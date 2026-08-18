@@ -39,6 +39,7 @@ const searchItems = [
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false)
+    const [visible, setVisible] = useState(true)
     const [scrollProgress, setScrollProgress] = useState(0)
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [searchOpen, setSearchOpen] = useState(false)
@@ -72,15 +73,34 @@ const Navbar = () => {
         document.documentElement.classList.add(nextTheme)
     }
 
-    // Handle scroll progress and header styling
+    // Handle scroll progress, hide/show on scroll direction, and header styling
     useEffect(() => {
+        let lastY = window.scrollY
+
         const handleScroll = () => {
+            const currentY = window.scrollY
             const totalScroll = document.documentElement.scrollTop || document.body.scrollTop
             const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
             const currentProgress = windowHeight > 0 ? (totalScroll / windowHeight) * 100 : 0
 
             setScrollProgress(currentProgress)
             setScrolled(totalScroll > 20)
+
+            // Hide when scrolling down past 80px, show when scrolling up
+            if (currentY > 10) {
+                if (currentY > lastY && currentY - lastY > 6) {
+                    // Scrolling down
+                    setVisible(false)
+                } else if (lastY - currentY > 6) {
+                    // Scrolling up
+                    setVisible(true)
+                }
+            } else {
+                // Near top
+                setVisible(true)
+            }
+
+            lastY = currentY
         }
 
         window.addEventListener('scroll', handleScroll, { passive: true })
@@ -117,10 +137,14 @@ const Navbar = () => {
         item.category.toLowerCase().includes(searchQuery.toLowerCase())
     )
 
+    const isHeaderVisible = visible || mobileMenuOpen || searchOpen
+
     return (
         <>
             <header
-                className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+                className={`sticky top-0 z-50 w-full transition-all duration-300 ease-in-out ${
+                    isHeaderVisible ? 'translate-y-0' : '-translate-y-full shadow-none pointer-events-none'
+                } ${
                     scrolled
                         ? 'bg-[var(--background)]/85 backdrop-blur-xl border-b border-black/[0.08] dark:border-white/[0.08] shadow-2xl shadow-acc dark:shadow-[#868686]/40'
                         : 'bg-[var(--background)]/60 backdrop-blur-md border-b border-black/[0.04] dark:border-white/[0.04]'

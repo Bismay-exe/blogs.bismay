@@ -147,7 +147,7 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
                 <span>On this page</span>
             </h1>
 
-            <div className="group-hover:opacity-100 opacity-0 transition-all duration-300 ease-in-out w-full space-y-2 text-xs sm:text-sm text-sec max-h-[70vh] overflow-y-auto pr-2">
+            <div className="group-hover:opacity-100 opacity-0 transition-all duration-300 ease-in-out w-full space-y-2 text-xs sm:text-sm text-sec zmax-h-[70vh] zoverflow-y-auto pr-2">
                 {headings.map((h, idx) => {
                     const isActive = activeSlug === h.slug
                     return (
@@ -155,7 +155,7 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
                             key={idx}
                             href={`#${h.slug}`}
                             onClick={(e) => handleScroll(e, h.slug)}
-                            className={`list block transition-all duration-200 leading-snug truncate cursor-pointer ${
+                            className={`list block transition-all duration-200 leading-snug ztruncate cursor-pointer ${
                                 h.level === 3 ? 'pl-3' : ''
                             } ${
                                 isActive

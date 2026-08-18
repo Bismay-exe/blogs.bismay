@@ -1,0 +1,72 @@
+{
+    "id": "string",
+    "slug": "string",
+    "status": "draft | published | scheduled",
+    "content": {
+        "title": "string",
+        "subtitle": "string",
+        "excerpt": "string",
+        "body": "string",
+        "format": "markdown | mdx | html",
+        "readingTimeMinutes": "number"
+    },
+    "media": {
+        "bannerImage": {
+            "url": "string",
+            "alt": "string",
+            "width": "number",
+            "height": "number"
+        }
+    },
+    "classification": {
+        "category": "string",
+        "tags": [
+            "string"
+        ]
+    },
+    "author": {
+        "id": "string"
+    },
+    "navigation": {
+        "seriesId": "string",
+        "seriesOrder": "number",
+        "relatedSlugs": [
+            "string"
+        ],
+        "redirectFrom": [
+            "string"
+        ]
+    },
+    "seo": {
+        "metaTitle": "string",
+        "metaDescription": "string",
+        "canonicalUrl": "string",
+        "ogTitle": "string",
+        "ogDescription": "string",
+        "ogImage": "string",
+        "ogType": "article",
+        "twitter": {
+            "card": "summary | summary_large_image",
+            "title": "string",
+            "description": "string",
+            "image": "string"
+        },
+        "robots": {
+            "index": "boolean",
+            "follow": "boolean"
+        },
+        "locale": "string"
+    },
+    "publishing": {
+        "createdAt": "string",
+        "publishedAt": "string",
+        "updatedAt": "string",
+        "scheduledAt": "string"
+    },
+    "settings": {
+        "isFeatured": "boolean"
+    },
+    "system": {
+        "revision": "number"
+    }
+}
