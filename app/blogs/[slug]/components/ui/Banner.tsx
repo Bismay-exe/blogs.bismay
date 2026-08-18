@@ -12,9 +12,9 @@ const Banner: React.FC<BannerProps> = ({
     if (!src) return null
 
     return (
-        <div className="max-w-375 w-full rounded-2xl overflow-hidden border border-black/[0.08] dark:border-white/[0.08]">
+        <div className="max-w-375 w-full rounded-2xl overflow-hidden border border-sec">
             <img
-                className="w-full object-cover max-h-[440px]"
+                className="w-full object-cover max-h-110"
                 src={src}
                 alt={alt}
             />

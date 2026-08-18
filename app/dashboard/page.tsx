@@ -159,7 +159,7 @@ const BlogsDashboard = () => {
     }
 
     return (
-        <div className="w-full min-h-screen flex flex-col items-center bg-[var(--background)] text-[var(--foreground)]">
+        <div className="w-full min-h-screen flex flex-col items-center bg-bg text-fg">
             <Navbar />
 
             <main className="max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-8 flex-1">
@@ -474,6 +474,17 @@ const BlogsDashboard = () => {
                                                 </div>
                                             )}
 
+                                            {/* Banner Image */}
+                                            {(article.media?.bannerImage?.url || article.seo?.ogImage) && (
+                                                <div className="w-full h-44 rounded-2xl overflow-hidden border border-black/[0.08] dark:border-white/[0.08] bg-black/[0.03] dark:bg-white/[0.03] relative group-hover:border-[var(--acc)]/40 transition-colors">
+                                                    <img
+                                                        src={article.media?.bannerImage?.url || article.seo?.ogImage}
+                                                        alt={article.media?.bannerImage?.alt || article.content?.title || 'Article banner'}
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                                                    />
+                                                </div>
+                                            )}
+
                                             {/* Title & Excerpt */}
                                             <div>
                                                 <h3 className="font-bold text-base sm:text-lg tracking-tight group-hover:text-[var(--acc)] transition-colors line-clamp-2">
@@ -600,6 +611,16 @@ const BlogsDashboard = () => {
                                         key={article.id || article.slug}
                                         className="group flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl border border-black/[0.08] dark:border-white/[0.08] hover:border-[var(--acc)]/40 bg-black/[0.015] dark:bg-white/[0.02] hover:bg-black/[0.03] dark:hover:bg-white/[0.03] transition-all"
                                     >
+                                        {/* {(article.media?.bannerImage?.url || article.seo?.ogImage) && (
+                                                <div className="w- h-24 rounded-xl overflow-hidden border border-sec/30 bg-bg/3 relative group-hover:border-acc/40 transition-colors">
+                                                    <img
+                                                        src={article.media?.bannerImage?.url || article.seo?.ogImage}
+                                                        alt={article.media?.bannerImage?.alt || article.content?.title || 'Article banner'}
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                                                    />
+                                                </div>
+                                            )} */}
+
                                         <div className="space-y-1.5 flex-1 min-w-0">
                                             <div className="flex items-center gap-2 flex-wrap">
                                                 {isPublished && (
