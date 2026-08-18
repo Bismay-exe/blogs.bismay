@@ -79,7 +79,7 @@ const CommentForm = () => {
     return (
         <div className="w-full h-full">
             <div className="pb-3">
-                <h1 className="text-lg text-sec font-mono">
+                <h1 className="text-lg text-fg font-mono">
                     Leave a <span className="text-fg font-semibold font-sans">comment</span>
                 </h1>
             </div>

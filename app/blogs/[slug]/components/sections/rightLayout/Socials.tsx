@@ -19,7 +19,7 @@ const Socials = () => {
     return (
         <div className="w-full h-full">
             <div className="pb-3">
-                <h1 className="text-lg text-sec font-mono">
+                <h1 className="text-lg text-fg font-mono">
                     Let's connect
                 </h1>
             </div>

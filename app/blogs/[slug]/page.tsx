@@ -1,22 +1,33 @@
 import React from 'react'
 import fs from 'fs'
 import path from 'path'
-import Main from './components/sections/MainLayout'
-import RightLayout from './components/sections/RightLayout'
-import LeftLayout from './components/sections/LeftLayout'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
+import ArticleViewClient from './components/ArticleViewClient'
 
 interface PageProps {
     params: Promise<{ slug: string }> | { slug: string }
 }
 
-function getArticleData(slug: string) {
+interface ServerArticleData {
+    markdown: string
+    title: string
+    category?: string
+    date?: string
+    readingTimeMinutes?: number
+    bannerUrl?: string
+    tags?: string[]
+}
+
+function getServerArticleData(slug: string): ServerArticleData | null {
     const seriesDir = path.join(process.cwd(), 'articles/series/🚀 React Learning Journal')
     let markdown = ''
     let title = ''
+    let date = 'Published'
+    let category = 'React & Frontend'
+    let readingTimeMinutes = 5
+    let bannerUrl = ''
+    let tags: string[] = ['React', 'JavaScript', 'WebDev']
 
-    // 1. Match day number e.g. "day-2-of-learning-react" -> day-2-article.md
+    // 1. Match day number e.g. "day-2-of-learning-react" or "day-2" -> day-2-article.md
     const dayMatch = slug.match(/day-(\d+)/i)
     if (dayMatch) {
         const dayNumber = dayMatch[1]
@@ -34,13 +45,13 @@ function getArticleData(slug: string) {
         }
     }
 
-    // 3. Fallback: Search all .md files in directory
+    // 3. Fallback search by filename in directory
     if (!markdown && fs.existsSync(seriesDir)) {
         const files = fs.readdirSync(seriesDir)
         for (const file of files) {
             if (file.endsWith('.md')) {
                 const nameWithoutExt = file.replace(/\.md$/, '')
-                if (slug.toLowerCase().includes(nameWithoutExt.toLowerCase())) {
+                if (slug.toLowerCase() === nameWithoutExt.toLowerCase()) {
                     markdown = fs.readFileSync(path.join(seriesDir, file), 'utf-8')
                     break
                 }
@@ -48,29 +59,49 @@ function getArticleData(slug: string) {
         }
     }
 
-    // 4. Default fallback if not found
+    // If no matching file found, DO NOT fallback to day-11! Return null so client/localStorage can be checked
     if (!markdown) {
-        const fallbackPath = path.join(seriesDir, 'day-11-article.md')
-        if (fs.existsSync(fallbackPath)) {
-            markdown = fs.readFileSync(fallbackPath, 'utf-8')
-        }
+        return null
     }
 
-    // Extract or derive title
+    // Extract title from markdown
     const titleMatch = markdown.match(/^#\s+(.+)$/m)
     if (titleMatch) {
         title = titleMatch[1].trim()
     } else if (slug.includes('day-2') || markdown.includes('Reconciliation')) {
-        title = "🚀 Day 2 of Learning React: Reconciliation, Diffing Algorithm, Render Phase, Commit Phase & React Fiber"
+        title = '🚀 Day 2 of Learning React: Reconciliation, Diffing Algorithm, Render Phase, Commit Phase & React Fiber'
+        category = 'Architecture'
+        readingTimeMinutes = 12
+        date = 'Feb 2, 2026'
+        tags = ['React Fiber', 'Reconciliation', 'Diffing', 'Performance']
+        bannerUrl = 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop'
     } else if (slug.includes('day-3') || markdown.includes('JSX')) {
-        title = "🚀 Day 3 of Learning React: Understanding JSX, Components, Props, Bundlers, and What Happens After `npm run dev`"
+        title = '🚀 Day 3 of Learning React: Understanding JSX, Components, Props, Bundlers, and What Happens After `npm run dev`'
+        category = 'React & Frontend'
+        readingTimeMinutes = 7
+        date = 'Feb 3, 2026'
+        tags = ['React', 'JSX', 'Components', 'Bundlers', 'Vite']
+        bannerUrl = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop'
     } else if (slug.includes('day-11') || markdown.includes('Context API')) {
-        title = "🚀 Day 11 of Learning React: Context API, Prop Drilling, Providers, and useContext()"
+        title = '🚀 Day 11 of Learning React: Context API, Prop Drilling, Providers, and useContext()'
+        category = 'React & Frontend'
+        readingTimeMinutes = 8
+        date = 'Feb 11, 2026'
+        tags = ['React', 'Context API', 'State Management', 'Hooks']
+        bannerUrl = 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1200&auto=format&fit=crop'
     } else {
-        title = "🚀 Learning React Series"
+        title = '🚀 Learning React Series'
     }
 
-    return { markdown, title }
+    return {
+        markdown,
+        title,
+        category,
+        date,
+        readingTimeMinutes,
+        bannerUrl,
+        tags,
+    }
 }
 
 export async function generateStaticParams() {
@@ -85,22 +116,12 @@ export async function generateStaticParams() {
     ]
 }
 
-const page = async ({ params }: PageProps) => {
+const Page = async ({ params }: PageProps) => {
     const resolvedParams = await Promise.resolve(params)
-    const slug = resolvedParams.slug || 'day-11-of-learning-react'
-    const { markdown, title } = getArticleData(slug)
+    const slug = resolvedParams.slug || ''
+    const serverArticle = slug ? getServerArticleData(slug) : null
 
-    return (
-        <div className='w-full min-h-screen flex flex-col items-center'>
-            <Navbar />
-            <div className='max-w-7xl w-full h-full flex flex-col lg:flex-row gap-5 px-4 sm:px-6 lg:px-8'>
-                <LeftLayout markdown={markdown} />
-                <Main markdown={markdown} title={title} />
-                <RightLayout />
-            </div>
-            <Footer />
-        </div>
-    )
+    return <ArticleViewClient slug={slug} initialServerArticle={serverArticle} />
 }
 
-export default page
+export default Page

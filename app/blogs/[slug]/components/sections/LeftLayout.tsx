@@ -1,7 +1,8 @@
 'use client'
 
 import React, { useEffect, useState, useMemo } from 'react'
-import { ArrowLeftIcon } from 'lucide-react'
+import { ArrowLeftIcon, Sparkles } from 'lucide-react'
+import Link from 'next/link'
 
 function slugify(text: string): string {
     return text
@@ -11,13 +12,6 @@ function slugify(text: string): string {
         .replace(/[^\w\s-]/g, '')
         .trim()
         .replace(/\s+/g, '-')
-}
-
-interface HeadingItem {
-    text: string
-    slug: string
-    level: number
-    widthPercent: number
 }
 
 interface LeftLayoutProps {
@@ -61,6 +55,28 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
             }
         })
     }, [markdown])
+
+    // Group headings into parent H2 sections with nested H3 children
+    const groupedHeadings = useMemo(() => {
+        const groups: {
+            parent: { text: string; slug: string; level: number; widthPercent: number }
+            children: { text: string; slug: string; level: number; widthPercent: number }[]
+        }[] = []
+
+        for (const h of headings) {
+            if (h.level === 2) {
+                groups.push({ parent: h, children: [] })
+            } else if (h.level === 3) {
+                if (groups.length > 0) {
+                    groups[groups.length - 1].children.push(h)
+                } else {
+                    groups.push({ parent: h, children: [] })
+                }
+            }
+        }
+
+        return groups
+    }, [headings])
 
     // Scroll spy: Track active heading on scroll
     useEffect(() => {
@@ -117,9 +133,9 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
         <div className="sticky top-0 max-w-56 w-full h-screen hidden xl:flex flex-col gap-5 justify-center bg-transparent group">
             {/* Back to blogs link */}
             <div className="absolute top-0 pt-5 cursor-pointer translate-x-8 w-fit">
-                <a href="/blogs" className="project flex items-center gap-2 w-fit hover:text-accent transition-colors">
+                <Link href="/blogs" className="project flex items-center gap-2 w-fit hover:text-accent transition-colors">
                     <ArrowLeftIcon size={20} className="list-line" /> back to blogs
-                </a>
+                </Link>
             </div>
 
             {/* Skeleton / Topic length minimap bars (Visible when not hovering) */}
@@ -130,12 +146,10 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
                         <div
                             key={idx}
                             style={{ width: `${h.widthPercent}%` }}
-                            className={`h-0.5 rounded-full transition-all duration-300 ${
+                            className={`h-0.5 rounded-full transition-all duration-300 ${h.level === 2 ? '' : 'ml-2.5'} ${
                                 isActive
                                     ? 'bg-accent scale-y-125'
-                                    : h.level === 2
-                                    ? 'bg-sec/70'
-                                    : 'bg-sec/40 ml-2.5'
+                                    : 'bg-sec/70'
                             }`}
                         />
                     )
@@ -145,27 +159,53 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
             {/* Interactive Table of Contents (Reveals smoothly on hover) */}
             <h1 className="group-hover:opacity-100 opacity-0 transition-all duration-300 ease-in-out text-sm font-bold tracking-tight text-fg flex items-center gap-2">
                 <span>On this page</span>
+                <Sparkles size={13} className="text-accent" />
             </h1>
 
-            <div className="group-hover:opacity-100 opacity-0 transition-all duration-300 ease-in-out w-full space-y-2 text-xs sm:text-sm text-sec zmax-h-[70vh] zoverflow-y-auto pr-2">
-                {headings.map((h, idx) => {
-                    const isActive = activeSlug === h.slug
+            <div className="group-hover:opacity-100 opacity-0 transition-all duration-300 ease-in-out w-full space-y-1 text-xs sm:text-sm text-sec max-h-[70vh] overflow-y-auto pr-2">
+                {groupedHeadings.map((group, gIdx) => {
+                    const isParentActive = activeSlug === group.parent.slug
+
                     return (
-                        <a
-                            key={idx}
-                            href={`#${h.slug}`}
-                            onClick={(e) => handleScroll(e, h.slug)}
-                            className={`list block transition-all duration-200 leading-snug ztruncate cursor-pointer ${
-                                h.level === 3 ? 'pl-3' : ''
-                            } ${
-                                isActive
-                                    ? 'text-accent font-semibold translate-x-1'
-                                    : 'hover:text-fg hover:translate-x-0.5'
-                            }`}
-                            title={h.text}
-                        >
-                            {h.text}
-                        </a>
+                        <div key={gIdx} className="space-y-0.5">
+                            {/* Main H2 Heading */}
+                            <a
+                                href={`#${group.parent.slug}`}
+                                onClick={(e) => handleScroll(e, group.parent.slug)}
+                                className={`list block transition-all duration-200 leading-tight truncate cursor-pointer ${
+                                    isParentActive
+                                        ? 'text-accent font-semibold translate-x-1'
+                                        : 'hover:text-fg hover:translate-x-0.5'
+                                }`}
+                                title={group.parent.text}
+                            >
+                                {group.parent.text}
+                            </a>
+
+                            {/* Subheadings Tree (like Series section) */}
+                            {group.children.length > 0 && (
+                                <div className="project-list pl-6! my-0.5">
+                                    <div className="line translate-y-1"></div>
+                                    {group.children.map((child, cIdx) => {
+                                        const isChildActive = activeSlug === child.slug
+                                        return (
+                                            <a
+                                                key={cIdx}
+                                                href={`#${child.slug}`}
+                                                onClick={(e) => handleScroll(e, child.slug)}
+                                                className={`flex items-center px-[0.8rem]! gap-1.5 project w-fit group/sub hover:text-accent transition-colors text-xs text-sec ${
+                                                    isChildActive ? 'text-accent font-semibold' : ''
+                                                }`}
+                                                title={child.text}
+                                            >
+                                                <div className="project-line w-5! translate-x-5! group-hover/sub:translate-x-3! transition-transform duration-300 ease-in-out"></div>
+                                                <span className="truncate max-w-36 block">{child.text}</span>
+                                            </a>
+                                        )
+                                    })}
+                                </div>
+                            )}
+                        </div>
                     )
                 })}
             </div>

@@ -9,16 +9,35 @@ import TopBar from './mainLayout/TopBar'
 interface MainLayoutProps {
     markdown?: string
     title?: string
+    bannerUrl?: string
+    bannerAlt?: string
+    tags?: string[]
+    category?: string
+    date?: string
+    readingTimeMinutes?: number
 }
 
-const Main: React.FC<MainLayoutProps> = ({ markdown = '', title }) => {
+const Main: React.FC<MainLayoutProps> = ({
+    markdown = '',
+    title,
+    bannerUrl,
+    bannerAlt,
+    tags,
+    category,
+    date,
+    readingTimeMinutes,
+}) => {
     return (
-        <div className='w-full bg-red-500/0 space-y-5'>
-            <TopBar />
-            <Banner />
+        <div className="w-full space-y-5 pb-16">
+            <TopBar
+                category={category}
+                date={date}
+                readingTimeMinutes={readingTimeMinutes}
+            />
+            {bannerUrl && <Banner src={bannerUrl} alt={bannerAlt || title} />}
             <Author />
             <Title title={title} />
-            <Tags />
+            {tags && tags.length > 0 && <Tags tags={tags} />}
             <Body content={markdown} />
         </div>
     )

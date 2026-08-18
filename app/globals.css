@@ -71,9 +71,9 @@ body {
 
 .line {
   position: absolute;
-  left: 10;
-  top: -5;
-  bottom: 17.5;
+  left: 10px;
+  top: -5px;
+  bottom: 17.5px;
   width: 2px;
   background: var(--line);
   border-radius: 14px;
