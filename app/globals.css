@@ -15,41 +15,48 @@
   --dark-secondary: #868686;
 
   --dark-accent: #C4B6ED;
+  --dark-line: #2d2d2d;
+  --dark-hover: #1f1f1f;
+
+  --background: var(--dark-bg);
+  --foreground: var(--dark-fg);
+  --sec: var(--dark-secondary);
+  --acc: var(--dark-accent);
 }
 
-/* :root:dark {
-  --bg: var(--dark-bg);
-  --fg: var(--dark-fg);
+html.dark {
+  --background: var(--dark-bg);
+  --foreground: var(--dark-fg);
+  --line: var(--dark-line);
+  --hover: var(--dark-hover);
   --sec: var(--dark-secondary);
-  --accent: var(--dark-accent);
-} */
+  --acc: var(--dark-accent);
+}
+
+html.light {
+  --background: var(--bg);
+  --foreground: var(--fg);
+  --line: #e5e7eb;
+  --hover: #f3f4f6;
+  --sec: var(--secondary);
+  --acc: #7c3aed;
+}
 
 @theme inline {
-  /* --color-bg: var(--bg);
-  --color-fg: var(--fg);
-  --color-sec: var(--secondary);
-  --color-accent: var(--accent); */
-
-  --color-bg: var(--dark-bg);
-  --color-fg: var(--dark-fg);
-  --color-sec: var(--dark-secondary);
-  --color-accent: var(--dark-accent);
+  --color-bg: var(--background);
+  --color-fg: var(--foreground);
+  --color-sec: var(--sec);
+  --color-accent: var(--acc);
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --font-mono: var(--font-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: var(--dark-bg);
-    --foreground: var(--dark-fg);
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter);
+  transition: background-color 0.45s ease, color 0.25s ease;
 }
 
 

@@ -9,7 +9,7 @@ interface SeriesItem {
 
 const seriesList: SeriesItem[] = Array.from({ length: 6 }, (_, i) => ({
     id: i + 1,
-    title: `Day ${i + 1} of Learning React`,
+    title: `🚀 Day ${i + 1} of Learning React`,
     href: `blogs/day-${i +1}-of-learning-react`,
 }));
 
@@ -29,10 +29,10 @@ const Series = () => {
                     <Link
                         key={item.id}
                         href={item.href || "#"}
-                        className="flex items-center gap-2 project w-fit"
+                        className="flex items-center gap-2 project w-fit group"
                     >
                         <div className="project-line"></div>
-                        🚀 {item.title}
+                        {item.title}
                     </Link>
                 ))}
             </div>

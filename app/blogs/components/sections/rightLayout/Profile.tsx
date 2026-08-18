@@ -7,9 +7,9 @@ const Profile = () => {
                 <h1 className="text-lg text-sec font-mono">About <span className="text-fg font-semibold font-sans">Bismay.exe</span></h1>
             </div>
             <div className="w-full h-full p-4 border border-sec/30 rounded-xl">
-                <div className="w-full h-full aspect-4/5 rounded-xl overflow-hidden border border-sec/30">
+                <div className="w-full aspect-4/5 rounded-xl overflow-hidden border border-sec/30">
                     <img
-                        className="w-full h-full object-cover hover:scale-110 transition-all duration-300 ease-in-out"
+                        className="w-full object-cover hover:scale-110 transition-all duration-300 ease-in-out"
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1epKN3vAvrQRIxnYi2AaXMJyKmVzUP3-mJr1D3b-DMSQID3s68GvINJ0&s=10"
                         alt=""
                     />
