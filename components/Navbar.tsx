@@ -142,16 +142,14 @@ const Navbar = () => {
     return (
         <>
             <header
-                className={`sticky top-0 z-50 w-full transition-all duration-300 ease-in-out ${
-                    isHeaderVisible ? 'translate-y-0' : '-translate-y-full shadow-none pointer-events-none'
-                } ${
-                    scrolled
-                        ? 'bg-[var(--background)]/85 backdrop-blur-xl border-b border-black/[0.08] dark:border-white/[0.08] shadow-2xl shadow-acc dark:shadow-[#868686]/40'
-                        : 'bg-[var(--background)]/60 backdrop-blur-md border-b border-black/[0.04] dark:border-white/[0.04]'
-                }`}
+                className={`sticky top-0 z-9999 w-full h-16 bg-linear-to-b from-bg/90 via-bg/70 to-bg/0 transition-all duration-300 ease-in-out ${isHeaderVisible ? 'translate-y-0' : '-translate-y-full shadow-none pointer-events-none'
+                    } ${scrolled
+                        ? '0border-b border-fg/8 zshadow-2xl shadow-bg'
+                        : '0border-b border-fg/4'
+                    }`}
             >
                 {/* Top ambient glow line */}
-                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[var(--acc)]/30 to-transparent pointer-events-none" />
+                <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-accent/30 to-transparent pointer-events-none" />
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
@@ -159,41 +157,39 @@ const Navbar = () => {
                         <div className="flex items-center gap-6">
                             <Link
                                 href="/blogs"
-                                className="group flex items-center gap-3 py-1 px-1.5 -ml-1.5 rounded-xl hover:bg-black/[0.04] dark:hover:bg-white/[0.04] transition-all duration-200"
+                                className="group flex items-center gap-3 py-1 px-1.5 -ml-1.5 rounded-xl hover:bg-black/4 dark:hover:bg-white/4 transition-all duration-200"
                             >
                                 <div className="flex flex-col">
                                     <div className="flex items-center gap-1.5">
-                                        <span className="font-sans font-bold text-[15px] tracking-tight text-[var(--foreground)] group-hover:text-[var(--acc)] transition-colors">
-                                            Bismay<span className="text-[var(--acc)]">.exe</span>
+                                        <span className="font-sans font-bold text-[15px] tracking-tight text-fg group-hover:text-accent transition-colors">
+                                            Bismay<span className="text-accent">.exe</span>
                                         </span>
                                         <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" title="Available for work" />
                                     </div>
-                                    <span className="text-[11px] font-mono text-[var(--sec)] tracking-wider group-hover:opacity-80 transition-colors">
+                                    <span className="text-[11px] font-mono text-sec tracking-wider group-hover:opacity-80 transition-colors">
                                         ~/blogs
                                     </span>
                                 </div>
                             </Link>
 
                             {/* Nav Links (Desktop) */}
-                            <nav className="hidden md:flex items-center gap-1 pl-4 border-l border-black/[0.08] dark:border-white/[0.08]">
+                            <nav className="hidden md:flex items-center gap-1 pl-4 border-l border-black/8 dark:border-white/8">
                                 {navLinks.map((item) => (
                                     <Link
                                         key={item.name}
                                         href={item.href}
-                                        className={`relative px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all duration-200 flex items-center gap-2 ${
-                                            item.active
-                                                ? 'text-[var(--foreground)] bg-black/[0.06] dark:bg-white/[0.08] font-semibold border border-black/[0.08] dark:border-white/[0.1]'
-                                                : 'text-[var(--sec)] hover:text-[var(--foreground)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04]'
-                                        }`}
+                                        className={`relative px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all duration-200 flex items-center gap-2 ${item.active
+                                            ? 'text-fg bg-black/6 dark:bg-white/8 font-semibold border border-black/8 dark:border-white/1'
+                                            : 'text-sec hover:text-fg hover:bg-black/3 dark:hover:bg-white/4'
+                                            }`}
                                     >
                                         <span>{item.name}</span>
                                         {item.badge && (
                                             <span
-                                                className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                                                    item.active
-                                                        ? 'bg-[var(--acc)]/20 text-[var(--acc)] border border-[var(--acc)]/30'
-                                                        : 'bg-black/[0.06] dark:bg-white/[0.06] text-[var(--sec)]'
-                                                }`}
+                                                className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${item.active
+                                                    ? 'bg-accent/20 text-accent border border-accent/30'
+                                                    : 'bg-black/6 dark:bg-white/6 text-sec'
+                                                    }`}
                                             >
                                                 {item.badge}
                                             </span>
@@ -208,12 +204,12 @@ const Navbar = () => {
                             {/* Command / Search Trigger */}
                             <button
                                 onClick={() => setSearchOpen(true)}
-                                className="group relative flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] hover:bg-black/[0.06] dark:hover:bg-white/[0.07] border border-black/[0.08] dark:border-white/[0.08] hover:border-black/20 dark:hover:border-white/20 transition-all duration-200 cursor-pointer text-xs text-[var(--sec)] hover:text-[var(--foreground)]"
+                                className="group relative flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-black/3 dark:bg-white/3 hover:bg-black/6 dark:hover:bg-white/7 border border-black/8 dark:border-white/8 hover:border-black/20 dark:hover:border-white/20 transition-all duration-200 cursor-pointer text-xs text-sec hover:text-fg"
                                 title="Search posts & topics"
                             >
-                                <Search size={14} className="text-[var(--sec)] group-hover:text-[var(--acc)] transition-colors" />
+                                <Search size={14} className="text-sec group-hover:text-accent transition-colors" />
                                 <span className="hidden sm:inline font-sans text-xs">Search blogs...</span>
-                                <kbd className="flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-black/[0.05] dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/[0.08] rounded text-[var(--sec)] group-hover:text-[var(--foreground)]">
+                                <kbd className="flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-black/5 dark:bg-white/6 border border-black/8 dark:border-white/8 rounded text-sec group-hover:text-fg">
                                     <span className="text-[11px]">⌘</span>K
                                 </kbd>
                             </button>
@@ -221,7 +217,7 @@ const Navbar = () => {
                             {/* Light / Dark Theme Toggle Button */}
                             <button
                                 onClick={toggleTheme}
-                                className="relative flex items-center justify-center w-8.5 h-8.5 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] hover:bg-black/[0.08] dark:hover:bg-white/[0.08] border border-black/[0.08] dark:border-white/[0.08] hover:border-black/20 dark:hover:border-white/20 text-[var(--sec)] hover:text-[var(--acc)] transition-all duration-300 cursor-pointer overflow-hidden group"
+                                className="relative flex items-center justify-center w-8.5 h-8.5 rounded-xl bg-black/3 dark:bg-white/3 hover:bg-black/8 dark:hover:bg-white/8 border border-black/8 dark:border-white/8 hover:border-black/20 dark:hover:border-white/20 text-sec hover:text-accent transition-all duration-300 cursor-pointer overflow-hidden group"
                                 title={mounted && theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
                                 aria-label="Toggle Theme"
                             >
@@ -243,7 +239,7 @@ const Navbar = () => {
                             {/* Share button */}
                             <button
                                 onClick={handleCopy}
-                                className="hidden sm:flex items-center justify-center w-8.5 h-8.5 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] hover:bg-black/[0.08] dark:hover:bg-white/[0.08] border border-black/[0.08] dark:border-white/[0.08] hover:border-black/20 dark:hover:border-white/20 text-[var(--sec)] hover:text-[var(--acc)] transition-all duration-200 cursor-pointer"
+                                className="hidden sm:flex items-center justify-center w-8.5 h-8.5 rounded-xl bg-black/3 dark:bg-white/3 hover:bg-black/8 dark:hover:bg-white/8 border border-black/8 dark:border-white/8 hover:border-black/20 dark:hover:border-white/20 text-sec hover:text-accent transition-all duration-200 cursor-pointer"
                                 title={copied ? 'Link Copied!' : 'Copy Page Link'}
                             >
                                 {copied ? (
@@ -258,7 +254,7 @@ const Navbar = () => {
                                 href="https://github.com/Bismay-exe"
                                 target="_blank"
                                 rel="noreferrer"
-                                className="flex items-center justify-center w-8.5 h-8.5 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] hover:bg-black/[0.08] dark:hover:bg-white/[0.08] border border-black/[0.08] dark:border-white/[0.08] hover:border-black/20 dark:hover:border-white/20 text-[var(--sec)] hover:text-[var(--foreground)] transition-all duration-200"
+                                className="flex items-center justify-center w-8.5 h-8.5 rounded-xl bg-black/3 dark:bg-white/3 hover:bg-black/8 dark:hover:bg-white/8 border border-black/8 dark:border-white/8 hover:border-black/20 dark:hover:border-white/20 text-sec hover:text-fg transition-all duration-200"
                                 title="GitHub Profile"
                             >
                                 <Cat size={15} />
@@ -267,17 +263,17 @@ const Navbar = () => {
                             {/* Connect / Newsletter CTA */}
                             <a
                                 href="#about"
-                                className="hidden lg:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[var(--acc)]/20 to-purple-500/20 hover:from-[var(--acc)]/30 hover:to-purple-500/30 text-xs font-mono font-medium text-[var(--foreground)] border border-[var(--acc)]/30 hover:border-[var(--acc)]/60 transition-all duration-300 shadow-sm shadow-purple-900/10 group"
+                                className="hidden lg:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-linear-to-r from-accent/20 to-purple-500/20 hover:from-accent/30 hover:to-purple-500/30 text-xs font-mono font-medium text-fg border border-accent/30 hover:border-accent/60 transition-all duration-300 shadow-sm shadow-purple-900/10 group"
                             >
-                                <Sparkles size={13} className="text-[var(--acc)] group-hover:rotate-12 transition-transform duration-300" />
+                                <Sparkles size={13} className="text-accent group-hover:rotate-12 transition-transform duration-300" />
                                 <span>Connect</span>
-                                <ArrowUpRight size={13} className="text-[var(--sec)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                <ArrowUpRight size={13} className="text-sec group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                             </a>
 
                             {/* Mobile Menu Toggle */}
                             <button
                                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                className="md:hidden flex items-center justify-center w-9 h-9 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] border border-black/[0.08] dark:border-white/[0.08] text-[var(--sec)] hover:text-[var(--foreground)] transition-colors"
+                                className="md:hidden flex items-center justify-center w-9 h-9 rounded-xl bg-black/3 dark:bg-white/3 border border-black/8 dark:border-white/8 text-sec hover:text-fg transition-colors"
                                 aria-label="Toggle Navigation Menu"
                             >
                                 {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
@@ -288,22 +284,21 @@ const Navbar = () => {
 
                 {/* Mobile Menu Overlay */}
                 {mobileMenuOpen && (
-                    <div className="md:hidden border-t border-black/[0.08] dark:border-white/[0.08] bg-[var(--background)]/95 backdrop-blur-2xl px-5 py-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="md:hidden border-t border-black/8 dark:border-white/8 bg-bg/95 backdrop-blur-2xl px-5 py-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
                         <div className="space-y-1">
                             {navLinks.map((item) => (
                                 <Link
                                     key={item.name}
                                     href={item.href}
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm font-mono ${
-                                        item.active
-                                            ? 'bg-black/[0.06] dark:bg-white/[0.08] text-[var(--foreground)] font-medium'
-                                            : 'text-[var(--sec)] hover:text-[var(--foreground)] hover:bg-black/[0.04] dark:hover:bg-white/[0.04]'
-                                    }`}
+                                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm font-mono ${item.active
+                                        ? 'bg-black/6 dark:bg-white/8 text-fg font-medium'
+                                        : 'text-sec hover:text-fg hover:bg-black/4 dark:hover:bg-white/4'
+                                        }`}
                                 >
                                     <span>{item.name}</span>
                                     {item.badge && (
-                                        <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--acc)]/20 text-[var(--acc)]">
+                                        <span className="text-xs px-2 py-0.5 rounded-full bg-accent/20 text-accent">
                                             {item.badge}
                                         </span>
                                     )}
@@ -311,11 +306,11 @@ const Navbar = () => {
                             ))}
                         </div>
 
-                        <div className="pt-3 border-t border-black/[0.08] dark:border-white/[0.08] flex items-center justify-between">
+                        <div className="pt-3 border-t border-black/8 dark:border-white/8 flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={toggleTheme}
-                                    className="p-2 rounded-lg bg-black/[0.05] dark:bg-white/[0.05] text-[var(--sec)] hover:text-[var(--foreground)] flex items-center gap-1.5 text-xs font-mono"
+                                    className="p-2 rounded-lg bg-black/5 dark:bg-white/5 text-sec hover:text-fg flex items-center gap-1.5 text-xs font-mono"
                                     title="Toggle Theme"
                                 >
                                     {mounted && theme === 'dark' ? <Sun size={15} className="text-amber-300" /> : <Moon size={15} className="text-indigo-500" />}
@@ -325,13 +320,13 @@ const Navbar = () => {
                                     href="https://github.com/Bismay-exe"
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="p-2 rounded-lg bg-black/[0.05] dark:bg-white/[0.05] text-[var(--sec)] hover:text-[var(--foreground)]"
+                                    className="p-2 rounded-lg bg-black/5 dark:bg-white/5 text-sec hover:text-fg"
                                 >
                                     <Cat size={16} />
                                 </a>
                                 <button
                                     onClick={handleCopy}
-                                    className="p-2 rounded-lg bg-black/[0.05] dark:bg-white/[0.05] text-[var(--sec)] hover:text-[var(--foreground)] flex items-center gap-1 text-xs font-mono"
+                                    className="p-2 rounded-lg bg-black/5 dark:bg-white/5 text-sec hover:text-fg flex items-center gap-1 text-xs font-mono"
                                 >
                                     {copied ? <Check size={15} className="text-emerald-400" /> : <Share2 size={15} />}
                                     <span>{copied ? 'Copied' : 'Share'}</span>
@@ -341,7 +336,7 @@ const Navbar = () => {
                             <a
                                 href="#about"
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="px-3.5 py-1.5 rounded-lg bg-[var(--acc)] text-white dark:text-[#0C0C0C] font-semibold text-xs font-mono flex items-center gap-1.5"
+                                className="px-3.5 py-1.5 rounded-lg bg-accent text-white dark:text-[#0C0C0C] font-semibold text-xs font-mono flex items-center gap-1.5"
                             >
                                 <Sparkles size={13} />
                                 <span>Connect</span>
@@ -351,9 +346,9 @@ const Navbar = () => {
                 )}
 
                 {/* Real-time Reading Scroll Progress Bar */}
-                <div className="w-full h-[3px] bg-transparent -mb-1">
+                <div className="w-full h-0.75 bg-transparent -mb-1 z-0">
                     <div
-                        className="h-full bg-gradient-to-r from-purple-500 via-[var(--acc)] to-indigo-400 transition-all duration-150 ease-out"
+                        className="h-full bg-linear-to-r from-purple-500 via-accent to-indigo-400 transition-all duration-150 ease-out"
                         style={{ width: `${scrollProgress}%` }}
                     />
                 </div>
@@ -369,21 +364,21 @@ const Navbar = () => {
                     />
 
                     {/* Dialog Box */}
-                    <div className="relative w-full max-w-lg rounded-2xl bg-[var(--background)] border border-black/[0.12] dark:border-white/[0.12] shadow-2xl shadow-purple-950/20 overflow-hidden z-10 animate-in zoom-in-95 duration-200">
+                    <div className="relative w-full max-w-lg rounded-2xl bg-bg border border-black/12 dark:border-white/12 shadow-2xl shadow-purple-950/20 overflow-hidden z-10 animate-in zoom-in-95 duration-200">
                         {/* Search Input Bar */}
-                        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-black/[0.08] dark:border-white/[0.08]">
-                            <Search size={18} className="text-[var(--acc)]" />
+                        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-black/8 dark:border-white/8">
+                            <Search size={18} className="text-accent" />
                             <input
                                 type="text"
                                 autoFocus
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Search blogs, series, tags, or topics..."
-                                className="w-full bg-transparent text-sm text-[var(--foreground)] placeholder:text-[var(--sec)] focus:outline-none font-sans"
+                                className="w-full bg-transparent text-sm text-fg placeholder:text-sec focus:outline-none font-sans"
                             />
                             <kbd
                                 onClick={() => setSearchOpen(false)}
-                                className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/[0.06] dark:bg-white/[0.08] text-[var(--sec)] border border-black/[0.08] dark:border-white/[0.08] cursor-pointer hover:text-[var(--foreground)]"
+                                className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/6 dark:bg-white/8 text-sec border border-black/8 dark:border-white/8 cursor-pointer hover:text-fg"
                             >
                                 ESC
                             </kbd>
@@ -399,34 +394,34 @@ const Navbar = () => {
                                             key={idx}
                                             href={item.href}
                                             onClick={() => setSearchOpen(false)}
-                                            className="group flex items-center justify-between p-2.5 rounded-xl hover:bg-black/[0.05] dark:hover:bg-white/[0.06] transition-colors"
+                                            className="group flex items-center justify-between p-2.5 rounded-xl hover:bg-black/5 dark:hover:bg-white/6 transition-colors"
                                         >
                                             <div className="flex items-center gap-3">
-                                                <div className="p-2 rounded-lg bg-black/[0.04] dark:bg-white/[0.04] text-[var(--sec)] group-hover:text-[var(--acc)] group-hover:bg-[var(--acc)]/10 transition-colors">
+                                                <div className="p-2 rounded-lg bg-black/4 dark:bg-white/4 text-sec group-hover:text-accent group-hover:bg-accent/10 transition-colors">
                                                     <IconComponent size={16} />
                                                 </div>
                                                 <div className="flex flex-col">
-                                                    <span className="text-xs font-medium text-[var(--foreground)]">
+                                                    <span className="text-xs font-medium text-fg">
                                                         {item.title}
                                                     </span>
-                                                    <span className="text-[11px] font-mono text-[var(--sec)]">
+                                                    <span className="text-[11px] font-mono text-sec">
                                                         {item.category}
                                                     </span>
                                                 </div>
                                             </div>
-                                            <ArrowUpRight size={14} className="text-[var(--sec)] group-hover:text-[var(--acc)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                                            <ArrowUpRight size={14} className="text-sec group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                                         </Link>
                                     )
                                 })
                             ) : (
-                                <div className="py-8 text-center text-xs font-mono text-[var(--sec)]">
+                                <div className="py-8 text-center text-xs font-mono text-sec">
                                     No results found for "{searchQuery}"
                                 </div>
                             )}
                         </div>
 
                         {/* Search Footer */}
-                        <div className="px-4 py-2 bg-black/[0.02] dark:bg-white/[0.02] border-t border-black/[0.06] dark:border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-[var(--sec)]">
+                        <div className="px-4 py-2 bg-black/2 dark:bg-white/2 border-t border-black/6 dark:border-white/6 flex items-center justify-between text-[11px] font-mono text-sec">
                             <span>Navigate with ⌘K</span>
                             <span>Bismay's Developer Blog</span>
                         </div>

@@ -1,5 +1,5 @@
 import React from 'react'
-import Banner from '../../components/ui/Banner'
+import Banner from './mainLayout/Banner'
 import Author from './mainLayout/Author'
 import Body from './mainLayout/Body'
 import Tags from './mainLayout/Tags'

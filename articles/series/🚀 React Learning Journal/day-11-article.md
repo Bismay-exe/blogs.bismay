@@ -34,7 +34,7 @@ That worked well for small examples.
 
 But then I started wondering...
 
-> **What happens when the component that needs the data is several levels deeper?**
+>> **What happens when the component that needs the data is several levels deeper?**
 
 ---
 
@@ -96,7 +96,7 @@ Then any component inside that tree can access it whenever it needs to.
 
 My favorite way to think about it is this:
 
-> **I started thinking of Context API as a shared storage room that every component inside the same application can access.**
+>> **I started thinking of Context API as a shared storage room that every component inside the same application can access.**
 
 No more passing keys from one room to another.
 

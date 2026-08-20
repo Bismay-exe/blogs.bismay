@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { ArrowLeftIcon, Sparkles } from 'lucide-react'
 import Link from 'next/link'
+import { ArrowIcon } from '@/components/ui/shared/ArrowIcon'
 
 function slugify(text: string): string {
     return text
@@ -130,11 +131,11 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
     }
 
     return (
-        <div className="sticky top-0 max-w-56 w-full h-screen hidden xl:flex flex-col gap-5 justify-center bg-transparent group">
+        <div className="sticky top-10 max-w-56 w-full h-[calc(100vh-64px)] hidden xl:flex flex-col gap-5 justify-center bg-transparent group z-10">
             {/* Back to blogs link */}
             <div className="absolute top-0 pt-5 cursor-pointer translate-x-8 w-fit">
-                <Link href="/blogs" className="project flex items-center gap-2 w-fit hover:text-accent transition-colors">
-                    <ArrowLeftIcon size={20} className="list-line" /> back to blogs
+                <Link href="/blogs" className="project group/icon flex items-center gap-2 w-fit hover:text-accent transition-colors">
+                    <ArrowIcon className="list-line rotate-180" /> back to blogs
                 </Link>
             </div>
 

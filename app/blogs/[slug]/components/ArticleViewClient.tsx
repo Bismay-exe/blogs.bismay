@@ -17,6 +17,9 @@ import {
     ArrowRight,
     Edit3,
 } from 'lucide-react'
+import Card404 from '@/components/ui/404page/404card'
+import { ArrowIcon } from '@/components/ui/shared/ArrowIcon'
+import { ProgressiveBlur } from '@/components/ui/shared/ProgressiveBlur'
 
 interface ArticleData {
     markdown: string
@@ -92,11 +95,11 @@ const ArticleViewClient: React.FC<ArticleViewClientProps> = ({
 
     if (loading) {
         return (
-            <div className="w-full min-h-screen flex flex-col items-center bg-[var(--background)]">
+            <div className="w-full min-h-screen flex flex-col items-center bg-bg">
                 <Navbar />
                 <div className="flex-1 flex flex-col items-center justify-center py-32 space-y-3">
-                    <div className="w-8 h-8 rounded-full border-2 border-[var(--acc)] border-t-transparent animate-spin" />
-                    <span className="text-xs font-mono text-[var(--sec)]">Loading article...</span>
+                    <div className="w-8 h-8 rounded-full border-2 border-accent border-t-transparent animate-spin" />
+                    <span className="text-xs font-mono text-sec">Loading article...</span>
                 </div>
                 <Footer />
             </div>
@@ -106,27 +109,21 @@ const ArticleViewClient: React.FC<ArticleViewClientProps> = ({
     // 404 Not Found View
     if (!article) {
         return (
-            <div className="w-full min-h-screen flex flex-col items-center bg-[var(--background)] text-[var(--foreground)]">
+            <div className="w-full h-screen flex flex-col items-center bg-bg text-fg">
                 <Navbar />
 
-                <main className="max-w-4xl w-full px-4 sm:px-6 lg:px-8 py-16 md:py-24 flex-1 flex flex-col items-center justify-center text-center space-y-8">
-                    {/* Glowing 404 Badge */}
-                    <div className="relative">
-                        <div className="w-24 h-24 rounded-3xl bg-[var(--acc)]/10 border border-[var(--acc)]/30 flex items-center justify-center text-[var(--acc)] shadow-2xl shadow-[var(--acc)]/20">
-                            <FileQuestion size={44} />
-                        </div>
-                        <span className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-md bg-[var(--acc)] text-black font-mono font-bold text-[11px]">
-                            404
-                        </span>
-                    </div>
+                <main className="h-[calc(100vh-64px)] max-w-4xl w-full px-4 sm:px-6 lg:px-8 py-16 md:py-24 flex-1 flex flex-col items-center justify-center text-center space-y-8">
+
+                    {/* 404 Animation Card */}
+                    <Card404 />
 
                     <div className="space-y-3 max-w-lg">
                         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
                             Article Not Found
                         </h1>
-                        <p className="text-sm text-[var(--sec)] leading-relaxed">
-                            We couldn&apos;t find any published article or saved draft matching{' '}
-                            <code className="px-1.5 py-0.5 rounded bg-black/[0.05] dark:bg-white/[0.08] font-mono text-[var(--foreground)] text-xs">
+                        <p className="text-sm text-sec leading-relaxed px-8">
+                            We couldn&apos;t find any published article or <br /> saved draft matching{' '}
+                            <code className="px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/8 font-mono text-fg text-xs">
                                 /blogs/{slug}
                             </code>
                             .
@@ -137,73 +134,22 @@ const ArticleViewClient: React.FC<ArticleViewClientProps> = ({
                     <div className="flex items-center gap-3 flex-wrap justify-center pt-2">
                         <Link
                             href="/blogs"
-                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-black/[0.05] dark:bg-white/[0.06] hover:bg-black/[0.08] dark:hover:bg-white/[0.1] text-xs font-mono font-medium border border-black/[0.08] dark:border-white/[0.08] transition-colors"
+                            className="group/icon flex items-center gap-2 pl-5 py-2.5 rounded-xl text-xs font-mono font-medium transition-colors"
                         >
-                            <ArrowLeft size={14} />
-                            <span>Back to Blog Hub</span>
+                            {/* <ArrowLeft size={14} /> */}
+                            <ArrowIcon className='rotate-180' />
+                            <span className='list'>Back to Blog Hub</span>
                         </Link>
-
-                        <Link
-                            href={`/blogs/new?slug=${encodeURIComponent(slug)}`}
-                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--acc)] hover:opacity-90 text-black font-bold text-xs font-mono transition-all shadow-md shadow-[var(--acc)]/20"
-                        >
-                            <Plus size={14} />
-                            <span>Create Article With This Slug</span>
-                        </Link>
-                    </div>
-
-                    {/* Popular Reads Suggestions */}
-                    <div className="w-full max-w-lg pt-12 border-t border-black/[0.08] dark:border-white/[0.08] text-left space-y-3">
-                        <span className="text-xs font-mono text-[var(--sec)] flex items-center gap-1.5">
-                            <Sparkles size={12} className="text-[var(--acc)]" />
-                            Popular Published Articles
-                        </span>
-
-                        <div className="space-y-2">
-                            {[
-                                {
-                                    slug: 'day-11-of-learning-react',
-                                    title: '🚀 Day 11: Context API & Prop Drilling',
-                                    read: '8 min read',
-                                },
-                                {
-                                    slug: 'day-3-of-learning-react',
-                                    title: '🚀 Day 3: JSX, Components, and Bundlers',
-                                    read: '7 min read',
-                                },
-                                {
-                                    slug: 'day-2-of-learning-react',
-                                    title: '🚀 Day 2: React Fiber & Reconciliation',
-                                    read: '12 min read',
-                                },
-                            ].map((item) => (
-                                <Link
-                                    key={item.slug}
-                                    href={`/blogs/${item.slug}`}
-                                    className="group flex items-center justify-between p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] hover:bg-black/[0.05] dark:hover:bg-white/[0.05] border border-black/[0.06] dark:border-white/[0.06] transition-colors"
-                                >
-                                    <div className="flex items-center gap-2.5">
-                                        <BookOpen size={15} className="text-[var(--acc)]" />
-                                        <span className="text-xs font-medium text-[var(--foreground)] group-hover:text-[var(--acc)] transition-colors">
-                                            {item.title}
-                                        </span>
-                                    </div>
-                                    <span className="text-[11px] font-mono text-[var(--sec)]">
-                                        {item.read}
-                                    </span>
-                                </Link>
-                            ))}
-                        </div>
                     </div>
                 </main>
 
-                <Footer />
+                {/* <Footer /> */}
             </div>
         )
     }
 
     return (
-        <div className="w-full min-h-screen flex flex-col items-center bg-[var(--background)] text-[var(--foreground)]">
+        <div className="relative w-full min-h-screen flex flex-col items-center bg-bg text-fg z-0">
             <Navbar />
             <div className="max-w-7xl w-full h-full flex flex-col lg:flex-row gap-5 px-4 sm:px-6 lg:px-8">
                 <LeftLayout markdown={article.markdown} />
@@ -218,6 +164,8 @@ const ArticleViewClient: React.FC<ArticleViewClientProps> = ({
                 />
                 <RightLayout />
             </div>
+            <ProgressiveBlur position="top" backgroundColor="var(--background)" />
+            <ProgressiveBlur position="bottom" backgroundColor="var(--background)" />
             <Footer />
         </div>
     )
