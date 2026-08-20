@@ -194,7 +194,7 @@ const BlogsDashboard = () => {
                         </button>
 
                         <Link
-                            href="/blogs/new"
+                            href="/admin/posts/new"
                             className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent hover:opacity-90 text-black font-bold text-sm transition-all shadow-md shadow-accent/20 cursor-pointer"
                         >
                             <Plus size={16} />
@@ -528,9 +528,9 @@ const BlogsDashboard = () => {
                                             {/* Action Buttons */}
                                             <div className="flex items-center justify-between gap-2 pt-1">
                                                 <div className="flex items-center gap-1.5">
-                                                    {/* Edit in /blogs/new */}
+                                                    {/* Edit in /admin/posts/[id] */}
                                                     <Link
-                                                        href={`/blogs/new?id=${encodeURIComponent(article.id)}${article.slug ? `&slug=${encodeURIComponent(article.slug)}` : ''}`}
+                                                        href={`/admin/posts/${encodeURIComponent(article.id)}`}
                                                         className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-fg text-bg hover:opacity-90 text-xs font-mono font-semibold transition-opacity"
                                                         title="Open in Editor"
                                                     >
@@ -663,7 +663,7 @@ const BlogsDashboard = () => {
 
                                             <div className="flex items-center gap-1.5">
                                                 <Link
-                                                    href={`/blogs/new?id=${encodeURIComponent(article.id)}${article.slug ? `&slug=${encodeURIComponent(article.slug)}` : ''}`}
+                                                    href={`/admin/posts/${encodeURIComponent(article.id)}`}
                                                     className="p-2 rounded-xl bg-fg text-bg hover:opacity-90 text-xs font-mono font-semibold"
                                                     title="Edit in Editor"
                                                 >
@@ -730,7 +730,7 @@ const BlogsDashboard = () => {
                         </div>
                         <div className="pt-2">
                             <Link
-                                href="/blogs/new"
+                                href="/admin/posts/new"
                                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-accent text-black font-bold text-xs"
                             >
                                 <Plus size={14} />

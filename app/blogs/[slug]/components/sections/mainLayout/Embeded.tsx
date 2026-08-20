@@ -1,14 +1,14 @@
 'use client'
 
 import React from 'react'
-import DevtoEmbed from './embeded/DevtoEmbed'
-import GithubProfileEmbed from './embeded/GithubProfileEmbed'
-import GithubRepoEmbed from './embeded/GithubRepoEmbed'
-import TwitterEmbed from './embeded/Twitterembed'
-import LinkedinEmbed from './embeded/LinkedinEmbed'
-import MediumEmbed from './embeded/MediumEmbed'
-import InstagramEmbed from './embeded/InstagramEmbed'
-import OtherEmbed from './embeded/OtherEmbed'
+import DevtoEmbed from './embeds/DevtoEmbed'
+import GithubProfileEmbed from './embeds/GithubProfileEmbed'
+import GithubRepoEmbed from './embeds/GithubRepoEmbed'
+import TwitterEmbed from './embeds/Twitterembed'
+import LinkedinEmbed from './embeds/LinkedinEmbed'
+import MediumEmbed from './embeds/MediumEmbed'
+import InstagramEmbed from './embeds/InstagramEmbed'
+import OtherEmbed from './embeds/OtherEmbed'
 
 interface EmbedProps {
     url: string

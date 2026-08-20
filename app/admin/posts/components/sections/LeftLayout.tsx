@@ -87,11 +87,11 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '', onBack }) => {
                         onClick={onBack}
                         className="project flex items-center gap-2 w-fit hover:text-accent transition-colors cursor-pointer bg-transparent border-0 text-inherit p-0 font-inherit text-sm text-sec"
                     >
-                        <ArrowLeftIcon size={20} className="list-line" /> back to blogs
+                        <ArrowLeftIcon size={20} className="list-line" /> back to posts
                     </button>
                 ) : (
-                    <Link href="/blogs" className="project flex items-center gap-2 w-fit hover:text-accent transition-colors">
-                        <ArrowLeftIcon size={20} className="list-line" /> back to blogs
+                    <Link href="/admin/posts" className="project flex items-center gap-2 w-fit hover:text-accent transition-colors">
+                        <ArrowLeftIcon size={20} className="list-line" /> back to posts
                     </Link>
                 )}
             </div>
