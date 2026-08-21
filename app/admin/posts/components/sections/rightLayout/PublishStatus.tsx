@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Sparkles, Star, Calendar, Clock } from 'lucide-react'
+import { Sparkles, Star } from 'lucide-react'
 import { WheelDateTimePicker } from '@/components/ui/shared/WheelDateTimePicker'
 import { Switch } from '@/components/ui/shared/Switch'
 
@@ -16,28 +16,6 @@ interface PublishStatusProps {
     onFeaturedChange: (isFeatured: boolean) => void
     onPublishedAtChange: (publishedAt: string) => void
     onScheduledAtChange: (scheduledAt: string) => void
-}
-
-function toDatetimeLocal(isoString?: string): string {
-    if (!isoString) return ''
-    try {
-        const d = new Date(isoString)
-        if (isNaN(d.getTime())) return ''
-        const offset = d.getTimezoneOffset() * 60000
-        const local = new Date(d.getTime() - offset)
-        return local.toISOString().slice(0, 16)
-    } catch {
-        return ''
-    }
-}
-
-function fromDatetimeLocal(localString: string): string {
-    if (!localString) return ''
-    try {
-        return new Date(localString).toISOString()
-    } catch {
-        return ''
-    }
 }
 
 const PublishStatus: React.FC<PublishStatusProps> = ({
@@ -94,6 +72,8 @@ const PublishStatus: React.FC<PublishStatusProps> = ({
             {status === 'scheduled' && (
                 <div className="space-y-2 animate-in fade-in duration-200">
                     <WheelDateTimePicker
+                        mode="scheduled"
+                        label="Scheduled Release Time"
                         value={scheduledAt}
                         onChange={onScheduledAtChange}
                     />
@@ -103,27 +83,18 @@ const PublishStatus: React.FC<PublishStatusProps> = ({
                 </div>
             )}
 
-            {/* Published Date Picker */}
+            {/* Kinetic Wheel Date & Time Picker for Published Status (Admin Customizable) */}
             {status === 'published' && (
-                <div className="space-y-1 animate-in fade-in duration-200">
-                    <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-mono text-sec flex items-center gap-1">
-                            <Calendar size={11} /> Published Date & Time
-                        </label>
-                        <button
-                            type="button"
-                            onClick={() => onPublishedAtChange(new Date().toISOString())}
-                            className="text-[10px] font-mono text-accent hover:underline cursor-pointer"
-                        >
-                            Set to now
-                        </button>
-                    </div>
-                    <input
-                        type="datetime-local"
-                        value={toDatetimeLocal(publishedAt || new Date().toISOString())}
-                        onChange={(e) => onPublishedAtChange(fromDatetimeLocal(e.target.value))}
-                        className="w-full px-3 py-2 rounded-xl bg-fg/5 border border-sec/20 text-xs font-mono text-fg outline-none focus:border-accent"
+                <div className="space-y-2 animate-in fade-in duration-200">
+                    <WheelDateTimePicker
+                        mode="published"
+                        label="Published Date & Time"
+                        value={publishedAt || new Date().toISOString()}
+                        onChange={onPublishedAtChange}
                     />
+                    <p className="text-[10px] font-mono text-sec/60 px-1">
+                        Customizable publication timestamp shown across reader views and archives.
+                    </p>
                 </div>
             )}
 

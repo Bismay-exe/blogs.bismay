@@ -3,11 +3,13 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { WheelPicker } from './WheelPicker'
 import { Switch } from './Switch'
-import { Calendar, Clock, Volume2, Sparkles } from 'lucide-react'
+import { Calendar, Clock, Volume2, Sparkles, RotateCcw } from 'lucide-react'
 
 export interface WheelDateTimePickerProps {
     value?: string // ISO string
     onChange: (isoString: string) => void
+    label?: string
+    mode?: 'published' | 'scheduled'
     disabled?: boolean
     className?: string
 }
@@ -27,8 +29,8 @@ const MONTHS = [
     { label: 'Dec', value: '11', full: 'December' },
 ]
 
-const currentYearNum = new Date().getFullYear()
-const YEARS = Array.from({ length: 8 }, (_, i) => String(currentYearNum + i))
+// Allow wide range of years for backdating and future scheduling (2015 to 2038)
+const YEARS = Array.from({ length: 24 }, (_, i) => String(2015 + i))
 
 const HOURS = Array.from({ length: 12 }, (_, i) => {
     const h = i + 1
@@ -46,20 +48,24 @@ function daysInMonth(monthIndex: number, year: number): number {
 export const WheelDateTimePicker: React.FC<WheelDateTimePickerProps> = ({
     value,
     onChange,
+    label,
+    mode = 'scheduled',
     disabled = false,
     className = '',
 }) => {
-    // Parse incoming date or default to tomorrow at 9:00 AM
+    // Parse incoming date or default
     const initialDate = useMemo(() => {
         if (value) {
             const d = new Date(value)
             if (!isNaN(d.getTime())) return d
         }
+        if (mode === 'published') return new Date()
+
         const tomorrow = new Date()
         tomorrow.setDate(tomorrow.getDate() + 1)
         tomorrow.setHours(9, 0, 0, 0)
         return tomorrow
-    }, [value])
+    }, [value, mode])
 
     const [month, setMonth] = useState<string>(String(initialDate.getMonth()))
     const [day, setDay] = useState<string>(String(initialDate.getDate()))
@@ -74,6 +80,29 @@ export const WheelDateTimePicker: React.FC<WheelDateTimePickerProps> = ({
     )
     const [period, setPeriod] = useState<string>(initialPeriod)
     const [sound, setSound] = useState<boolean>(true)
+
+    // Sync external value changes into picker state
+    useEffect(() => {
+        if (!value) return
+        const d = new Date(value)
+        if (isNaN(d.getTime())) return
+
+        const mStr = String(d.getMonth())
+        const dStr = String(d.getDate())
+        const yStr = String(d.getFullYear())
+        const h24 = d.getHours()
+        const pStr = h24 >= 12 ? 'PM' : 'AM'
+        const h12 = h24 % 12 || 12
+        const hStr = h12 < 10 ? `0${h12}` : String(h12)
+        const minStr = d.getMinutes() < 10 ? `0${d.getMinutes()}` : String(d.getMinutes())
+
+        setMonth(mStr)
+        setDay(dStr)
+        setYear(yStr)
+        setHour(hStr)
+        setMinute(minStr)
+        setPeriod(pStr)
+    }, [value])
 
     // Calculate valid days in selected month and year
     const maxDays = useMemo(() => {
@@ -92,25 +121,56 @@ export const WheelDateTimePicker: React.FC<WheelDateTimePickerProps> = ({
     }, [maxDays, day])
 
     // Emit updated ISO string whenever picker values change
-    useEffect(() => {
-        const h12 = parseInt(hour, 10) || 12
-        let h24 = h12
-        if (period === 'PM' && h12 < 12) h24 = h12 + 12
-        if (period === 'AM' && h12 === 12) h24 = 0
+    const updateDateTime = useCallback(
+        (m: string, d: string, y: string, h: string, min: string, p: string) => {
+            const h12 = parseInt(h, 10) || 12
+            let h24 = h12
+            if (p === 'PM' && h12 < 12) h24 = h12 + 12
+            if (p === 'AM' && h12 === 12) h24 = 0
 
-        const m = parseInt(minute, 10) || 0
-        const d = parseInt(day, 10) || 1
-        const mo = parseInt(month, 10) || 0
-        const y = parseInt(year, 10) || currentYearNum
+            const minuteNum = parseInt(min, 10) || 0
+            const dayNum = parseInt(d, 10) || 1
+            const monthNum = parseInt(m, 10) || 0
+            const yearNum = parseInt(y, 10) || new Date().getFullYear()
 
-        const newDate = new Date(y, mo, d, h24, m, 0)
-        if (!isNaN(newDate.getTime())) {
-            const iso = newDate.toISOString()
-            if (iso !== value) {
+            const newDate = new Date(yearNum, monthNum, dayNum, h24, minuteNum, 0)
+            if (!isNaN(newDate.getTime())) {
+                const iso = newDate.toISOString()
                 onChange(iso)
             }
-        }
-    }, [month, day, year, hour, minute, period, onChange, value])
+        },
+        [onChange]
+    )
+
+    const handleMonthChange = (newMonth: string) => {
+        setMonth(newMonth)
+        updateDateTime(newMonth, day, year, hour, minute, period)
+    }
+
+    const handleDayChange = (newDay: string) => {
+        setDay(newDay)
+        updateDateTime(month, newDay, year, hour, minute, period)
+    }
+
+    const handleYearChange = (newYear: string) => {
+        setYear(newYear)
+        updateDateTime(month, day, newYear, hour, minute, period)
+    }
+
+    const handleHourChange = (newHour: string) => {
+        setHour(newHour)
+        updateDateTime(month, day, year, newHour, minute, period)
+    }
+
+    const handleMinuteChange = (newMinute: string) => {
+        setMinute(newMinute)
+        updateDateTime(month, day, year, hour, newMinute, period)
+    }
+
+    const handlePeriodChange = (newPeriod: string) => {
+        setPeriod(newPeriod)
+        updateDateTime(month, day, year, hour, minute, newPeriod)
+    }
 
     // Format human-readable preview
     const formattedPreview = useMemo(() => {
@@ -121,22 +181,36 @@ export const WheelDateTimePicker: React.FC<WheelDateTimePickerProps> = ({
 
     // Quick Presets
     const setPreset = useCallback(
-        (daysAhead: number, targetHour24: number) => {
+        (daysDelta: number, targetHour24?: number, setExactNow = false) => {
             const d = new Date()
-            d.setDate(d.getDate() + daysAhead)
-            d.setHours(targetHour24, 0, 0, 0)
+            if (setExactNow) {
+                // exact now
+            } else {
+                d.setDate(d.getDate() + daysDelta)
+                if (targetHour24 !== undefined) {
+                    d.setHours(targetHour24, 0, 0, 0)
+                }
+            }
 
-            setMonth(String(d.getMonth()))
-            setDay(String(d.getDate()))
-            setYear(String(d.getFullYear()))
+            const mStr = String(d.getMonth())
+            const dStr = String(d.getDate())
+            const yStr = String(d.getFullYear())
+            const h24 = d.getHours()
+            const pStr = h24 >= 12 ? 'PM' : 'AM'
+            const h12 = h24 % 12 || 12
+            const hStr = h12 < 10 ? `0${h12}` : String(h12)
+            const minStr = d.getMinutes() < 10 ? `0${d.getMinutes()}` : String(d.getMinutes())
 
-            const p = targetHour24 >= 12 ? 'PM' : 'AM'
-            const h12 = targetHour24 % 12 || 12
-            setHour(h12 < 10 ? `0${h12}` : String(h12))
-            setMinute('00')
-            setPeriod(p)
+            setMonth(mStr)
+            setDay(dStr)
+            setYear(yStr)
+            setHour(hStr)
+            setMinute(minStr)
+            setPeriod(pStr)
+
+            onChange(d.toISOString())
         },
-        []
+        [onChange]
     )
 
     return (
@@ -145,8 +219,8 @@ export const WheelDateTimePicker: React.FC<WheelDateTimePickerProps> = ({
             <div className="flex items-center justify-between p-3 rounded-2xl bg-accent/10 border border-accent/30 text-fg">
                 <div className="space-y-0.5">
                     <div className="flex items-center gap-1.5 text-[11px] font-mono font-semibold text-accent uppercase tracking-wider">
-                        <Clock size={12} />
-                        <span>Scheduled Release Time</span>
+                        {mode === 'published' ? <Calendar size={12} /> : <Clock size={12} />}
+                        <span>{label || (mode === 'published' ? 'Published Timestamp' : 'Scheduled Release Time')}</span>
                     </div>
                     <p className="text-xs font-mono font-bold text-fg">
                         {formattedPreview}
@@ -165,27 +239,55 @@ export const WheelDateTimePicker: React.FC<WheelDateTimePickerProps> = ({
 
             {/* Quick Timing Presets */}
             <div className="grid grid-cols-3 gap-1.5">
-                <button
-                    type="button"
-                    onClick={() => setPreset(1, 9)}
-                    className="py-1.5 px-2 rounded-xl bg-fg/5 hover:bg-fg/10 border border-sec/15 text-[10px] font-mono text-sec hover:text-fg transition-all text-center cursor-pointer"
-                >
-                    Tomorrow 9 AM
-                </button>
-                <button
-                    type="button"
-                    onClick={() => setPreset(2, 12)}
-                    className="py-1.5 px-2 rounded-xl bg-fg/5 hover:bg-fg/10 border border-sec/15 text-[10px] font-mono text-sec hover:text-fg transition-all text-center cursor-pointer"
-                >
-                    In 2 Days Noon
-                </button>
-                <button
-                    type="button"
-                    onClick={() => setPreset(7, 9)}
-                    className="py-1.5 px-2 rounded-xl bg-fg/5 hover:bg-fg/10 border border-sec/15 text-[10px] font-mono text-sec hover:text-fg transition-all text-center cursor-pointer"
-                >
-                    Next Week 9 AM
-                </button>
+                {mode === 'published' ? (
+                    <>
+                        <button
+                            type="button"
+                            onClick={() => setPreset(0, undefined, true)}
+                            className="py-1.5 px-2 rounded-xl bg-fg/5 hover:bg-fg/10 border border-sec/15 text-[10px] font-mono text-sec hover:text-fg transition-all text-center cursor-pointer font-bold text-accent"
+                        >
+                            ⚡ Set to Now
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setPreset(-1, 9)}
+                            className="py-1.5 px-2 rounded-xl bg-fg/5 hover:bg-fg/10 border border-sec/15 text-[10px] font-mono text-sec hover:text-fg transition-all text-center cursor-pointer"
+                        >
+                            Yesterday 9 AM
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setPreset(-7, 9)}
+                            className="py-1.5 px-2 rounded-xl bg-fg/5 hover:bg-fg/10 border border-sec/15 text-[10px] font-mono text-sec hover:text-fg transition-all text-center cursor-pointer"
+                        >
+                            1 Week Ago
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <button
+                            type="button"
+                            onClick={() => setPreset(1, 9)}
+                            className="py-1.5 px-2 rounded-xl bg-fg/5 hover:bg-fg/10 border border-sec/15 text-[10px] font-mono text-sec hover:text-fg transition-all text-center cursor-pointer"
+                        >
+                            Tomorrow 9 AM
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setPreset(2, 12)}
+                            className="py-1.5 px-2 rounded-xl bg-fg/5 hover:bg-fg/10 border border-sec/15 text-[10px] font-mono text-sec hover:text-fg transition-all text-center cursor-pointer"
+                        >
+                            In 2 Days Noon
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setPreset(7, 9)}
+                            className="py-1.5 px-2 rounded-xl bg-fg/5 hover:bg-fg/10 border border-sec/15 text-[10px] font-mono text-sec hover:text-fg transition-all text-center cursor-pointer"
+                        >
+                            Next Week 9 AM
+                        </button>
+                    </>
+                )}
             </div>
 
             {/* Dual Wheel Pickers: Date + Time */}
@@ -194,14 +296,14 @@ export const WheelDateTimePicker: React.FC<WheelDateTimePickerProps> = ({
                 <div className="p-2 rounded-2xl border border-sec/20 bg-bg/60 space-y-1.5">
                     <div className="flex items-center gap-1 px-1 text-[10px] font-mono text-sec uppercase tracking-wider">
                         <Calendar size={11} className="text-accent" />
-                        <span>Date (M / D / Y)</span>
+                        <span>Date (Month / Day / Year)</span>
                     </div>
                     <div className="flex items-stretch justify-center gap-1">
                         {/* Month */}
                         <WheelPicker
                             options={MONTHS.map((m) => ({ label: m.label, value: m.value }))}
                             value={month}
-                            onValueChange={setMonth}
+                            onValueChange={handleMonthChange}
                             visibleCount={5}
                             itemHeight={32}
                             sound={sound}
@@ -213,7 +315,7 @@ export const WheelDateTimePicker: React.FC<WheelDateTimePickerProps> = ({
                         <WheelPicker
                             options={dayOptions}
                             value={day}
-                            onValueChange={setDay}
+                            onValueChange={handleDayChange}
                             visibleCount={5}
                             itemHeight={32}
                             sound={sound}
@@ -225,7 +327,7 @@ export const WheelDateTimePicker: React.FC<WheelDateTimePickerProps> = ({
                         <WheelPicker
                             options={YEARS}
                             value={year}
-                            onValueChange={setYear}
+                            onValueChange={handleYearChange}
                             visibleCount={5}
                             itemHeight={32}
                             sound={sound}
@@ -242,12 +344,12 @@ export const WheelDateTimePicker: React.FC<WheelDateTimePickerProps> = ({
                         <Clock size={11} className="text-accent" />
                         <span>Time (H : M : Period)</span>
                     </div>
-                    <div className="flex items-stretch justify-center gap-1 items-center">
+                    <div className="flex items-stretch justify-center gap-1">
                         {/* Hour */}
                         <WheelPicker
                             options={HOURS}
                             value={hour}
-                            onValueChange={setHour}
+                            onValueChange={handleHourChange}
                             visibleCount={5}
                             itemHeight={32}
                             sound={sound}
@@ -255,12 +357,12 @@ export const WheelDateTimePicker: React.FC<WheelDateTimePickerProps> = ({
                             className="w-12 sm:w-14 border-0 bg-transparent"
                             aria-label="Hour"
                         />
-                        <span className="text-sec font-mono font-bold text-sm">:</span>
+                        <span className="text-sec font-mono font-bold text-sm flex items-center">:</span>
                         {/* Minute */}
                         <WheelPicker
                             options={MINUTES}
                             value={minute}
-                            onValueChange={setMinute}
+                            onValueChange={handleMinuteChange}
                             visibleCount={5}
                             itemHeight={32}
                             sound={sound}
@@ -272,7 +374,7 @@ export const WheelDateTimePicker: React.FC<WheelDateTimePickerProps> = ({
                         <WheelPicker
                             options={PERIODS}
                             value={period}
-                            onValueChange={setPeriod}
+                            onValueChange={handlePeriodChange}
                             visibleCount={5}
                             itemHeight={32}
                             sound={sound}

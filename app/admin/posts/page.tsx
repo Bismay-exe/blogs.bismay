@@ -6,9 +6,11 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import {
     getStoredArticles,
+    saveArticleToStorage,
     deleteArticleFromStorage,
     ArticleWithStorageMeta,
 } from '@/lib/blogStorage'
+import PublishStatus from './components/sections/rightLayout/PublishStatus'
 import {
     Plus,
     Search,
@@ -30,6 +32,7 @@ import {
     BookOpen,
     HardDrive,
     RefreshCw,
+    X,
 } from 'lucide-react'
 
 type StatusFilter = 'all' | 'published' | 'draft' | 'scheduled' | 'saved'
@@ -41,6 +44,7 @@ const BlogsDashboard = () => {
     const [searchQuery, setSearchQuery] = useState('')
     const [selectedCategory, setSelectedCategory] = useState<string>('All')
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+    const [editingDateArticle, setEditingDateArticle] = useState<ArticleWithStorageMeta | null>(null)
 
     const refreshArticles = () => {
         const list = getStoredArticles()
@@ -516,10 +520,17 @@ const BlogsDashboard = () => {
                                         {/* Footer Meta & Actions */}
                                         <div className="pt-4 mt-4 border-t border-black/6 dark:border-white/6 space-y-3">
                                             <div className="flex items-center justify-between text-[11px] font-mono text-sec">
-                                                <span className="flex items-center gap-1">
-                                                    <Calendar size={12} />
-                                                    {formatDate(article.publishing?.updatedAt || article.publishing?.createdAt)}
-                                                </span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setEditingDateArticle(article)}
+                                                    className="flex items-center gap-1 hover:text-accent transition-colors cursor-pointer group/date text-left"
+                                                    title="Change Publication / Scheduled Date & Time"
+                                                >
+                                                    <Calendar size={12} className="text-accent group-hover/date:scale-110 transition-transform" />
+                                                    <span className="underline decoration-dotted underline-offset-2">
+                                                        {formatDate(article.publishing?.publishedAt || article.publishing?.scheduledAt || article.publishing?.createdAt)}
+                                                    </span>
+                                                </button>
                                                 <span>
                                                     {article.content?.readingTimeMinutes || 1} min read
                                                 </span>
@@ -532,11 +543,22 @@ const BlogsDashboard = () => {
                                                     <Link
                                                         href={`/admin/posts/${encodeURIComponent(article.id)}`}
                                                         className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-fg text-bg hover:opacity-90 text-xs font-mono font-semibold transition-opacity"
-                                                        title="Open in Editor"
+                                                        title="Open in Full Editor"
                                                     >
                                                         <Edit3 size={12} />
                                                         <span>Edit</span>
                                                     </Link>
+
+                                                    {/* Quick Change Date & Status */}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setEditingDateArticle(article)}
+                                                        className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-black/4 dark:bg-white/5 hover:bg-accent/15 hover:text-accent text-xs font-mono text-sec transition-colors cursor-pointer"
+                                                        title="Quick Edit Date & Publish Status"
+                                                    >
+                                                        <Calendar size={12} />
+                                                        <span className="hidden sm:inline">Date</span>
+                                                    </button>
 
                                                     {/* View Live Article (if slug exists) */}
                                                     {article.slug && (
@@ -602,16 +624,6 @@ const BlogsDashboard = () => {
                                         key={article.id || article.slug}
                                         className="group flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl border border-black/8 dark:border-white/8 hover:border-accent/40 bg-black/1.5 dark:bg-white/2 hover:bg-black/3 dark:hover:bg-white/3 transition-all"
                                     >
-                                        {/* {(article.media?.bannerImage?.url || article.seo?.ogImage) && (
-                                                <div className="w- h-24 rounded-xl overflow-hidden border border-sec/30 bg-bg/3 relative group-hover:border-acc/40 transition-colors">
-                                                    <img
-                                                        src={article.media?.bannerImage?.url || article.seo?.ogImage}
-                                                        alt={article.media?.bannerImage?.alt || article.content?.title || 'Article banner'}
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                                                    />
-                                                </div>
-                                            )} */}
-
                                         <div className="space-y-1.5 flex-1 min-w-0">
                                             <div className="flex items-center gap-2 flex-wrap">
                                                 {isPublished && (
@@ -656,19 +668,35 @@ const BlogsDashboard = () => {
                                         </div>
 
                                         <div className="flex items-center gap-4 justify-between md:justify-end">
-                                            <div className="text-right text-xs font-mono text-sec hidden sm:block">
-                                                <div>{formatDate(article.publishing?.updatedAt || article.publishing?.createdAt)}</div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setEditingDateArticle(article)}
+                                                className="text-right text-xs font-mono text-sec hidden sm:block hover:text-accent transition-colors cursor-pointer group/date"
+                                                title="Change Publication Date"
+                                            >
+                                                <div className="underline decoration-dotted underline-offset-2">
+                                                    {formatDate(article.publishing?.publishedAt || article.publishing?.scheduledAt || article.publishing?.createdAt)}
+                                                </div>
                                                 <div className="text-[11px] opacity-75">{article.content?.readingTimeMinutes || 1} min read</div>
-                                            </div>
+                                            </button>
 
                                             <div className="flex items-center gap-1.5">
                                                 <Link
                                                     href={`/admin/posts/${encodeURIComponent(article.id)}`}
                                                     className="p-2 rounded-xl bg-fg text-bg hover:opacity-90 text-xs font-mono font-semibold"
-                                                    title="Edit in Editor"
+                                                    title="Edit in Full Editor"
                                                 >
                                                     <Edit3 size={13} />
                                                 </Link>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setEditingDateArticle(article)}
+                                                    className="p-2 rounded-xl bg-black/4 dark:bg-white/5 hover:bg-accent/15 hover:text-accent text-sec text-xs font-mono transition-colors cursor-pointer"
+                                                    title="Quick Edit Date & Status"
+                                                >
+                                                    <Calendar size={13} />
+                                                </button>
 
                                                 {article.slug && (
                                                     <Link
@@ -739,6 +767,107 @@ const BlogsDashboard = () => {
                         </div>
                     </div>
                 )}
+
+                {/* Quick Publish / Date Editor Modal with WheelDateTimePicker */}
+                {editingDateArticle && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+                        <div className="w-full max-w-lg bg-bg border border-sec/30 rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+                            <div className="flex items-center justify-between pb-3 border-b border-sec/15">
+                                <div>
+                                    <h3 className="text-sm font-bold font-mono text-fg flex items-center gap-2">
+                                        <Sparkles size={16} className="text-accent" />
+                                        Change Publication Date & Status
+                                    </h3>
+                                    <p className="text-xs text-sec truncate max-w-sm mt-0.5">
+                                        {editingDateArticle.content?.title || editingDateArticle.slug || 'Untitled Article'}
+                                    </p>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => setEditingDateArticle(null)}
+                                    className="p-2 rounded-xl text-sec hover:text-fg hover:bg-fg/5 transition-colors cursor-pointer"
+                                >
+                                    <X size={16} />
+                                </button>
+                            </div>
+
+                            <PublishStatus
+                                status={editingDateArticle.status}
+                                slug={editingDateArticle.slug}
+                                isFeatured={editingDateArticle.settings?.isFeatured ?? false}
+                                publishedAt={editingDateArticle.publishing?.publishedAt}
+                                scheduledAt={editingDateArticle.publishing?.scheduledAt}
+                                onStatusChange={(status) =>
+                                    setEditingDateArticle((prev) =>
+                                        prev
+                                            ? {
+                                                  ...prev,
+                                                  status,
+                                                  publishing: {
+                                                      ...prev.publishing,
+                                                      ...(status === 'published' && !prev.publishing?.publishedAt
+                                                          ? { publishedAt: new Date().toISOString() }
+                                                          : {}),
+                                                  },
+                                              }
+                                            : null
+                                    )
+                                }
+                                onSlugChange={(slug) =>
+                                    setEditingDateArticle((prev) => (prev ? { ...prev, slug } : null))
+                                }
+                                onFeaturedChange={(isFeatured) =>
+                                    setEditingDateArticle((prev) =>
+                                        prev ? { ...prev, settings: { ...prev.settings, isFeatured } } : null
+                                    )
+                                }
+                                onPublishedAtChange={(publishedAt) =>
+                                    setEditingDateArticle((prev) =>
+                                        prev
+                                            ? {
+                                                  ...prev,
+                                                  publishing: { ...prev.publishing, publishedAt },
+                                              }
+                                            : null
+                                    )
+                                }
+                                onScheduledAtChange={(scheduledAt) =>
+                                    setEditingDateArticle((prev) =>
+                                        prev
+                                            ? {
+                                                  ...prev,
+                                                  publishing: { ...prev.publishing, scheduledAt },
+                                              }
+                                            : null
+                                    )
+                                }
+                            />
+
+                            <div className="flex items-center justify-end gap-2 pt-2 border-t border-sec/15">
+                                <button
+                                    type="button"
+                                    onClick={() => setEditingDateArticle(null)}
+                                    className="px-4 py-2 rounded-xl border border-sec/20 text-xs font-mono text-sec hover:text-fg hover:bg-fg/5 transition-colors cursor-pointer"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        if (editingDateArticle) {
+                                            saveArticleToStorage(editingDateArticle)
+                                            refreshArticles()
+                                            setEditingDateArticle(null)
+                                        }
+                                    }}
+                                    className="px-5 py-2 rounded-xl bg-accent text-black font-bold text-xs font-mono transition-all hover:opacity-90 shadow-md shadow-accent/20 cursor-pointer"
+                                >
+                                    Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </main>
 
             <Footer />
@@ -747,3 +876,4 @@ const BlogsDashboard = () => {
 }
 
 export default BlogsDashboard
+

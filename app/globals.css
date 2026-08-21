@@ -50,6 +50,8 @@ html.light {
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --font-mono: var(--font-mono);
+  --font-inter-tight: var(--font-inter-tight);
+  --font-space-mono: var(--font-space-mono);
 }
 
 html {

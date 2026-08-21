@@ -588,7 +588,7 @@ export function WheelPicker({
                 <ul
                     ref={bandRef}
                     aria-hidden
-                    className="absolute inset-x-0 top-1/2 m-0 h-0 list-none p-0 [backface-visibility:hidden] [transform-style:preserve-3d] [will-change:transform]"
+                    className="absolute inset-x-0 top-1/2 m-0 h-0 list-none p-0 backface-hidden transform-3d will-change-transform"
                 >
                     {options.map((option, i) => (
                         <li
