@@ -68,7 +68,7 @@ const ContentEditor: React.FC<ContentEditorProps> = ({ content, onContentChange 
                 )}
 
                 {viewMode === 'preview' && (
-                    <div className="w-full h-[calc(100vh-170px)] overflow-y-auto p-5 sm:p-8 bg-transparent">
+                    <div className="w-full max-w-full min-w-0 h-[calc(100vh-170px)] overflow-y-auto p-5 sm:p-8 bg-transparent">
                         {content.trim() ? (
                             <ArticleBody content={content} />
                         ) : (

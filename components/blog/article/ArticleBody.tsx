@@ -37,7 +37,14 @@ const ArticleBody: React.FC<ArticleBodyProps> = ({ content = '' }) => {
 
     return (
         <>
-            <article className="w-full text-fg/90 space-y-6 pt-4 text-[16.5px] sm:text-[17px] leading-[1.8] font-sans antialiased">
+            <article
+                style={{
+                    fontFamily: 'var(--reader-body-font, var(--font-sans))',
+                    fontSize: 'var(--reader-body-font-size, 16.5px)',
+                    lineHeight: 'var(--reader-line-height, 1.8)',
+                }}
+                className="w-full max-w-full min-w-0 text-fg/90 space-y-6 pt-4 antialiased break-words"
+            >
                 {blocks.map((block, idx) => {
                     switch (block.type) {
                         case 'heading':

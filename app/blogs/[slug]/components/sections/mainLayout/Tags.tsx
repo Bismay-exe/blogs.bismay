@@ -1,4 +1,7 @@
+'use client'
+
 import React from 'react'
+import { useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
 
 interface TagsProps {
     tags?: string[]
@@ -7,16 +10,19 @@ interface TagsProps {
 const defaultTags = ['react', 'javascript', 'webdev', 'beginners']
 
 const Tags: React.FC<TagsProps> = ({ tags = defaultTags }) => {
+    const { settings } = useReaderSettings()
+    const { headerAlignment } = settings.layout
+    const isCenter = headerAlignment === 'center'
     const list = tags && tags.length > 0 ? tags : defaultTags
 
     return (
-        <div className="flex gap-5 items-center text-sm font-light text-sec flex-wrap">
+        <div className={`flex gap-3 items-center text-xs font-mono text-sec flex-wrap ${isCenter ? 'justify-center mx-auto' : 'justify-start'}`}>
             {list.map((tag, idx) => {
                 const cleaned = tag.replace(/^#/, '')
                 return (
                     <span
                         key={idx}
-                        className="font-mono hover:text-fg cursor-pointer rounded-lg hover:bg-(--hover) hover:px-3 py-1.5 transition-all duration-300 ease-in-out"
+                        className="px-2.5 py-1 rounded-lg bg-fg/4 hover:bg-fg/8 hover:text-fg border border-sec/15 cursor-pointer transition-all duration-200"
                     >
                         #{cleaned}
                     </span>

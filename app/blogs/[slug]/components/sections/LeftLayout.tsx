@@ -1,9 +1,10 @@
 'use client'
-
+ 
 import React, { useEffect, useState, useMemo } from 'react'
 import { ArrowLeftIcon, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { ArrowIcon } from '@/components/ui/shared/ArrowIcon'
+import { useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
 
 function slugify(text: string): string {
     return text
@@ -20,7 +21,12 @@ interface LeftLayoutProps {
 }
 
 const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
+    const { settings } = useReaderSettings()
     const [activeSlug, setActiveSlug] = useState<string>('')
+
+    if (!settings.layout.showLeftSidebar || !settings.appearance.showTableOfContents) {
+        return null
+    }
 
     const headings = useMemo(() => {
         if (!markdown) return []

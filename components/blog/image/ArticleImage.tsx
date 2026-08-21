@@ -22,7 +22,7 @@ const ArticleImage: React.FC<ArticleImageProps> = ({ src, alt, caption, onImageC
                 <img
                     src={src}
                     alt={alt || 'Article image'}
-                    className="w-full h-auto object-cover max-h-125 group-hover:scale-[1.015] transition-transform duration-300"
+                    className="w-full h-auto object-cover max-w-375 group-hover:scale-[1.015] transition-transform duration-300"
                     loading="lazy"
                 />
                 <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md text-white/80 text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none flex items-center gap-1.5 shadow-md">

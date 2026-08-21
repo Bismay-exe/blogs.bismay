@@ -146,7 +146,7 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '', onBack }) => {
                                             className="flex items-center gap-2 project w-fit group/sub hover:text-accent transition-colors text-xs text-sec"
                                         >
                                             <div className="project-line"></div>
-                                            <span className="truncate max-w-[145px] block" title={child.text}>{child.text}</span>
+                                            <span className="truncate max-w-36.25 block" title={child.text}>{child.text}</span>
                                         </div>
                                     ))}
                                 </div>

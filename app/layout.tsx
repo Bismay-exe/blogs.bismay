@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Lora, JetBrains_Mono, Space_Mono  } from "next/font/google";
+import { Inter, Inter_Tight, Lora, JetBrains_Mono, Space_Mono  } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+
+const interTight = Inter_Tight({
+  subsets: ['latin'],
+  variable: '--font-inter-tight',
+});
 
 const lora = Lora({
   variable: "--font-serif",
@@ -31,7 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", lora.variable, jetbrainsMono.variable, spaceMono.variable, "font-sans", inter.variable)}
+      className={cn("h-full", "antialiased", lora.variable, jetbrainsMono.variable, spaceMono.variable, "font-sans", inter.variable, interTight.variable)}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

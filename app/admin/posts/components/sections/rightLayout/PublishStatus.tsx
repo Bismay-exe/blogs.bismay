@@ -2,6 +2,8 @@
 
 import React from 'react'
 import { Sparkles, Star, Calendar, Clock } from 'lucide-react'
+import { WheelDateTimePicker } from '@/components/ui/shared/WheelDateTimePicker'
+import { Switch } from '@/components/ui/shared/Switch'
 
 interface PublishStatusProps {
     status: 'draft' | 'published' | 'scheduled'
@@ -77,32 +79,26 @@ const PublishStatus: React.FC<PublishStatusProps> = ({
                         key={st}
                         type="button"
                         onClick={() => handleStatusSelect(st)}
-                        className={`py-1.5 rounded-xl capitalize transition-all cursor-pointer ${status === st
+                        className={`py-1.5 rounded-xl capitalize transition-all cursor-pointer ${
+                            status === st
                                 ? 'bg-accent text-black shadow-sm font-bold'
                                 : 'text-sec hover:text-fg'
-                            }`}
+                        }`}
                     >
                         {st}
                     </button>
                 ))}
             </div>
 
-            {/* Scheduled Date Picker */}
+            {/* Kinetic Wheel Date & Time Picker for Scheduled Status */}
             {status === 'scheduled' && (
-                <div className="space-y-1 animate-in fade-in duration-200">
-                    <div className="flex items-center justify-between">
-                        <label className="text-[11px] font-mono text-accent flex items-center gap-1">
-                            <Clock size={11} /> Scheduled Publish Time
-                        </label>
-                    </div>
-                    <input
-                        type="datetime-local"
-                        value={toDatetimeLocal(scheduledAt)}
-                        onChange={(e) => onScheduledAtChange(fromDatetimeLocal(e.target.value))}
-                        className="w-full px-3 py-2 rounded-xl bg-fg/5 border border-accent/40 text-xs font-mono text-fg outline-none focus:border-accent"
+                <div className="space-y-2 animate-in fade-in duration-200">
+                    <WheelDateTimePicker
+                        value={scheduledAt}
+                        onChange={onScheduledAtChange}
                     />
-                    <p className="text-[10px] font-mono text-sec/60">
-                        Post will be held in queue until this scheduled timestamp.
+                    <p className="text-[10px] font-mono text-sec/60 px-1">
+                        Article will remain in queue and auto-publish at the designated timestamp.
                     </p>
                 </div>
             )}
@@ -146,19 +142,19 @@ const PublishStatus: React.FC<PublishStatusProps> = ({
                 </div>
             </div>
 
-            {/* Featured Post Toggle */}
-            <label className="flex items-center justify-between p-3 rounded-2xl bg-fg/5 border border-sec/15 cursor-pointer group hover:bg-fg/10 transition-colors">
+            {/* Featured Post Toggle using Animated Switch */}
+            <div className="flex items-center justify-between p-3 rounded-2xl bg-fg/5 border border-sec/15">
                 <div className="flex items-center gap-2 text-xs font-medium text-fg">
                     <Star size={15} className={isFeatured ? 'text-amber-400 fill-amber-400' : 'text-sec'} />
                     <span>Featured Article</span>
                 </div>
-                <input
-                    type="checkbox"
+                <Switch
                     checked={isFeatured}
-                    onChange={(e) => onFeaturedChange(e.target.checked)}
-                    className="w-4 h-4 rounded accent-accent cursor-pointer"
+                    onCheckedChange={onFeaturedChange}
+                    ariaLabel="Toggle featured article"
+                    className="scale-90 origin-right"
                 />
-            </label>
+            </div>
         </div>
     )
 }

@@ -26,7 +26,17 @@ export const HeadingBlockComponent: React.FC<HeadingBlock> = ({ level, content, 
 
     if (level === 1) {
         return (
-            <h1 id={id} className="scroll-mt-24 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-fg pt-2">
+            <h1
+                id={id}
+                style={{
+                    fontFamily: 'var(--reader-heading-font, var(--font-sans))',
+                    fontWeight: 'var(--reader-heading-font-weight, 700)',
+                    fontSize: 'calc(2.25rem * var(--reader-heading-scale, 1))',
+                    marginTop: 'var(--reader-heading-margin-top, 32px)',
+                    marginBottom: 'var(--reader-heading-margin-bottom, 12px)',
+                }}
+                className="scroll-mt-24 font-extrabold tracking-tight text-fg leading-tight"
+            >
                 {inlineContent}
             </h1>
         )
@@ -34,7 +44,17 @@ export const HeadingBlockComponent: React.FC<HeadingBlock> = ({ level, content, 
 
     if (level === 2) {
         return (
-            <h2 id={id} className="scroll-mt-24 text-2xl sm:text-3xl font-bold tracking-tight text-fg pt-2">
+            <h2
+                id={id}
+                style={{
+                    fontFamily: 'var(--reader-heading-font, var(--font-sans))',
+                    fontWeight: 'var(--reader-heading-font-weight, 700)',
+                    fontSize: 'calc(1.875rem * var(--reader-heading-scale, 1))',
+                    marginTop: 'var(--reader-heading-margin-top, 32px)',
+                    marginBottom: 'var(--reader-heading-margin-bottom, 12px)',
+                }}
+                className="scroll-mt-24 font-bold tracking-tight text-fg leading-tight"
+            >
                 {inlineContent}
             </h2>
         )
@@ -42,7 +62,17 @@ export const HeadingBlockComponent: React.FC<HeadingBlock> = ({ level, content, 
 
     if (level === 3) {
         return (
-            <h3 id={id} className="scroll-mt-24 text-lg sm:text-xl font-bold tracking-tight text-fg pt-2">
+            <h3
+                id={id}
+                style={{
+                    fontFamily: 'var(--reader-heading-font, var(--font-sans))',
+                    fontWeight: 'var(--reader-heading-font-weight, 700)',
+                    fontSize: 'calc(1.5rem * var(--reader-heading-scale, 1))',
+                    marginTop: 'calc(var(--reader-heading-margin-top, 32px) * 0.85)',
+                    marginBottom: 'calc(var(--reader-heading-margin-bottom, 12px) * 0.85)',
+                }}
+                className="scroll-mt-24 font-bold tracking-tight text-fg leading-snug"
+            >
                 {inlineContent}
             </h3>
         )
@@ -50,22 +80,69 @@ export const HeadingBlockComponent: React.FC<HeadingBlock> = ({ level, content, 
 
     if (level === 4) {
         return (
-            <h4 id={id} className="scroll-mt-24 text-base sm:text-lg font-bold tracking-tight text-fg pt-2">
+            <h4
+                id={id}
+                style={{
+                    fontFamily: 'var(--reader-heading-font, var(--font-sans))',
+                    fontWeight: 'var(--reader-heading-font-weight, 700)',
+                    fontSize: 'calc(1.25rem * var(--reader-heading-scale, 1))',
+                    marginTop: 'calc(var(--reader-heading-margin-top, 32px) * 0.75)',
+                    marginBottom: 'calc(var(--reader-heading-margin-bottom, 12px) * 0.75)',
+                }}
+                className="scroll-mt-24 font-semibold tracking-tight text-fg leading-snug"
+            >
                 {inlineContent}
             </h4>
         )
     }
 
+    if (level === 5) {
+        return (
+            <h5
+                id={id}
+                style={{
+                    fontFamily: 'var(--reader-heading-font, var(--font-sans))',
+                    fontWeight: 'var(--reader-heading-font-weight, 700)',
+                    fontSize: 'calc(1.125rem * var(--reader-heading-scale, 1))',
+                    marginTop: 'calc(var(--reader-heading-margin-top, 32px) * 0.65)',
+                    marginBottom: 'calc(var(--reader-heading-margin-bottom, 12px) * 0.65)',
+                }}
+                className="scroll-mt-24 font-semibold tracking-tight text-fg leading-snug"
+            >
+                {inlineContent}
+            </h5>
+        )
+    }
+
     return (
-        <h5 id={id} className="scroll-mt-24 text-sm sm:text-base font-bold tracking-tight text-fg pt-2">
+        <h6
+            id={id}
+            style={{
+                fontFamily: 'var(--reader-heading-font, var(--font-sans))',
+                fontWeight: 'var(--reader-heading-font-weight, 700)',
+                fontSize: 'calc(1rem * var(--reader-heading-scale, 1))',
+                marginTop: 'calc(var(--reader-heading-margin-top, 32px) * 0.5)',
+                marginBottom: 'calc(var(--reader-heading-margin-bottom, 12px) * 0.5)',
+            }}
+            className="scroll-mt-24 font-semibold tracking-tight text-fg/80 leading-snug"
+        >
             {inlineContent}
-        </h5>
+        </h6>
     )
 }
 
 export const ParagraphBlockComponent: React.FC<ParagraphBlock> = ({ content }) => {
     return (
-        <p className="leading-[1.8] text-fg/90">
+        <p
+            style={{
+                fontFamily: 'var(--reader-body-font, var(--font-sans))',
+                fontWeight: 'var(--reader-body-font-weight, 400)',
+                fontSize: 'var(--reader-body-font-size, 16.5px)',
+                lineHeight: 'var(--reader-line-height, 1.8)',
+                marginBottom: 'var(--reader-paragraph-spacing, 24px)',
+            }}
+            className="text-fg/90"
+        >
             {parseInlineMarkdown(content)}
         </p>
     )
@@ -73,7 +150,15 @@ export const ParagraphBlockComponent: React.FC<ParagraphBlock> = ({ content }) =
 
 export const QuoteBlockComponent: React.FC<QuoteBlock> = ({ content }) => {
     return (
-        <blockquote className="my-4 p-4 sm:p-5 rounded-l-xs rounded-r-md border-l-4 border-accent bg-accent/5 italic text-fg font-medium">
+        <blockquote
+            style={{
+                fontFamily: 'var(--reader-body-font, var(--font-sans))',
+                fontWeight: 'var(--reader-body-font-weight, 400)',
+                fontSize: 'var(--reader-body-font-size, 16.5px)',
+                lineHeight: 'var(--reader-line-height, 1.8)',
+            }}
+            className="my-4 p-4 sm:p-5 rounded-l-xs rounded-r-md border-l-4 border-accent bg-accent/5 italic text-fg font-medium"
+        >
             {content.split('\n').map((line, idx) => (
                 <p key={idx} className={idx > 0 ? 'mt-2' : ''}>
                     {parseInlineMarkdown(line)}
@@ -262,11 +347,17 @@ export const TableBlockComponent: React.FC<TableBlock> = ({ headers, rows }) => 
 }
 
 export const ListBlockComponent: React.FC<ListBlock> = ({ ordered, items }) => {
+    const listStyle = {
+        fontFamily: 'var(--reader-body-font, var(--font-sans))',
+        fontSize: 'var(--reader-body-font-size, 16.5px)',
+        lineHeight: 'var(--reader-line-height, 1.8)',
+    }
+
     if (ordered) {
         return (
-            <ol className="space-y-3 pl-2 my-4 list-decimal list-inside text-fg/90">
+            <ol style={listStyle} className="space-y-3 pl-2 my-4 list-decimal list-inside text-fg/90">
                 {items.map((item, idx) => (
-                    <li key={idx} className="leading-relaxed">
+                    <li key={idx}>
                         <span>{parseInlineMarkdown(item)}</span>
                     </li>
                 ))}
@@ -275,11 +366,11 @@ export const ListBlockComponent: React.FC<ListBlock> = ({ ordered, items }) => {
     }
 
     return (
-        <ul className="space-y-3 pl-2 my-4">
+        <ul style={listStyle} className="space-y-3 pl-2 my-4">
             {items.map((item, idx) => (
                 <li key={idx} className="flex items-start gap-3">
                     <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2.5 shrink-0" />
-                    <span className="leading-relaxed">{parseInlineMarkdown(item)}</span>
+                    <span>{parseInlineMarkdown(item)}</span>
                 </li>
             ))}
         </ul>

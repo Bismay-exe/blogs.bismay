@@ -1,15 +1,59 @@
-import React from "react";
+'use client'
+
+import React from 'react'
+import { useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
 
 interface TitleProps {
-    title?: string;
+    title?: string
 }
 
 const Title: React.FC<TitleProps> = ({ title }) => {
-    return (
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-fg leading-tight">
-            {title || "🚀 Learning React Series"}
-        </h1>
-    );
-};
+    const { settings } = useReaderSettings()
+    const { headerAlignment, titleWidth = 'contained' } = settings.layout
+    const { titleUppercase = false } = settings.typography
+    const isCenter = headerAlignment === 'center'
 
-export default Title;
+    const titleElement = (
+        <h1
+            style={{
+                fontFamily: 'var(--reader-heading-font, inherit)',
+                fontWeight: 'var(--reader-title-font-weight, 700)',
+                fontSize: 'calc(clamp(2rem, 4.5vw, 3.75rem) * var(--reader-title-scale, 1))',
+            }}
+            className={`tracking-tight text-fg leading-[0.9] pt-2 transition-all ${
+                isCenter ? 'text-center' : 'text-left'
+            } ${titleUppercase ? 'uppercase' : 'normal-case'}`}
+        >
+            {title || '🚀 Learning React Series'}
+        </h1>
+    )
+
+    if (titleWidth === 'contained') {
+        return titleElement
+    }
+
+    if (titleWidth === 'breakout') {
+        return (
+            <div className="w-full max-w-5xl mx-auto transition-all duration-300">
+                {titleElement}
+            </div>
+        )
+    }
+
+    if (titleWidth === 'awwwards-80') {
+        return (
+            <div className="w-full lg:w-[80vw] relative left-1/2 -translate-x-1/2 transition-all duration-300">
+                {titleElement}
+            </div>
+        )
+    }
+
+    // Full bleed width
+    return (
+        <div className="w-screen relative left-1/2 -translate-x-1/2 px-4 sm:px-8 transition-all duration-300">
+            {titleElement}
+        </div>
+    )
+}
+
+export default Title

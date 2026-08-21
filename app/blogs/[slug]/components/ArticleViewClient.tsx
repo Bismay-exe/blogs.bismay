@@ -5,21 +5,20 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import LeftLayout from './sections/LeftLayout'
-import Main from './sections/MainLayout'
+import Main, { HeaderZone } from './sections/MainLayout'
+import Body from './sections/mainLayout/Body'
 import RightLayout from './sections/RightLayout'
 import { getStoredArticles } from '@/lib/blogStorage'
 import {
     ArrowLeft,
-    FileQuestion,
-    Plus,
+    Sliders,
     Sparkles,
-    BookOpen,
-    ArrowRight,
-    Edit3,
 } from 'lucide-react'
 import Card404 from '@/components/ui/404page/404card'
 import { ArrowIcon } from '@/components/ui/shared/ArrowIcon'
 import { ProgressiveBlur } from '@/components/ui/shared/ProgressiveBlur'
+import { ReaderSettingsProvider, useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
+import { getFontFamily } from '@/lib/reader-settings/defaults'
 
 interface ArticleData {
     markdown: string
@@ -38,12 +37,15 @@ interface ArticleViewClientProps {
     initialServerArticle: ArticleData | null
 }
 
-const ArticleViewClient: React.FC<ArticleViewClientProps> = ({
+const ArticleViewInner: React.FC<ArticleViewClientProps> = ({
     slug,
     initialServerArticle,
 }) => {
     const [article, setArticle] = useState<ArticleData | null>(initialServerArticle)
     const [loading, setLoading] = useState<boolean>(!initialServerArticle)
+    const [scrollProgress, setScrollProgress] = useState(0)
+    const { settings } = useReaderSettings()
+    const { layout, typography, appearance } = settings
 
     useEffect(() => {
         if (initialServerArticle) {
@@ -93,10 +95,23 @@ const ArticleViewClient: React.FC<ArticleViewClientProps> = ({
         }
     }, [slug, initialServerArticle])
 
+    // Scroll progress tracker for top reading progress indicator
+    useEffect(() => {
+        const handleScroll = () => {
+            const totalScroll = document.documentElement.scrollTop || document.body.scrollTop
+            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
+            const currentProgress = windowHeight > 0 ? (totalScroll / windowHeight) * 100 : 0
+            setScrollProgress(currentProgress)
+        }
+
+        window.addEventListener('scroll', handleScroll, { passive: true })
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
     if (loading) {
         return (
             <div className="w-full min-h-screen flex flex-col items-center bg-bg">
-                <Navbar />
+                {layout.showNavbar && <Navbar />}
                 <div className="flex-1 flex flex-col items-center justify-center py-32 space-y-3">
                     <div className="w-8 h-8 rounded-full border-2 border-accent border-t-transparent animate-spin" />
                     <span className="text-xs font-mono text-sec">Loading article...</span>
@@ -113,7 +128,6 @@ const ArticleViewClient: React.FC<ArticleViewClientProps> = ({
                 <Navbar />
 
                 <main className="h-[calc(100vh-64px)] max-w-4xl w-full px-4 sm:px-6 lg:px-8 py-16 md:py-24 flex-1 flex flex-col items-center justify-center text-center space-y-8">
-
                     {/* 404 Animation Card */}
                     <Card404 />
 
@@ -136,38 +150,143 @@ const ArticleViewClient: React.FC<ArticleViewClientProps> = ({
                             href="/blogs"
                             className="group/icon flex items-center gap-2 pl-5 py-2.5 rounded-xl text-xs font-mono font-medium transition-colors"
                         >
-                            {/* <ArrowLeft size={14} /> */}
-                            <ArrowIcon className='rotate-180' />
-                            <span className='list'>Back to Blog Hub</span>
+                            <ArrowIcon className="rotate-180" />
+                            <span className="list">Back to Blog Hub</span>
                         </Link>
                     </div>
                 </main>
-
-                {/* <Footer /> */}
             </div>
         )
     }
 
+    const cssVariables = {
+        ['--reader-heading-font' as any]: getFontFamily(typography.headingFont),
+        ['--reader-body-font' as any]: getFontFamily(typography.bodyFont),
+        ['--reader-code-font' as any]: getFontFamily(typography.codeFont),
+        ['--reader-body-font-size' as any]: `${typography.bodyFontSize}px`,
+        ['--reader-body-font-weight' as any]: `${typography.bodyFontWeight || 400}`,
+        ['--reader-heading-font-weight' as any]: `${typography.headingFontWeight || 700}`,
+        ['--reader-title-font-weight' as any]: `${typography.titleFontWeight || 700}`,
+        ['--reader-title-scale' as any]: `${typography.titleScale || 1.0}`,
+        ['--reader-line-height' as any]: `${typography.lineHeight}`,
+        ['--reader-heading-scale' as any]: `${typography.headingScale}`,
+        ['--reader-paragraph-spacing' as any]: `${typography.paragraphSpacing || 24}px`,
+        ['--reader-heading-margin-top' as any]: `${typography.headingMarginTop || 32}px`,
+        ['--reader-heading-margin-bottom' as any]: `${typography.headingMarginBottom || 12}px`,
+    }
+
+    const maxWidthClass =
+        layout.contentWidth === 'narrow'
+            ? 'max-w-2xl'
+            : layout.contentWidth === 'wide'
+            ? 'max-w-5xl'
+            : 'max-w-3xl'
+
+    const isBreakoutBanner =
+        layout.bannerWidth === 'breakout' ||
+        layout.bannerWidth === 'awwwards-80' ||
+        layout.bannerWidth === 'full-bleed' ||
+        layout.titleWidth === 'breakout' ||
+        layout.titleWidth === 'awwwards-80' ||
+        layout.titleWidth === 'full-bleed'
+
     return (
-        <div className="relative w-full min-h-screen flex flex-col items-center bg-bg text-fg z-0">
-            <Navbar />
-            <div className="max-w-7xl w-full h-full flex flex-col lg:flex-row gap-5 px-4 sm:px-6 lg:px-8">
-                <LeftLayout markdown={article.markdown} />
-                <Main
-                    markdown={article.markdown}
-                    title={article.title}
-                    bannerUrl={article.bannerUrl}
-                    tags={article.tags}
-                    category={article.category}
-                    date={article.date}
-                    readingTimeMinutes={article.readingTimeMinutes}
-                />
-                <RightLayout />
-            </div>
+        <div
+            style={cssVariables}
+            className="relative w-full min-h-screen flex flex-col items-center bg-bg text-fg z-0"
+        >
+            {/* Top Reading Progress Bar (Fixed at very top) */}
+            {appearance.showReadingProgress && (
+                <div className="fixed top-0 left-0 right-0 h-1 z-[10000] bg-transparent pointer-events-none">
+                    <div
+                        className="h-full bg-linear-to-r from-purple-500 via-accent to-indigo-400 transition-all duration-150 ease-out"
+                        style={{ width: `${scrollProgress}%` }}
+                    />
+                </div>
+            )}
+
+            {/* Conditionally Render Top Navbar */}
+            {layout.showNavbar ? (
+                <Navbar />
+            ) : (
+                /* Distraction-Free Header Bar with Quick Exit */
+                <div className="sticky top-0 z-50 w-full px-4 py-3 flex items-center justify-between bg-bg/80 backdrop-blur-md border-b border-sec/10">
+                    <Link
+                        href="/blogs"
+                        className="flex items-center gap-1.5 text-xs font-mono text-sec hover:text-fg transition-colors"
+                    >
+                        <ArrowLeft size={14} />
+                        <span>Exit Focus Mode</span>
+                    </Link>
+
+                    <Link
+                        href="/settings/reader"
+                        className="flex items-center gap-1 text-[11px] font-mono text-sec hover:text-accent transition-colors"
+                        title="Customize Reading Experience"
+                    >
+                        <Sliders size={13} />
+                        <span className="hidden sm:inline">Reader Settings</span>
+                    </Link>
+                </div>
+            )}
+
+            {/* Layout Rendering: Breakout Banner Layout vs Contained Layout */}
+            {isBreakoutBanner ? (
+                <div className="w-full flex flex-col items-center">
+                    {/* Header Zone: Full container width across the top without sidebar constraint */}
+                    <header className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${layout.showNavbar ? 'pt-8 sm:pt-12' : 'pt-6'}`}>
+                        <HeaderZone
+                            title={article.title}
+                            bannerUrl={article.bannerUrl}
+                            tags={article.tags}
+                            category={article.category}
+                            date={article.date}
+                            readingTimeMinutes={article.readingTimeMinutes}
+                        />
+                    </header>
+
+                    {/* Content & Sidebars Zone: Centered with sidebars starting at Body Text */}
+                    <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 pt-4 pb-16">
+                        {layout.showLeftSidebar && appearance.showTableOfContents && (
+                            <LeftLayout markdown={article.markdown} />
+                        )}
+                        <div className={`w-full ${maxWidthClass} mx-auto min-w-0 flex-1 transition-all duration-300`}>
+                            <Body content={article.markdown} />
+                        </div>
+                        {layout.showRightSidebar && <RightLayout />}
+                    </div>
+                </div>
+            ) : (
+                /* Contained Layout: Standard 3-column top alignment */
+                <div className={`w-full max-w-7xl mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 pb-16 ${layout.showNavbar ? 'pt-8 sm:pt-12' : 'pt-6'}`}>
+                    {layout.showLeftSidebar && appearance.showTableOfContents && (
+                        <LeftLayout markdown={article.markdown} />
+                    )}
+                    <Main
+                        markdown={article.markdown}
+                        title={article.title}
+                        bannerUrl={article.bannerUrl}
+                        tags={article.tags}
+                        category={article.category}
+                        date={article.date}
+                        readingTimeMinutes={article.readingTimeMinutes}
+                    />
+                    {layout.showRightSidebar && <RightLayout />}
+                </div>
+            )}
+
             <ProgressiveBlur position="top" backgroundColor="var(--background)" />
             <ProgressiveBlur position="bottom" backgroundColor="var(--background)" />
             <Footer />
         </div>
+    )
+}
+
+const ArticleViewClient: React.FC<ArticleViewClientProps> = (props) => {
+    return (
+        <ReaderSettingsProvider>
+            <ArticleViewInner {...props} />
+        </ReaderSettingsProvider>
     )
 }
 

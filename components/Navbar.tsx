@@ -18,7 +18,8 @@ import {
     ArrowUpRight,
     Compass,
     Sun,
-    Moon
+    Moon,
+    Sliders
 } from 'lucide-react'
 
 const navLinks = [
@@ -29,6 +30,7 @@ const navLinks = [
 ]
 
 const searchItems = [
+    { title: 'Reading Experience & Article Settings', category: 'Settings', href: '/settings/reader', icon: Sliders },
     { title: 'Day 3: Learning React (JSX, Props, Bundlers)', category: 'Blog Post', href: '/blogs', icon: BookOpen },
     { title: 'Day 2: JavaScript Prerequisites for React', category: 'Blog Post', href: '/blogs', icon: BookOpen },
     { title: 'Day 1: Why I Started React in 2026', category: 'Blog Post', href: '/blogs', icon: BookOpen },
