@@ -68,6 +68,7 @@ export interface ReaderSettings {
 
 export type ReaderPresetId =
     | 'default'
+    | 'creator'
     | 'awwwards'
     | 'minimal'
     | 'magazine'

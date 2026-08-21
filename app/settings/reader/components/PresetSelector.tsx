@@ -1,13 +1,13 @@
 'use client'
 
-import React from 'react'
-import { Sparkles, Minimize2, BookOpen, Terminal, Maximize2, Award, Check } from 'lucide-react'
+import { Sparkles, Minimize2, BookOpen, Terminal, Maximize2, Award, Check, User } from 'lucide-react'
 import { READER_PRESETS } from '@/lib/reader-settings/presets'
 import { ReaderPresetId } from '@/lib/reader-settings/types'
 import { useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
 
 const PRESET_ICONS: Record<ReaderPresetId, React.ElementType> = {
     default: Sparkles,
+    creator: User,
     awwwards: Award,
     minimal: Minimize2,
     magazine: BookOpen,
