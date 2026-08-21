@@ -13,8 +13,9 @@ import {
     AlignLeft,
     MoveVertical,
     Heading,
+    User,
 } from 'lucide-react'
-import { ContentWidth, BannerWidth, TitleWidth, HeaderAlignment } from '@/lib/reader-settings/types'
+import { ContentWidth, BannerWidth, TitleWidth, HeaderAlignment, AuthorStyle } from '@/lib/reader-settings/types'
 import { useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
 
 export const LayoutSettings: React.FC = () => {
@@ -26,6 +27,7 @@ export const LayoutSettings: React.FC = () => {
         contentWidth,
         bannerWidth = 'contained',
         titleWidth = 'contained',
+        authorStyle = 'default',
         bannerMarginTop = 24,
         bannerMarginBottom = 32,
         headerAlignment = 'left',
@@ -49,6 +51,25 @@ export const LayoutSettings: React.FC = () => {
             label: 'Expanded (Wide)',
             widthPx: '920px',
             desc: 'Spacious canvas ideal for data tables, large code blocks, and diagrams.',
+        },
+    ]
+
+    const authorStyleOptions: { id: AuthorStyle; label: string; desc: string; badge?: string }[] = [
+        {
+            id: 'default',
+            label: 'Standard Inline',
+            desc: 'Avatar sits beside author name in a neat horizontal badge.',
+        },
+        {
+            id: 'overlap',
+            label: 'Overlapping Hero Avatar',
+            desc: 'Floating avatar overlapping bottom of the hero banner with clean creator byline.',
+            badge: 'Creator Style',
+        },
+        {
+            id: 'compact',
+            label: 'Compact Minimal',
+            desc: 'Micro avatar with inline author signature.',
         },
     ]
 
@@ -329,6 +350,49 @@ export const LayoutSettings: React.FC = () => {
                             <div
                                 key={opt.id}
                                 onClick={() => updateLayout({ bannerWidth: opt.id })}
+                                className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between ${
+                                    isSelected
+                                        ? 'bg-accent/10 border-accent shadow-sm ring-1 ring-accent/30'
+                                        : 'bg-fg/2 hover:bg-fg/4 border-sec/15'
+                                }`}
+                            >
+                                <div className="space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <h5 className={`text-xs font-bold ${isSelected ? 'text-fg' : 'text-sec'}`}>
+                                            {opt.label}
+                                        </h5>
+                                        {opt.badge && (
+                                            <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-accent/20 text-accent">
+                                                {opt.badge}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p className="text-[11px] text-sec leading-relaxed">
+                                        {opt.desc}
+                                    </p>
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
+
+            {/* Author Avatar Presentation Setting */}
+            <div className="space-y-3 pt-2">
+                <div className="flex items-center gap-2">
+                    <User size={14} className="text-accent" />
+                    <h4 className="text-xs font-semibold uppercase tracking-wider text-fg font-mono">
+                        Author Avatar Presentation & Style
+                    </h4>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {authorStyleOptions.map((opt) => {
+                        const isSelected = authorStyle === opt.id
+                        return (
+                            <div
+                                key={opt.id}
+                                onClick={() => updateLayout({ authorStyle: opt.id })}
                                 className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between ${
                                     isSelected
                                         ? 'bg-accent/10 border-accent shadow-sm ring-1 ring-accent/30'

@@ -6,6 +6,8 @@ export type BannerWidth = 'contained' | 'breakout' | 'awwwards-80' | 'full-bleed
 
 export type TitleWidth = 'contained' | 'breakout' | 'awwwards-80' | 'full-bleed'
 
+export type AuthorStyle = 'default' | 'overlap' | 'compact'
+
 export type HeaderAlignment = 'left' | 'center'
 
 export type FontChoice = 'sans' | 'inter-tight' | 'serif' | 'mono' | 'space-mono'
@@ -17,6 +19,7 @@ export interface ReaderLayoutSettings {
     contentWidth: ContentWidth
     bannerWidth: BannerWidth
     titleWidth: TitleWidth
+    authorStyle: AuthorStyle
     bannerMarginTop: number // in px, e.g. 24
     bannerMarginBottom: number // in px, e.g. 32
     headerAlignment: HeaderAlignment

@@ -8,6 +8,7 @@ export const DEFAULT_READER_SETTINGS: ReaderSettings = {
         contentWidth: 'default',
         bannerWidth: 'contained',
         titleWidth: 'contained',
+        authorStyle: 'default',
         bannerMarginTop: 24,
         bannerMarginBottom: 32,
         headerAlignment: 'left',

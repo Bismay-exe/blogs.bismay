@@ -20,6 +20,7 @@ export const LivePreview: React.FC = () => {
         contentWidth,
         bannerWidth = 'contained',
         titleWidth = 'contained',
+        authorStyle = 'default',
         bannerMarginTop = 24,
         bannerMarginBottom = 32,
         rightWidgets,
@@ -91,19 +92,62 @@ export const LivePreview: React.FC = () => {
                             alt="Preview banner"
                             className="w-full h-full object-cover opacity-80"
                         />
-                        <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-white/80">
-                            {bannerWidth === 'awwwards-80'
-                                ? 'Awwwards 85% Viewport Banner'
-                                : bannerWidth === 'breakout'
-                                ? 'Breakout Hero Banner'
-                                : bannerWidth === 'full-bleed'
-                                ? 'Full Bleed Viewport'
-                                : 'Contained Banner'}
-                        </div>
+                        {authorStyle === 'overlap' && (
+                            <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-full bg-black/80 text-[9px] font-mono text-amber-400 border border-white/10">
+                                1,420 readers ★★★★★
+                            </div>
+                        )}
+                        {authorStyle !== 'overlap' && (
+                            <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-white/80">
+                                {bannerWidth === 'awwwards-80'
+                                    ? 'Awwwards 85% Viewport Banner'
+                                    : bannerWidth === 'breakout'
+                                    ? 'Breakout Hero Banner'
+                                    : bannerWidth === 'full-bleed'
+                                    ? 'Full Bleed Viewport'
+                                    : 'Contained Banner'}
+                            </div>
+                        )}
                     </div>
                 )
 
             case 'author':
+                if (authorStyle === 'overlap') {
+                    return (
+                        <div
+                            key="author"
+                            className={`relative z-10 flex flex-col gap-1.5 transition-all ${
+                                isCenter ? 'items-center text-center -mt-7 mx-auto' : 'items-start text-left -mt-7 ml-3'
+                            }`}
+                        >
+                            <div className="w-12 h-12 rounded-xl bg-accent/25 border-2 border-bg ring-2 ring-accent/40 shadow-xl flex items-center justify-center text-accent font-bold text-sm">
+                                B
+                            </div>
+                            <div className="space-y-0.5">
+                                <p className="text-[11px] font-mono text-sec">
+                                    An article by <span className="font-bold text-fg">Bismay.exe</span>
+                                </p>
+                            </div>
+                        </div>
+                    )
+                }
+
+                if (authorStyle === 'compact') {
+                    return (
+                        <div
+                            key="author"
+                            className={`flex items-center gap-1.5 py-0.5 text-[11px] font-mono text-sec ${
+                                isCenter ? 'justify-center mx-auto' : 'justify-start'
+                            }`}
+                        >
+                            <div className="w-5 h-5 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center text-accent font-bold text-[10px]">
+                                B
+                            </div>
+                            <span>By <strong className="text-fg">Bismay.exe</strong></span>
+                        </div>
+                    )
+                }
+
                 return (
                     <div
                         key="author"
