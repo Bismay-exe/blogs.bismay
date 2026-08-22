@@ -1,10 +1,31 @@
 import { MarkdownBlock, CalloutType, TaskItem } from './types'
 import { slugify } from './parseInline'
 
-function extractYouTubeId(url: string): string | null {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
+export function extractYouTubeId(url: string): string | null {
+    if (!url) return null
+    const regExp = /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/|live\/))([\w-]{11})/i
     const match = url.match(regExp)
-    return match && match[2].length === 11 ? match[2] : null
+    if (match && match[1]) {
+        return match[1]
+    }
+    if (/^[\w-]{11}$/.test(url.trim())) {
+        return url.trim()
+    }
+    return null
+}
+
+export function isVideoUrl(url: string): boolean {
+    if (!url) return false
+    if (extractYouTubeId(url)) return true
+    const cleanUrl = url.split('?')[0].split('#')[0].toLowerCase()
+    const videoExtensions = ['.mp4', '.webm', '.ogg', '.ogv', '.mov', '.m4v', '.m3u8', '.mpd']
+    return (
+        videoExtensions.some((ext) => cleanUrl.endsWith(ext)) ||
+        url.includes('/video/') ||
+        url.includes('.mp4?') ||
+        url.includes('.webm?') ||
+        url.includes('stream.mux.com')
+    )
 }
 
 export function parseMarkdown(content: string = ''): MarkdownBlock[] {
@@ -25,7 +46,7 @@ export function parseMarkdown(content: string = ''): MarkdownBlock[] {
             continue
         }
 
-        // 1. Image Block (![alt](src)) with optional caption on next line
+        // 1. Media Block: Image, Video, or YouTube (![alt](src)) with optional caption on next line
         const imgMatch = trimmed.match(/^!\[(.*?)\]\((.*?)\)$/)
         if (imgMatch) {
             const [, alt, src] = imgMatch
@@ -37,12 +58,28 @@ export function parseMarkdown(content: string = ''): MarkdownBlock[] {
                 i++ // consume caption line
             }
 
-            blocks.push({
-                type: 'image',
-                src,
-                alt: alt || 'Article image',
-                caption,
-            })
+            const ytId = extractYouTubeId(src)
+            if (ytId) {
+                blocks.push({
+                    type: 'youtube',
+                    videoId: ytId,
+                    url: src,
+                })
+            } else if (isVideoUrl(src)) {
+                blocks.push({
+                    type: 'video',
+                    src,
+                    alt: alt || 'Article video',
+                    caption,
+                })
+            } else {
+                blocks.push({
+                    type: 'image',
+                    src,
+                    alt: alt || 'Article image',
+                    caption,
+                })
+            }
             i++
             continue
         }

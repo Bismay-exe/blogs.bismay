@@ -51,6 +51,7 @@ export const DEFAULT_READER_SETTINGS: ReaderSettings = {
         showReadingTime: true,
         showPublishedDate: true,
         showCategory: true,
+        videoPlayerSkin: 'modern',
     },
 }
 

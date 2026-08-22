@@ -1,14 +1,67 @@
 'use client'
 
 import React from 'react'
+import { LinkedinPostCard, LinkedinProfileCard } from '@/components/blog/socials'
 import { ArrowUpRight } from 'lucide-react'
 import { Icon } from '@iconify-icon/react'
 
 interface LinkedinEmbedProps {
     url: string
+    variant?: 'post' | 'profile' | 'card'
 }
 
-const LinkedinEmbed: React.FC<LinkedinEmbedProps> = ({ url }) => {
+function parseLinkedinUrl(rawUrl: string) {
+    const url = rawUrl.trim()
+
+    // 1. Post or Pulse URL
+    const postMatch = url.match(/linkedin\.com\/(?:posts|feed\/update|pulse)\/([^/?#]+)/i)
+    if (postMatch) {
+        return {
+            type: 'post' as const,
+            id: postMatch[1],
+            url,
+        }
+    }
+
+    // 2. Profile or Company URL
+    const profileMatch = url.match(/linkedin\.com\/(?:in|company)\/([^/?#]+)/i)
+    if (profileMatch) {
+        return {
+            type: 'profile' as const,
+            username: profileMatch[1],
+            url,
+        }
+    }
+
+    return {
+        type: 'generic' as const,
+        url,
+    }
+}
+
+const LinkedinEmbed: React.FC<LinkedinEmbedProps> = ({ url, variant }) => {
+    const parsed = parseLinkedinUrl(url)
+
+    if (variant === 'profile' || (!variant && parsed.type === 'profile')) {
+        return (
+            <div className="my-7 flex justify-center w-full">
+                <LinkedinProfileCard
+                    name={parsed.type === 'profile' ? parsed.username.replace(/-/g, ' ') : 'Bismay'}
+                    profileUrl={url}
+                />
+            </div>
+        )
+    }
+
+    if (variant === 'post' || (!variant && parsed.type === 'post')) {
+        return (
+            <div className="my-7 flex justify-center w-full">
+                <LinkedinPostCard postUrl={url} />
+            </div>
+        )
+    }
+
+    // Fallback generic aesthetic card
     return (
         <a
             href={url}
@@ -28,7 +81,7 @@ const LinkedinEmbed: React.FC<LinkedinEmbedProps> = ({ url }) => {
                 </div>
                 <div className="flex items-center gap-1 text-[#0A66C2] font-semibold text-xs">
                     <span>View on LinkedIn</span>
-                    <ArrowUpRight size={14} className='group-hover:rotate-45 transition-transform duration-300 ease-in-out' />
+                    <ArrowUpRight size={14} className="group-hover:rotate-45 transition-transform duration-300 ease-in-out" />
                 </div>
             </div>
 

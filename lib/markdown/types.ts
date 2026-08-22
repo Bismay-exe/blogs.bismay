@@ -19,6 +19,14 @@ export interface ImageBlock {
     caption?: string
 }
 
+export interface VideoBlock {
+    type: 'video'
+    src: string
+    alt: string
+    caption?: string
+    poster?: string
+}
+
 export interface CodeBlockData {
     type: 'code'
     language: string
@@ -90,6 +98,7 @@ export type MarkdownBlock =
     | HeadingBlock
     | ParagraphBlock
     | ImageBlock
+    | VideoBlock
     | CodeBlockData
     | TableBlock
     | QuoteBlock

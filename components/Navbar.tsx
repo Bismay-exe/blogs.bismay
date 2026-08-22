@@ -150,8 +150,6 @@ const Navbar = () => {
                         : '0border-b border-fg/4'
                     }`}
             >
-                {/* Top ambient glow line */}
-                <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-accent/30 to-transparent pointer-events-none" />
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
@@ -348,12 +346,12 @@ const Navbar = () => {
                 )}
 
                 {/* Real-time Reading Scroll Progress Bar */}
-                <div className="w-full h-0.75 bg-transparent -mb-1 z-0">
+                {/* <div className="w-full h-0.75 bg-transparent -mb-1 z-0">
                     <div
                         className="h-full bg-linear-to-r from-purple-500 via-accent to-indigo-400 transition-all duration-150 ease-out"
                         style={{ width: `${scrollProgress}%` }}
                     />
-                </div>
+                </div> */}
             </header>
 
             {/* Spotlight / Command Search Dialog */}

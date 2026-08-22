@@ -1,5 +1,6 @@
 import React from 'react'
 import { ArrowUpRight } from 'lucide-react'
+import ArticleVideo, { isVideoUrl } from '../../components/blog/video/ArticleVideo'
 
 export function slugify(text: string): string {
     return text
@@ -46,15 +47,25 @@ export function parseInlineMarkdown(text: string): React.ReactNode[] {
         ] = match
 
         if (imgAlt !== undefined && imgSrc) {
-            parts.push(
-                <img
-                    key={match.index}
-                    src={imgSrc}
-                    alt={imgAlt || 'Image'}
-                    className="rounded-2xl border border-sec/20 max-w-full h-auto my-4"
-                    loading="lazy"
-                />
-            )
+            if (isVideoUrl(imgSrc)) {
+                parts.push(
+                    <ArticleVideo
+                        key={match.index}
+                        src={imgSrc}
+                        alt={imgAlt || 'Article video'}
+                    />
+                )
+            } else {
+                parts.push(
+                    <img
+                        key={match.index}
+                        src={imgSrc}
+                        alt={imgAlt || 'Image'}
+                        className="rounded-2xl border border-sec/20 max-w-full h-auto my-4"
+                        loading="lazy"
+                    />
+                )
+            }
         } else if (linkText && linkUrl) {
             parts.push(
                 <a

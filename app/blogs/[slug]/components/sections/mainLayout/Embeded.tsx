@@ -8,6 +8,7 @@ import TwitterEmbed from './embeds/Twitterembed'
 import LinkedinEmbed from './embeds/LinkedinEmbed'
 import MediumEmbed from './embeds/MediumEmbed'
 import InstagramEmbed from './embeds/InstagramEmbed'
+import PinterestEmbed from './embeds/PinterestEmbed'
 import OtherEmbed from './embeds/OtherEmbed'
 
 interface EmbedProps {
@@ -52,7 +53,12 @@ const Embed: React.FC<EmbedProps> = ({ url }) => {
         return <InstagramEmbed url={url} />
     }
 
-    // 7. Fallback generic embed
+    // 7. PINTEREST Embed
+    if (url.includes('pinterest.com/') || url.includes('pin.it/')) {
+        return <PinterestEmbed url={url} />
+    }
+
+    // 8. Fallback generic embed
     return <OtherEmbed url={url} />
 }
 

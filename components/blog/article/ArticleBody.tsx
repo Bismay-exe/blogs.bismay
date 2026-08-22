@@ -5,6 +5,7 @@ import { parseMarkdown } from '../../../lib/markdown/parseMarkdown'
 import { MarkdownBlock } from '../../../lib/markdown/types'
 import CodeBlock from '../code/CodeBlock'
 import ArticleImage from '../image/ArticleImage'
+import ArticleVideo from '../video/ArticleVideo'
 import ImageLightbox, { LightboxImage } from '../image/ImageLightbox'
 import EmbedBlock from '../embeds/EmbedBlock'
 import {
@@ -61,6 +62,16 @@ const ArticleBody: React.FC<ArticleBodyProps> = ({ content = '' }) => {
                                     alt={block.alt}
                                     caption={block.caption}
                                     onImageClick={setActiveImage}
+                                />
+                            )
+                        case 'video':
+                            return (
+                                <ArticleVideo
+                                    key={idx}
+                                    src={block.src}
+                                    alt={block.alt}
+                                    caption={block.caption}
+                                    poster={block.poster}
                                 />
                             )
                         case 'callout':

@@ -4,7 +4,7 @@ import ParticleText from './ui/shared/ParticleText'
 const Footer = () => {
     return (
         <div>
-            <div style={{ width: '100%', height: 360, background: '#09090f' }}>
+            {/* <div style={{ width: '100%', height: 360, background: '#09090f' }}>
                 <ParticleText
                     text="Future Interfaces"
                     particleSize={2.2}
@@ -23,7 +23,7 @@ const Footer = () => {
                     fontFamily="inherit"
                     glow
                 />
-            </div>
+            </div> */}
         </div>
     )
 }

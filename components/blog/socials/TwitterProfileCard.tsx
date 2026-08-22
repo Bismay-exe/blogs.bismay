@@ -215,7 +215,7 @@ export const TwitterProfileCard = forwardRef<
                 ref={ref}
                 data-slot="twitter-profile-card"
                 className={cn(
-                    "w-full max-w-lg overflow-hidden rounded-2xl border border-sec/30 bg-bg font-sans shadow-lg shadow-black/5 dark:shadow-2xl transition-all duration-300",
+                    "w-full overflow-hidden rounded-2xl border border-sec/30 bg-bg font-sans shadow-lg shadow-black/5 dark:shadow-2xl transition-all duration-300",
                     className,
                 )}
                 {...props}
@@ -362,7 +362,7 @@ export const TwitterProfileCard = forwardRef<
                     {/* Stats (Following & Followers) */}
                     <div
                         data-slot="twitter-profile-card-stats"
-                        className="mt-4 flex gap-5 text-xs text-neutral-500 dark:text-neutral-400 pt-3 border-t border-sec/30"
+                        className="mt-4 flex gap-5 text-xs text-neutral-500 dark:text-neutral-400 pt-3 zborder-t border-sec/30"
                     >
                         <a
                             href={`${targetProfileUrl}/following`}

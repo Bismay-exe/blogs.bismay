@@ -3,6 +3,7 @@
 import React from 'react'
 import { parseInlineMarkdown } from '../../../lib/markdown/parseInline'
 import { LightboxImage } from './ImageLightbox'
+import ArticleVideo, { isVideoUrl } from '../video/ArticleVideo'
 
 interface ArticleImageProps {
     src: string
@@ -12,6 +13,9 @@ interface ArticleImageProps {
 }
 
 const ArticleImage: React.FC<ArticleImageProps> = ({ src, alt, caption, onImageClick }) => {
+    if (isVideoUrl(src)) {
+        return <ArticleVideo src={src} alt={alt} caption={caption} />
+    }
     return (
         <figure className="my-6 space-y-2 group">
             <div

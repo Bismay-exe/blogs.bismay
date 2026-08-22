@@ -1,14 +1,71 @@
 'use client'
 
 import React from 'react'
+import { InstagramPostCard, InstagramProfileCard } from '@/components/blog/socials'
 import { ArrowUpRight } from 'lucide-react'
 import { Icon } from '@iconify-icon/react'
 
 interface InstagramEmbedProps {
     url: string
+    variant?: 'post' | 'profile' | 'card'
 }
 
-const InstagramEmbed: React.FC<InstagramEmbedProps> = ({ url }) => {
+function parseInstagramUrl(rawUrl: string) {
+    const url = rawUrl.trim()
+
+    // 1. Post or Reel or TV URL
+    const postMatch = url.match(/instagram\.com\/(?:p|reel|reels|tv)\/([^/?#]+)/i)
+    if (postMatch) {
+        return {
+            type: 'post' as const,
+            shortcode: postMatch[1],
+            url,
+        }
+    }
+
+    // 2. Profile URL
+    const profileMatch = url.match(/instagram\.com\/([^/?#]+)\/?(?:\?.*)?$/i)
+    if (profileMatch) {
+        const username = profileMatch[1]
+        const reserved = ['p', 'reel', 'reels', 'tv', 'stories', 'explore', 'direct', 'accounts', 'about', 'legal']
+        if (!reserved.includes(username.toLowerCase())) {
+            return {
+                type: 'profile' as const,
+                username,
+                url,
+            }
+        }
+    }
+
+    return {
+        type: 'generic' as const,
+        url,
+    }
+}
+
+const InstagramEmbed: React.FC<InstagramEmbedProps> = ({ url, variant }) => {
+    const parsed = parseInstagramUrl(url)
+
+    if (variant === 'profile' || (!variant && parsed.type === 'profile')) {
+        return (
+            <div className="my-7 flex justify-center w-full">
+                <InstagramProfileCard
+                    username={parsed.type === 'profile' ? parsed.username : 'bismay.exe'}
+                    profileUrl={url}
+                />
+            </div>
+        )
+    }
+
+    if (variant === 'post' || (!variant && parsed.type === 'post')) {
+        return (
+            <div className="my-7 flex justify-center w-full">
+                <InstagramPostCard postUrl={url} />
+            </div>
+        )
+    }
+
+    // Fallback generic aesthetic card
     return (
         <a
             href={url}
@@ -26,9 +83,9 @@ const InstagramEmbed: React.FC<InstagramEmbedProps> = ({ url }) => {
                     <span>•</span>
                     <span className="text-sec">Media</span>
                 </div>
-                <div className="flex items-center gap-1 text-rose-400 font-semibold text-xs---">
+                <div className="flex items-center gap-1 text-rose-400 font-semibold text-xs">
                     <span>View on Instagram</span>
-                    <ArrowUpRight size={14} className='group-hover:rotate-45 transition-transform duration-300 ease-in-out' />
+                    <ArrowUpRight size={14} className="group-hover:rotate-45 transition-transform duration-300 ease-in-out" />
                 </div>
             </div>
 

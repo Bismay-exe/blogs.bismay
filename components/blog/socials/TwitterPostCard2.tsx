@@ -495,6 +495,16 @@ const withSafeEntities = <T extends { entities?: Tweet["entities"] }>(
     },
 });
 
+export type TwitterPostCard2Props = Readonly<
+    {
+        id?: string;
+        tweet?: Tweet;
+        apiUrl?: string;
+        fallback?: React.ReactNode;
+        tweetUrl?: string;
+    } & React.ComponentPropsWithoutRef<"div">
+>;
+
 export const MagicTweet = ({
     tweet,
     className,
@@ -502,6 +512,7 @@ export const MagicTweet = ({
 }: {
     tweet: Tweet;
     className?: string;
+    [key: string]: unknown;
 }) => {
     const safeTweet: Tweet = {
         ...withSafeEntities(tweet),
@@ -544,6 +555,7 @@ export const ClientTweetCard = ({
     fallback?: React.ReactNode;
     tweetUrl?: string;
     className?: string;
+    [key: string]: unknown;
 }) => {
     const { data: tweet, error, isLoading } = useTweet(id, apiUrl);
 
@@ -563,14 +575,7 @@ export const TwitterPostCard2 = ({
     tweetUrl,
     className,
     ...props
-}: {
-    id?: string;
-    tweet?: Tweet;
-    apiUrl?: string;
-    fallback?: React.ReactNode;
-    tweetUrl?: string;
-    className?: string;
-}) => {
+}: TwitterPostCard2Props) => {
     if (tweet) {
         return <MagicTweet tweet={tweet} className={className} {...props} />;
     }

@@ -51,6 +51,8 @@ export interface ReaderTypographySettings {
     headingScale: number // multiplier e.g. 1.0
 }
 
+export type VideoPlayerSkin = 'modern' | 'minimal'
+
 export interface ReaderAppearanceSettings {
     showReadingProgress: boolean
     showTableOfContents: boolean
@@ -58,6 +60,7 @@ export interface ReaderAppearanceSettings {
     showReadingTime: boolean
     showPublishedDate: boolean
     showCategory: boolean
+    videoPlayerSkin: VideoPlayerSkin
 }
 
 export interface ReaderSettings {

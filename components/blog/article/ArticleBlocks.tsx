@@ -9,6 +9,7 @@ import {
     Check,
 } from 'lucide-react'
 import { parseInlineMarkdown } from '../../../lib/markdown/parseInline'
+import YoutubeVideo from '../video/YoutubeVideo'
 import {
     HeadingBlock,
     ParagraphBlock,
@@ -301,20 +302,8 @@ export const TaskListBlockComponent: React.FC<TaskListBlock> = ({ items }) => {
     )
 }
 
-export const YouTubeBlockComponent: React.FC<YouTubeBlock> = ({ videoId }) => {
-    return (
-        <div className="my-7 overflow-hidden rounded-2xl border border-sec/30 bg-black/60 shadow-lg shadow-black/20">
-            <div className="relative aspect-video w-full">
-                <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${videoId}`}
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    className="absolute inset-0 h-full w-full border-0"
-                />
-            </div>
-        </div>
-    )
+export const YouTubeBlockComponent: React.FC<YouTubeBlock> = ({ videoId, url }) => {
+    return <YoutubeVideo videoId={videoId} url={url} />
 }
 
 export const TableBlockComponent: React.FC<TableBlock> = ({ headers, rows }) => {

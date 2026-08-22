@@ -159,3 +159,40 @@ body {
     transform-origin: left;
     height: 2px;
 }
+
+/* Remove default borders and rings from @videojs/react */
+.media-default-skin,
+.media-default-skin--video {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  --border-color: transparent !important;
+}
+
+.media-default-skin::after,
+.media-default-skin--video::after {
+  display: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  content: none !important;
+}
+
+/* Ensure Next.js YouTubeEmbed fills 100% of responsive container */
+div[data-ntpc="YouTubeEmbed"],
+lite-youtube {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: 16 / 9 !important;
+  background-size: cover !important;
+  background-position: center !important;
+  display: block !important;
+}
+
+lite-youtube > iframe {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
