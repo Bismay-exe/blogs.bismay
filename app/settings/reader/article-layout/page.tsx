@@ -19,6 +19,7 @@ import { ReaderNav } from '@/components/settings/ReaderNav'
 import { BannerWidthPreviewSVG } from '@/components/settings/svgs/BannerWidthPreviewSVG'
 import { HeaderAlignmentSVG } from '@/components/settings/svgs/HeaderAlignmentSVG'
 import { TitleWidthPreviewSVG } from '@/components/settings/svgs/TitleWidthPreviewSVG'
+import { AuthorStylePreviewSVG } from '@/components/settings/svgs/AuthorStylePreviewSVG'
 import { Scrubber } from '@/components/ui/smoothui/scrubber'
 
 const ELEMENT_LABELS: Record<HeaderElementId, string> = {
@@ -173,27 +174,34 @@ export default function ArticleLayoutSettingsPage() {
                     </div>
 
                     {/* Author Style */}
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
                         <span className="text-xs font-semibold text-sec block">Author Presentation</span>
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                             {[
-                                { id: 'default', label: 'Default' },
-                                { id: 'overlap', label: 'Hero Overlap' },
-                                { id: 'compact', label: 'Compact' },
-                            ].map((as) => (
-                                <button
-                                    key={as.id}
-                                    type="button"
-                                    onClick={() => updateArticleLayout({ authorStyle: as.id as AuthorStyle })}
-                                    className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
-                                        authorStyle === as.id
-                                            ? 'border-fg bg-fg text-bg shadow-xs'
-                                            : 'border-sec/15 bg-bg text-fg hover:border-sec/30'
-                                    }`}
-                                >
-                                    {as.label}
-                                </button>
-                            ))}
+                                { id: 'default', label: 'Default', sub: 'Standard Byline' },
+                                { id: 'overlap', label: 'Hero Overlap', sub: 'Floating Badge' },
+                                { id: 'compact', label: 'Compact', sub: 'Minimal Inline' },
+                            ].map((as) => {
+                                const isSelected = authorStyle === as.id
+                                return (
+                                    <button
+                                        key={as.id}
+                                        type="button"
+                                        onClick={() => updateArticleLayout({ authorStyle: as.id as AuthorStyle })}
+                                        className={`group relative rounded-2xl overflow-hidden text-left cursor-pointer transition-all duration-200 ${
+                                            isSelected
+                                                ? 'ring-2 ring-fg shadow-lg shadow-fg/10'
+                                                : 'border border-sec/20 opacity-75 hover:opacity-100'
+                                        }`}
+                                    >
+                                        <AuthorStylePreviewSVG styleMode={as.id as AuthorStyle} className="w-full h-auto" />
+                                        <div className="p-2.5 bg-fg/5 border-t border-sec/10 flex flex-col items-start justify-between">
+                                            <span className="text-xs font-semibold text-fg">{as.label}</span>
+                                            <span className="text-[10px] font-mono text-sec">{as.sub}</span>
+                                        </div>
+                                    </button>
+                                )
+                            })}
                         </div>
                     </div>
                 </div>
