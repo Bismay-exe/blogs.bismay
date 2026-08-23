@@ -202,7 +202,7 @@ const ArticleViewInner: React.FC<ArticleViewClientProps> = ({
         >
             {/* Top Reading Progress Bar (Fixed at very top) */}
             {appearance.showReadingProgress && (
-                <div className="fixed top-0 left-0 right-0 h-1 z-[10000] bg-transparent pointer-events-none">
+                <div className="fixed top-0 left-0 right-0 h-1 z-10000 bg-transparent pointer-events-none">
                     <div
                         className="h-full bg-linear-to-r from-purple-500 via-accent to-indigo-400 transition-all duration-150 ease-out"
                         style={{ width: `${scrollProgress}%` }}

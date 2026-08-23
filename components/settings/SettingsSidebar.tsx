@@ -137,7 +137,7 @@ export const SettingsSidebar: React.FC = () => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search settings..."
-                    className="w-full pl-8.5 pr-4 py-2 text-xs font-mono rounded-xl bg-black/[0.03] dark:bg-white/[0.04] border border-sec/15 placeholder:text-sec/50 text-fg focus:outline-none focus:border-accent/50 transition-all"
+                    className="w-full pl-8.5 pr-4 py-2 text-xs font-mono rounded-xl bg-black/3 dark:bg-white/4 border border-sec/15 placeholder:text-sec/50 text-fg focus:outline-none focus:border-accent/50 transition-all"
                 />
             </div>
 
@@ -158,29 +158,26 @@ export const SettingsSidebar: React.FC = () => {
                                     <Link
                                         key={item.label}
                                         href={item.href}
-                                        className={`group flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all duration-150 cursor-pointer ${
-                                            isCurrentPath
-                                                ? 'bg-accent/15 text-fg font-bold shadow-xs border border-accent/30'
-                                                : 'text-sec hover:text-fg hover:bg-black/5 dark:hover:bg-white/5 border border-transparent'
-                                        }`}
+                                        className={`group flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all duration-150 cursor-pointer ${isCurrentPath
+                                            ? 'bg-accent/15 text-fg font-bold shadow-xs border border-accent/30'
+                                            : 'text-sec hover:text-fg hover:bg-black/5 dark:hover:bg-white/5 border border-transparent'
+                                            }`}
                                     >
                                         <div className="flex items-center gap-2.5 min-w-0">
                                             <Icon
                                                 size={15}
-                                                className={`shrink-0 transition-colors ${
-                                                    isCurrentPath
-                                                        ? 'text-accent'
-                                                        : 'text-sec group-hover:text-fg'
-                                                }`}
+                                                className={`shrink-0 transition-colors ${isCurrentPath
+                                                    ? 'text-accent'
+                                                    : 'text-sec group-hover:text-fg'
+                                                    }`}
                                             />
                                             <span className="truncate">{item.label}</span>
                                         </div>
 
                                         {item.badge && (
                                             <span
-                                                className={`text-[9px] font-mono px-1.5 py-0.2 rounded-full font-bold uppercase shrink-0 ${
-                                                    item.badgeColor || 'bg-black/10 dark:bg-white/10 text-sec'
-                                                }`}
+                                                className={`text-[9px] font-mono px-1.5 py-0.2 rounded-full font-bold uppercase shrink-0 ${item.badgeColor || 'bg-black/10 dark:bg-white/10 text-sec'
+                                                    }`}
                                             >
                                                 {item.badge}
                                             </span>

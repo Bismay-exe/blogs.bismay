@@ -42,7 +42,7 @@ export const ExportConfigModal: React.FC<ExportConfigModalProps> = ({ isOpen, on
     }
 
     return (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-99999 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
             <div className="w-full max-w-xl rounded-3xl border border-neutral-800 bg-[#141414] text-white p-6 shadow-2xl space-y-5">
                 {/* Header */}
                 <div className="flex items-center justify-between">
@@ -90,7 +90,7 @@ export const ExportConfigModal: React.FC<ExportConfigModalProps> = ({ isOpen, on
                 </div>
 
                 {/* Code Block Container */}
-                <div className="relative rounded-2xl bg-black border border-neutral-800 p-4 max-h-[300px] overflow-y-auto font-mono text-xs text-neutral-300">
+                <div className="relative rounded-2xl bg-black border border-neutral-800 p-4 max-h-75 overflow-y-auto font-mono text-xs text-neutral-300">
                     <pre className="whitespace-pre-wrap">{activeCode}</pre>
                 </div>
 

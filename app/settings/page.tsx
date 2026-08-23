@@ -103,7 +103,7 @@ export default function SettingsHubPage() {
                 </div>
 
                 {/* Active Configuration Overview Card */}
-                <div className="p-5 sm:p-6 rounded-3xl border border-sec/20 bg-black/[0.02] dark:bg-white/[0.02] space-y-4">
+                <div className="p-5 sm:p-6 rounded-3xl border border-sec/20 bg-black/2 dark:bg-white/2 space-y-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -141,7 +141,7 @@ export default function SettingsHubPage() {
                     {/* Card 1: Reader Studio */}
                     <Link
                         href="/settings/reader"
-                        className="group p-6 rounded-3xl border border-sec/20 bg-black/[0.02] dark:bg-white/[0.02] hover:bg-black/[0.04] dark:hover:bg-white/[0.04] hover:border-accent/40 transition-all duration-300 flex flex-col justify-between space-y-5 shadow-xs"
+                        className="group p-6 rounded-3xl border border-sec/20 bg-black/2 dark:bg-white/2 hover:bg-black/4 dark:hover:bg-white/4 hover:border-accent/40 transition-all duration-300 flex flex-col justify-between space-y-5 shadow-xs"
                     >
                         <div className="space-y-3.5">
                             <div className="flex items-center justify-between">
@@ -172,7 +172,7 @@ export default function SettingsHubPage() {
                     {/* Card 2: Post & Article Content Management */}
                     <Link
                         href="/admin/posts"
-                        className="group p-6 rounded-3xl border border-sec/20 bg-black/[0.02] dark:bg-white/[0.02] hover:bg-black/[0.04] dark:hover:bg-white/[0.04] hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between space-y-5 shadow-xs"
+                        className="group p-6 rounded-3xl border border-sec/20 bg-black/2 dark:bg-white/2 hover:bg-black/4 dark:hover:bg-white/4 hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between space-y-5 shadow-xs"
                     >
                         <div className="space-y-3.5">
                             <div className="flex items-center justify-between">
