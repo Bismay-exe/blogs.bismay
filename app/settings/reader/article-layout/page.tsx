@@ -19,6 +19,7 @@ import { ReaderNav } from '@/components/settings/ReaderNav'
 import { BannerWidthPreviewSVG } from '@/components/settings/svgs/BannerWidthPreviewSVG'
 import { HeaderAlignmentSVG } from '@/components/settings/svgs/HeaderAlignmentSVG'
 import { TitleWidthPreviewSVG } from '@/components/settings/svgs/TitleWidthPreviewSVG'
+import { Scrubber } from '@/components/ui/smoothui/scrubber'
 
 const ELEMENT_LABELS: Record<HeaderElementId, string> = {
     topbar: 'Metadata / Category & Date',
@@ -271,38 +272,28 @@ export default function ArticleLayoutSettingsPage() {
                     </div>
 
                     {/* Banner Margins */}
-                    <div className="grid grid-cols-2 gap-4 pt-2 border-t border-sec/10">
-                        <div className="space-y-1.5">
-                            <div className="flex justify-between text-xs text-sec font-medium">
-                                <span>Hero Top Space</span>
-                                <span className="font-bold text-fg">{bannerMarginTop}px</span>
-                            </div>
-                            <input
-                                type="range"
-                                min="8"
-                                max="56"
-                                step="4"
-                                value={bannerMarginTop}
-                                onChange={(e) => updateArticleLayout({ bannerMarginTop: parseFloat(e.target.value) })}
-                                className="w-full accent-fg cursor-pointer"
-                            />
-                        </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-sec/10">
+                        <Scrubber
+                            label="Hero Top Space"
+                            min={8}
+                            max={56}
+                            step={4}
+                            decimals={0}
+                            unit="px"
+                            value={bannerMarginTop}
+                            onValueChange={(val) => updateArticleLayout({ bannerMarginTop: val })}
+                        />
 
-                        <div className="space-y-1.5">
-                            <div className="flex justify-between text-xs text-sec font-medium">
-                                <span>Hero Bottom Space</span>
-                                <span className="font-bold text-fg">{bannerMarginBottom}px</span>
-                            </div>
-                            <input
-                                type="range"
-                                min="8"
-                                max="64"
-                                step="4"
-                                value={bannerMarginBottom}
-                                onChange={(e) => updateArticleLayout({ bannerMarginBottom: parseFloat(e.target.value) })}
-                                className="w-full accent-fg cursor-pointer"
-                            />
-                        </div>
+                        <Scrubber
+                            label="Hero Bottom Space"
+                            min={8}
+                            max={64}
+                            step={4}
+                            decimals={0}
+                            unit="px"
+                            value={bannerMarginBottom}
+                            onValueChange={(val) => updateArticleLayout({ bannerMarginBottom: val })}
+                        />
                     </div>
                 </div>
             </div>

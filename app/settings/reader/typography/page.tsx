@@ -4,6 +4,9 @@ import React from 'react'
 import { useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
 import { FontChoice } from '@/lib/reader-settings/types'
 import { ReaderNav } from '@/components/settings/ReaderNav'
+import { Notch, NotchItem } from '@/components/ui/notch'
+import { Scrubber } from '@/components/ui/smoothui/scrubber'
+import { Type, Sparkles, Binary, BookOpen } from 'lucide-react'
 
 export default function TypographySettingsPage() {
     const { settings, updateTitleFont, updateHeadingFont, updateBodyFont, updateCodeFont, isLoaded } = useReaderSettings()
@@ -19,10 +22,117 @@ export default function TypographySettingsPage() {
     const { typography } = settings
     const { titleFont, headingFont, bodyFont, codeFont } = typography
 
+    // Title Notch items
+    const titleNotchItems: NotchItem[] = [
+        {
+            id: 'title-font',
+            label: 'Font',
+            icon: <Type className="w-3.5 h-3.5" />,
+            value: titleFont.titleFont,
+            options: [
+                { id: 'inter-tight', label: 'Inter Tight' },
+                { id: 'sans', label: 'DM Sans' },
+                { id: 'serif', label: 'Lora Serif' },
+            ],
+            onChange: (id) => updateTitleFont({ titleFont: id as FontChoice }),
+        },
+        {
+            id: 'title-weight',
+            label: 'Weight',
+            value: String(titleFont.titleFontWeight),
+            options: [
+                { id: '600', label: '600 Semi' },
+                { id: '700', label: '700 Bold' },
+                { id: '800', label: '800 Black' },
+            ],
+            onChange: (id) => updateTitleFont({ titleFontWeight: parseInt(id, 10) }),
+        },
+    ]
+
+    // Heading Notch items
+    const headingNotchItems: NotchItem[] = [
+        {
+            id: 'heading-font',
+            label: 'Font',
+            icon: <Sparkles className="w-3.5 h-3.5" />,
+            value: headingFont.headingFont,
+            options: [
+                { id: 'inter-tight', label: 'Inter Tight' },
+                { id: 'sans', label: 'DM Sans' },
+                { id: 'serif', label: 'Lora Serif' },
+            ],
+            onChange: (id) => updateHeadingFont({ headingFont: id as FontChoice }),
+        },
+        {
+            id: 'heading-weight',
+            label: 'Weight',
+            value: String(headingFont.headingFontWeight),
+            options: [
+                { id: '400', label: '400 Regular' },
+                { id: '600', label: '600 Semi' },
+                { id: '700', label: '700 Bold' },
+            ],
+            onChange: (id) => updateHeadingFont({ headingFontWeight: parseInt(id, 10) }),
+        },
+    ]
+
+    // Body Notch items
+    const bodyNotchItems: NotchItem[] = [
+        {
+            id: 'body-font',
+            label: 'Font',
+            icon: <BookOpen className="w-3.5 h-3.5" />,
+            value: bodyFont.bodyFont,
+            options: [
+                { id: 'sans', label: 'DM Sans' },
+                { id: 'serif', label: 'Lora Serif' },
+                { id: 'roboto', label: 'Roboto' },
+            ],
+            onChange: (id) => updateBodyFont({ bodyFont: id as FontChoice }),
+        },
+        {
+            id: 'body-weight',
+            label: 'Weight',
+            value: String(bodyFont.bodyFontWeight || 400),
+            options: [
+                { id: '300', label: '300 Light' },
+                { id: '400', label: '400 Regular' },
+                { id: '500', label: '500 Medium' },
+            ],
+            onChange: (id) => updateBodyFont({ bodyFontWeight: parseInt(id, 10) }),
+        },
+    ]
+
+    // Code Notch items
+    const codeNotchItems: NotchItem[] = [
+        {
+            id: 'code-font',
+            label: 'Font',
+            icon: <Binary className="w-3.5 h-3.5" />,
+            value: codeFont.codeFont,
+            options: [
+                { id: 'mono', label: 'JetBrains Mono' },
+                { id: 'space-mono', label: 'Space Mono' },
+            ],
+            onChange: (id) => updateCodeFont({ codeFont: id as any }),
+        },
+        {
+            id: 'code-weight',
+            label: 'Weight',
+            value: String(codeFont.codeFontWeight || 400),
+            options: [
+                { id: '400', label: '400 Regular' },
+                { id: '500', label: '500 Medium' },
+                { id: '700', label: '700 Bold' },
+            ],
+            onChange: (id) => updateCodeFont({ codeFontWeight: parseInt(id, 10) }),
+        },
+    ]
+
     return (
         <div className="relative bg-bg text-fg py-12 pl-18 pr-3 sm:pr-6">
             <ReaderNav />
-            <div className="max-w-2xl mx-auto space-y-4">
+            <div className="max-w-2xl mx-auto space-y-5">
                 <h1 className="text-3xl font-bold tracking-tight text-fg mb-6">
                     Typography
                 </h1>
@@ -34,70 +144,23 @@ export default function TypographySettingsPage() {
                         <p className="text-xs text-sec mt-0.5">Customize title styling, weight, and scale</p>
                     </div>
 
-                    {/* Title Font Picker */}
+                    {/* Title Font & Weight Notch */}
                     <div className="space-y-2">
-                        <span className="text-xs font-semibold text-sec block">Title Font</span>
-                        <div className="grid grid-cols-3 gap-2">
-                            {[
-                                { id: 'inter-tight', label: 'Inter Tight' },
-                                { id: 'sans', label: 'DM Sans' },
-                                { id: 'serif', label: 'Lora Serif' },
-                            ].map((f) => (
-                                <button
-                                    key={f.id}
-                                    type="button"
-                                    onClick={() => updateTitleFont({ titleFont: f.id as FontChoice })}
-                                    className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
-                                        titleFont.titleFont === f.id
-                                            ? 'border-fg bg-fg text-bg shadow-xs'
-                                            : 'border-sec/15 bg-bg text-fg hover:border-sec/30'
-                                    }`}
-                                >
-                                    {f.label}
-                                </button>
-                            ))}
-                        </div>
+                        <span className="text-xs font-semibold text-sec block">Font & Weight</span>
+                        <Notch variant="inline" items={titleNotchItems} />
                     </div>
 
-                    {/* Title Weight */}
-                    <div className="space-y-2">
-                        <span className="text-xs font-semibold text-sec block">Title Weight</span>
-                        <div className="grid grid-cols-3 gap-2">
-                            {[
-                                { label: '600 Semi', value: 600 },
-                                { label: '700 Bold', value: 700 },
-                                { label: '800 Black', value: 800 },
-                            ].map((w) => (
-                                <button
-                                    key={w.value}
-                                    type="button"
-                                    onClick={() => updateTitleFont({ titleFontWeight: w.value })}
-                                    className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
-                                        titleFont.titleFontWeight === w.value
-                                            ? 'border-fg bg-fg text-bg shadow-xs'
-                                            : 'border-sec/15 bg-bg text-fg hover:border-sec/30'
-                                    }`}
-                                >
-                                    {w.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Title Scale Slider */}
+                    {/* Title Scale Scrubber */}
                     <div className="space-y-2 pt-1">
-                        <div className="flex justify-between text-xs font-medium text-sec">
-                            <span>Title Scale</span>
-                            <span className="font-bold text-fg">{titleFont.titleScale}x</span>
-                        </div>
-                        <input
-                            type="range"
-                            min="0.9"
-                            max="2.2"
-                            step="0.05"
+                        <Scrubber
+                            label="Title Scale"
+                            min={0.9}
+                            max={2.2}
+                            step={0.05}
+                            decimals={2}
+                            unit="x"
                             value={titleFont.titleScale}
-                            onChange={(e) => updateTitleFont({ titleScale: parseFloat(e.target.value) })}
-                            className="w-full accent-fg cursor-pointer"
+                            onValueChange={(val) => updateTitleFont({ titleScale: val })}
                         />
                     </div>
 
@@ -132,106 +195,49 @@ export default function TypographySettingsPage() {
                         <p className="text-xs text-sec mt-0.5">Control font family, scale, and vertical spacing</p>
                     </div>
 
-                    {/* Heading Font Picker */}
+                    {/* Heading Font & Weight Notch */}
                     <div className="space-y-2">
-                        <span className="text-xs font-semibold text-sec block">Heading Font</span>
-                        <div className="grid grid-cols-3 gap-2">
-                            {[
-                                { id: 'inter-tight', label: 'Inter Tight' },
-                                { id: 'sans', label: 'DM Sans' },
-                                { id: 'serif', label: 'Lora Serif' },
-                            ].map((f) => (
-                                <button
-                                    key={f.id}
-                                    type="button"
-                                    onClick={() => updateHeadingFont({ headingFont: f.id as FontChoice })}
-                                    className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
-                                        headingFont.headingFont === f.id
-                                            ? 'border-fg bg-fg text-bg shadow-xs'
-                                            : 'border-sec/15 bg-bg text-fg hover:border-sec/30'
-                                    }`}
-                                >
-                                    {f.label}
-                                </button>
-                            ))}
-                        </div>
+                        <span className="text-xs font-semibold text-sec block">Font & Weight</span>
+                        <Notch variant="inline" items={headingNotchItems} />
                     </div>
 
-                    {/* Heading Weight */}
-                    <div className="space-y-2">
-                        <span className="text-xs font-semibold text-sec block">Heading Weight</span>
-                        <div className="grid grid-cols-3 gap-2">
-                            {[
-                                { label: '400 Light', value: 400 },
-                                { label: '600 Semi', value: 600 },
-                                { label: '700 Bold', value: 700 },
-                            ].map((w) => (
-                                <button
-                                    key={w.value}
-                                    type="button"
-                                    onClick={() => updateHeadingFont({ headingFontWeight: w.value })}
-                                    className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
-                                        headingFont.headingFontWeight === w.value
-                                            ? 'border-fg bg-fg text-bg shadow-xs'
-                                            : 'border-sec/15 bg-bg text-fg hover:border-sec/30'
-                                    }`}
-                                >
-                                    {w.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Heading Scale Slider */}
+                    {/* Heading Scale Scrubber */}
                     <div className="space-y-2 pt-1">
-                        <div className="flex justify-between text-xs font-medium text-sec">
-                            <span>Heading Scale</span>
-                            <span className="font-bold text-fg">{headingFont.headingScale}x</span>
-                        </div>
-                        <input
-                            type="range"
-                            min="0.85"
-                            max="1.4"
-                            step="0.05"
+                        <Scrubber
+                            label="Heading Scale"
+                            min={0.85}
+                            max={1.4}
+                            step={0.05}
+                            decimals={2}
+                            unit="x"
                             value={headingFont.headingScale}
-                            onChange={(e) => updateHeadingFont({ headingScale: parseFloat(e.target.value) })}
-                            className="w-full accent-fg cursor-pointer"
+                            onValueChange={(val) => updateHeadingFont({ headingScale: val })}
                         />
                     </div>
 
-                    {/* Top & Bottom Margins */}
-                    <div className="grid grid-cols-2 gap-4 pt-2 border-t border-sec/10">
-                        <div className="space-y-1.5">
-                            <div className="flex justify-between text-xs text-sec font-medium">
-                                <span>Top Space</span>
-                                <span className="font-bold text-fg">{headingFont.headingMarginTop}px</span>
-                            </div>
-                            <input
-                                type="range"
-                                min="16"
-                                max="64"
-                                step="4"
-                                value={headingFont.headingMarginTop}
-                                onChange={(e) => updateHeadingFont({ headingMarginTop: parseFloat(e.target.value) })}
-                                className="w-full accent-fg cursor-pointer"
-                            />
-                        </div>
+                    {/* Top & Bottom Margins Scrubbers */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-sec/10">
+                        <Scrubber
+                            label="Top Space"
+                            min={16}
+                            max={64}
+                            step={4}
+                            decimals={0}
+                            unit="px"
+                            value={headingFont.headingMarginTop}
+                            onValueChange={(val) => updateHeadingFont({ headingMarginTop: val })}
+                        />
 
-                        <div className="space-y-1.5">
-                            <div className="flex justify-between text-xs text-sec font-medium">
-                                <span>Bottom Space</span>
-                                <span className="font-bold text-fg">{headingFont.headingMarginBottom}px</span>
-                            </div>
-                            <input
-                                type="range"
-                                min="6"
-                                max="32"
-                                step="2"
-                                value={headingFont.headingMarginBottom}
-                                onChange={(e) => updateHeadingFont({ headingMarginBottom: parseFloat(e.target.value) })}
-                                className="w-full accent-fg cursor-pointer"
-                            />
-                        </div>
+                        <Scrubber
+                            label="Bottom Space"
+                            min={6}
+                            max={32}
+                            step={2}
+                            decimals={0}
+                            unit="px"
+                            value={headingFont.headingMarginBottom}
+                            onValueChange={(val) => updateHeadingFont({ headingMarginBottom: val })}
+                        />
                     </div>
                 </div>
 
@@ -242,79 +248,44 @@ export default function TypographySettingsPage() {
                         <p className="text-xs text-sec mt-0.5">Control font family, size, and comfortable line rhythm</p>
                     </div>
 
-                    {/* Body Font Picker */}
+                    {/* Body Font & Weight Notch */}
                     <div className="space-y-2">
-                        <span className="text-xs font-semibold text-sec block">Body Font</span>
-                        <div className="grid grid-cols-3 gap-2">
-                            {[
-                                { id: 'sans', label: 'DM Sans' },
-                                { id: 'serif', label: 'Lora Serif' },
-                                { id: 'roboto', label: 'Roboto' },
-                            ].map((f) => (
-                                <button
-                                    key={f.id}
-                                    type="button"
-                                    onClick={() => updateBodyFont({ bodyFont: f.id as FontChoice })}
-                                    className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
-                                        bodyFont.bodyFont === f.id
-                                            ? 'border-fg bg-fg text-bg shadow-xs'
-                                            : 'border-sec/15 bg-bg text-fg hover:border-sec/30'
-                                    }`}
-                                >
-                                    {f.label}
-                                </button>
-                            ))}
-                        </div>
+                        <span className="text-xs font-semibold text-sec block">Font & Weight</span>
+                        <Notch variant="inline" items={bodyNotchItems} />
                     </div>
 
-                    {/* Body Font Size Slider */}
-                    <div className="space-y-2">
-                        <div className="flex justify-between text-xs font-medium text-sec">
-                            <span>Font Size</span>
-                            <span className="font-bold text-fg">{bodyFont.bodyFontSize}px</span>
-                        </div>
-                        <input
-                            type="range"
-                            min="14"
-                            max="22"
-                            step="0.5"
+                    {/* Body Font Size Scrubber */}
+                    <div className="space-y-3 pt-1">
+                        <Scrubber
+                            label="Font Size"
+                            min={14}
+                            max={22}
+                            step={0.5}
+                            decimals={1}
+                            unit="px"
                             value={bodyFont.bodyFontSize}
-                            onChange={(e) => updateBodyFont({ bodyFontSize: parseFloat(e.target.value) })}
-                            className="w-full accent-fg cursor-pointer"
+                            onValueChange={(val) => updateBodyFont({ bodyFontSize: val })}
                         />
-                    </div>
 
-                    {/* Line Height Slider */}
-                    <div className="space-y-2">
-                        <div className="flex justify-between text-xs font-medium text-sec">
-                            <span>Line Height</span>
-                            <span className="font-bold text-fg">{bodyFont.lineHeight}</span>
-                        </div>
-                        <input
-                            type="range"
-                            min="1.5"
-                            max="2.2"
-                            step="0.02"
+                        <Scrubber
+                            label="Line Height"
+                            min={1.5}
+                            max={2.2}
+                            step={0.02}
+                            decimals={2}
                             value={bodyFont.lineHeight}
-                            onChange={(e) => updateBodyFont({ lineHeight: parseFloat(e.target.value) })}
-                            className="w-full accent-fg cursor-pointer"
+                            onValueChange={(val) => updateBodyFont({ lineHeight: val })}
                         />
-                    </div>
 
-                    {/* Paragraph Spacing Slider */}
-                    <div className="space-y-2">
-                        <div className="flex justify-between text-xs font-medium text-sec">
-                            <span>Paragraph Gap</span>
-                            <span className="font-bold text-fg">{bodyFont.paragraphSpacing}px</span>
-                        </div>
-                        <input
-                            type="range"
-                            min="14"
-                            max="44"
-                            step="2"
+                        <Scrubber
+                            label="Paragraph Gap"
+                            min={14}
+                            max={44}
+                            step={2}
+                            decimals={0}
+                            unit="px"
                             value={bodyFont.paragraphSpacing}
-                            onChange={(e) => updateBodyFont({ paragraphSpacing: parseFloat(e.target.value) })}
-                            className="w-full accent-fg cursor-pointer"
+                            onValueChange={(val) => updateBodyFont({ paragraphSpacing: val })}
                         />
                     </div>
                 </div>
@@ -326,44 +297,23 @@ export default function TypographySettingsPage() {
                         <p className="text-xs text-sec mt-0.5">Styling for embedded code snippets</p>
                     </div>
 
-                    {/* Code Font Choice */}
+                    {/* Code Font & Weight Notch */}
                     <div className="space-y-2">
-                        <span className="text-xs font-semibold text-sec block">Monospace Font</span>
-                        <div className="grid grid-cols-2 gap-2">
-                            {[
-                                { id: 'mono', label: 'JetBrains Mono' },
-                                { id: 'space-mono', label: 'Space Mono' },
-                            ].map((cf) => (
-                                <button
-                                    key={cf.id}
-                                    type="button"
-                                    onClick={() => updateCodeFont({ codeFont: cf.id as any })}
-                                    className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
-                                        codeFont.codeFont === cf.id
-                                            ? 'border-fg bg-fg text-bg shadow-xs'
-                                            : 'border-sec/15 bg-bg text-fg hover:border-sec/30'
-                                    }`}
-                                >
-                                    {cf.label}
-                                </button>
-                            ))}
-                        </div>
+                        <span className="text-xs font-semibold text-sec block">Monospace Font & Weight</span>
+                        <Notch variant="inline" items={codeNotchItems} />
                     </div>
 
-                    {/* Code Font Size */}
-                    <div className="space-y-2">
-                        <div className="flex justify-between text-xs font-medium text-sec">
-                            <span>Code Font Size</span>
-                            <span className="font-bold text-fg">{codeFont.codeFontSize}px</span>
-                        </div>
-                        <input
-                            type="range"
-                            min="13"
-                            max="19"
-                            step="0.5"
+                    {/* Code Font Size Scrubber */}
+                    <div className="space-y-2 pt-1">
+                        <Scrubber
+                            label="Code Font Size"
+                            min={13}
+                            max={19}
+                            step={0.5}
+                            decimals={1}
+                            unit="px"
                             value={codeFont.codeFontSize}
-                            onChange={(e) => updateCodeFont({ codeFontSize: parseFloat(e.target.value) })}
-                            className="w-full accent-fg cursor-pointer"
+                            onValueChange={(val) => updateCodeFont({ codeFontSize: val })}
                         />
                     </div>
                 </div>

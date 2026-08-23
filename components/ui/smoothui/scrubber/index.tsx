@@ -17,6 +17,10 @@ export interface ScrubberProps {
   max?: number;
   /** Minimum value */
   min?: number;
+  /** Unit suffix displayed with value, e.g. "px" or "x" */
+  unit?: string;
+  /** Custom formatter for the displayed value */
+  formatValue?: (value: number) => string;
   /** Called when value changes during interaction */
   onValueChange?: (value: number) => void;
   /** Step increment */
@@ -33,7 +37,7 @@ const clamp = (val: number, min: number, max: number) =>
 const roundToStep = (val: number, step: number, min: number) =>
   Math.round((val - min) / step) * step + min;
 
-const Scrubber = ({
+export const Scrubber = ({
   label = "Value",
   value: controlledValue,
   defaultValue = 0,
@@ -43,6 +47,8 @@ const Scrubber = ({
   step = 0.01,
   decimals = 2,
   ticks = 9,
+  unit = "",
+  formatValue,
   className,
 }: ScrubberProps) => {
   const shouldReduceMotion = useReducedMotion();
@@ -145,6 +151,10 @@ const Scrubber = ({
     ? { duration: 0 }
     : { bounce: 0.1, duration: 0.25, type: "spring" as const };
 
+  const displayVal = formatValue
+    ? formatValue(value)
+    : `${decimals === 0 ? Math.round(value) : value.toFixed(decimals)}${unit}`;
+
   return (
     <div className={cn("relative w-full select-none", className)}>
       <div
@@ -152,7 +162,7 @@ const Scrubber = ({
         aria-valuemax={max}
         aria-valuemin={min}
         aria-valuenow={Number(value.toFixed(decimals))}
-        className="relative cursor-pointer overflow-hidden bg-muted outline-offset-2"
+        className="relative cursor-pointer overflow-hidden rounded-2xl bg-bg/80 border border-sec/20 hover:border-sec/40 transition-colors outline-offset-2 shadow-xs"
         onKeyDown={handleKeyDown}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
@@ -162,17 +172,15 @@ const Scrubber = ({
         ref={trackRef}
         role="slider"
         style={{
-          borderRadius: 8,
-          height: 36,
+          height: 38,
           touchAction: "none",
         }}
         tabIndex={0}
       >
         {/* Fill indicator */}
         <div
-          className="pointer-events-none absolute inset-y-0 left-0 bg-foreground/14"
+          className="pointer-events-none absolute inset-y-0 left-0 bg-fg/10"
           style={{
-            borderRadius: 8,
             transition: isDragging
               ? "none"
               : "width 150ms cubic-bezier(0.23, 1, 0.32, 1)",
@@ -187,11 +195,11 @@ const Scrubber = ({
               const pos = ((i + 1) / (ticks + 1)) * 100;
               return (
                 <div
-                  className="absolute top-1/2 bg-foreground/25"
+                  className="absolute top-1/2 bg-sec/30"
                   key={pos}
                   style={{
                     borderRadius: 999,
-                    height: 6,
+                    height: 5,
                     left: `${pos}%`,
                     transform: "translateX(-50%) translateY(-50%)",
                     width: 1,
@@ -207,7 +215,7 @@ const Scrubber = ({
           className="pointer-events-none absolute"
           style={{
             left: `${percentage}%`,
-            marginLeft: -5,
+            marginLeft: -3,
             top: "50%",
             transform: "translateX(-50%) translateY(-50%)",
             transition: isDragging
@@ -218,14 +226,14 @@ const Scrubber = ({
         >
           <motion.div
             animate={{
-              opacity: isActive ? 0.8 : 0.15,
-              scaleX: isActive ? 1 : 0.7,
-              scaleY: isActive ? 1 : 0.7,
+              opacity: isActive ? 1 : 0.4,
+              scaleX: isActive ? 1.2 : 0.85,
+              scaleY: isActive ? 1.1 : 0.85,
             }}
-            className="bg-foreground/90"
+            className="bg-fg shadow-sm"
             style={{
               borderRadius: 999,
-              height: 22,
+              height: 20,
               width: 4,
             }}
             transition={springConfig}
@@ -234,10 +242,8 @@ const Scrubber = ({
 
         {/* Label */}
         <div
-          className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 whitespace-nowrap text-foreground"
+          className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 whitespace-nowrap text-fg text-xs font-semibold"
           style={{
-            fontSize: 13,
-            fontWeight: 500,
             zIndex: 4,
           }}
         >
@@ -246,16 +252,13 @@ const Scrubber = ({
 
         {/* Value display */}
         <div
-          className="pointer-events-none absolute top-1/2 right-2.5 -translate-y-1/2 text-foreground"
+          className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-fg font-mono text-xs font-bold"
           style={{
-            fontFamily: "ui-monospace, monospace",
-            fontSize: 13,
             fontVariantNumeric: "tabular-nums",
-            fontWeight: 500,
             zIndex: 4,
           }}
         >
-          {value.toFixed(decimals)}
+          {displayVal}
         </div>
       </div>
     </div>
