@@ -17,9 +17,11 @@ const TopBar: React.FC<TopBarProps> = ({
     readingTimeMinutes = 5,
 }) => {
     const { settings } = useReaderSettings()
-    const { headerAlignment } = settings.layout
-    const { appearance } = settings
+    const headerAlignment = settings.articleLayout?.headerAlignment || settings.layout?.headerAlignment || 'left'
     const isCenter = headerAlignment === 'center'
+    const showCategory = settings.articleInformation?.showCategory ?? true
+    const showPublishedDate = settings.articleInformation?.showPublishedDate ?? true
+    const showReadingTime = settings.articleInformation?.showReadingTime ?? true
 
     return (
         <div className="pt-7">
@@ -29,18 +31,18 @@ const TopBar: React.FC<TopBarProps> = ({
                 </Link>
             </div>
             <div className={`flex flex-wrap items-center gap-3.5 text-xs font-mono text-sec ${isCenter ? 'justify-center' : 'justify-start'}`}>
-                {appearance.showCategory && category && (
+                {showCategory && category && (
                     <div className="bg-accent text-bg font-bold tracking-wider uppercase px-3 py-1 w-fit rounded-xl">
                         {category}
                     </div>
                 )}
-                {appearance.showPublishedDate && date && (
+                {showPublishedDate && date && (
                     <span className="flex items-center gap-1.5">
                         <Calendar size={13} className="text-sec/70" />
                         <span>{date}</span>
                     </span>
                 )}
-                {appearance.showReadingTime && readingTimeMinutes && (
+                {showReadingTime && readingTimeMinutes && (
                     <>
                         <div className="aspect-square w-1 bg-fg/40 rounded-full" />
                         <span className="flex items-center gap-1.5">

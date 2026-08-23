@@ -24,7 +24,7 @@ function getServerArticleData(slug: string): ServerArticleData | null {
     let date = 'Published'
     let category = 'React & Frontend'
     let readingTimeMinutes = 5
-    let bannerUrl = ''
+    let bannerUrl = 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1200&auto=format&fit=crop'
     let tags: string[] = ['React', 'JavaScript', 'WebDev']
 
     // 1. Match day number e.g. "day-2-of-learning-react" or "day-2" -> day-2-article.md
@@ -59,38 +59,47 @@ function getServerArticleData(slug: string): ServerArticleData | null {
         }
     }
 
-    // If no matching file found, DO NOT fallback to day-11! Return null so client/localStorage can be checked
+    // If no matching file found, return null so client/localStorage can be checked
     if (!markdown) {
         return null
     }
 
-    // Extract title from markdown
+    // Extract title from markdown if present
     const titleMatch = markdown.match(/^#\s+(.+)$/m)
     if (titleMatch) {
         title = titleMatch[1].trim()
-    } else if (slug.includes('day-2') || markdown.includes('Reconciliation')) {
-        title = '🚀 Day 2 of Learning React: Reconciliation, Diffing Algorithm, Render Phase, Commit Phase & React Fiber'
+    }
+
+    // Match metadata by specific day slug
+    if (slug.includes('day-2') || slug.includes('reconciliation')) {
+        title = title || '🚀 Day 2 of Learning React: Reconciliation, Diffing Algorithm, Render Phase, Commit Phase & React Fiber'
         category = 'Architecture'
         readingTimeMinutes = 12
         date = 'Feb 2, 2026'
         tags = ['React Fiber', 'Reconciliation', 'Diffing', 'Performance']
         bannerUrl = 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop'
-    } else if (slug.includes('day-3') || markdown.includes('JSX')) {
-        title = '🚀 Day 3 of Learning React: Understanding JSX, Components, Props, Bundlers, and What Happens After `npm run dev`'
+    } else if (slug.includes('day-3') || slug.includes('jsx')) {
+        title = title || '🚀 Day 3 of Learning React: Understanding JSX, Components, Props, Bundlers, and What Happens After `npm run dev`'
         category = 'React & Frontend'
         readingTimeMinutes = 7
         date = 'Feb 3, 2026'
         tags = ['React', 'JSX', 'Components', 'Bundlers', 'Vite']
         bannerUrl = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop'
-    } else if (slug.includes('day-11') || markdown.includes('Context API')) {
-        title = '🚀 Day 11 of Learning React: Context API, Prop Drilling, Providers, and useContext()'
+    } else if (slug.includes('day-11') || slug.includes('context-api')) {
+        title = title || '🚀 Day 11 of Learning React: Context API, Prop Drilling, Providers, and useContext()'
         category = 'React & Frontend'
         readingTimeMinutes = 8
         date = 'Feb 11, 2026'
         tags = ['React', 'Context API', 'State Management', 'Hooks']
         bannerUrl = 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1200&auto=format&fit=crop'
-    } else {
+    } else if (!title) {
         title = '🚀 Learning React Series'
+    }
+
+    // If markdown has a direct image link at top, use it as cover if available
+    const imgMatch = markdown.match(/!\[.*?\]\((https?:\/\/[^\s\)]+)\)/)
+    if (imgMatch && imgMatch[1]) {
+        bannerUrl = imgMatch[1]
     }
 
     return {

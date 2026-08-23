@@ -10,79 +10,132 @@ export type AuthorStyle = 'default' | 'overlap' | 'compact'
 
 export type HeaderAlignment = 'left' | 'center'
 
-export type FontChoice = 'sans' | 'inter-tight' | 'serif' | 'mono' | 'space-mono'
+export type FontChoice = 'sans' | 'inter-tight' | 'serif' | 'mono' | 'space-mono' | 'roboto'
 
-export interface ReaderLayoutSettings {
-    showNavbar: boolean
-    showLeftSidebar: boolean
-    showRightSidebar: boolean
-    contentWidth: ContentWidth
-    bannerWidth: BannerWidth
-    titleWidth: TitleWidth
-    authorStyle: AuthorStyle
-    bannerMarginTop: number // in px, e.g. 24
-    bannerMarginBottom: number // in px, e.g. 32
-    headerAlignment: HeaderAlignment
-    headerOrder: HeaderElementId[]
-    headerVisibility: Record<HeaderElementId, boolean>
-    rightWidgets: {
-        profile: boolean
-        series: boolean
-        subscribeForm: boolean
-        socials: boolean
-    }
-}
-
-export interface ReaderTypographySettings {
-    headingFont: FontChoice
-    bodyFont: FontChoice
-    codeFont: 'mono' | 'space-mono'
-    bodyFontSize: number // in px, e.g. 16.5
-    bodyFontWeight: number // e.g. 300, 400, 500
-    headingFontWeight: number // e.g. 400, 500, 600, 700
-    titleFontWeight: number // e.g. 700, 800, 900
-    titleScale: number // multiplier e.g. 1.0 to 2.2
-    titleUppercase: boolean // uppercase transform
-    lineHeight: number // unitless, e.g. 1.8
-    paragraphSpacing: number // in px, e.g. 24
-    headingMarginTop: number // in px, e.g. 32
-    headingMarginBottom: number // in px, e.g. 12
-    letterSpacing: number // in em, e.g. 0
-    headingScale: number // multiplier e.g. 1.0
-}
+export type ReaderThemeMode = 'system' | 'light' | 'dim' | 'dark'
 
 export type VideoPlayerSkin = 'modern' | 'minimal'
 
-export interface ReaderAppearanceSettings {
-    showReadingProgress: boolean
-    showTableOfContents: boolean
-    showShareButtons: boolean
-    showReadingTime: boolean
-    showPublishedDate: boolean
-    showCategory: boolean
-    videoPlayerSkin: VideoPlayerSkin
-}
-
 export interface ReaderSettings {
-    layout: ReaderLayoutSettings
-    typography: ReaderTypographySettings
-    appearance: ReaderAppearanceSettings
+    presets: ReaderPresetId[]
+    appearance: {
+        theme: ReaderThemeMode
+        accentColor: string
+        showReadingProgress: boolean
+        reduceMotion: boolean
+    }
+    typography: {
+        titleFont: {
+            titleWidth: TitleWidth
+            titleAlignment: HeaderAlignment
+            titleFont: FontChoice
+            titleFontWeight: number
+            titleScale: number
+            titleUppercase: boolean
+        }
+        headingFont: {
+            headingFont: FontChoice
+            headingFontWeight: number
+            headingScale: number
+            headingMarginTop: number
+            headingMarginBottom: number
+        }
+        bodyFont: {
+            bodyFont: FontChoice
+            bodyFontSize: number
+            lineHeight: number
+            paragraphSpacing: number
+            bodyFontWeight: number
+        }
+        codeFont: {
+            codeFont: 'mono' | 'space-mono'
+            codeFontSize: number
+            lineHeight: number
+            paragraphSpacing: number
+            codeFontWeight: number
+        }
+        // Aliases for backwards compatibility with article renderer:
+        headingFontChoice?: FontChoice
+        bodyFontChoice?: FontChoice
+        codeFontChoice?: FontChoice
+        bodyFontSize?: number
+        bodyFontWeight?: number
+        headingFontWeight?: number
+        titleFontWeight?: number
+        titleScale?: number
+        titleUppercase?: boolean
+        lineHeight?: number
+        paragraphSpacing?: number
+        headingMarginTop?: number
+        headingMarginBottom?: number
+        headingScale?: number
+    }
+    layout: {
+        contentWidth: ContentWidth
+        showNavbar: boolean
+        showLeftSidebar: boolean
+        showTableOfContents: boolean
+        showRightSidebar: boolean
+        // Aliases:
+        headerOrder?: HeaderElementId[]
+        headerVisibility?: Record<HeaderElementId, boolean>
+        bannerWidth?: BannerWidth
+        titleWidth?: TitleWidth
+        authorStyle?: AuthorStyle
+        bannerMarginTop?: number
+        bannerMarginBottom?: number
+        headerAlignment?: HeaderAlignment
+        rightWidgets?: {
+            profile: boolean
+            series: boolean
+            subscribeForm: boolean
+            socials: boolean
+        }
+    }
+    articleLayout: {
+        headerBuilder: {
+            headerOrder: HeaderElementId[]
+            headerVisibility: Record<HeaderElementId, boolean>
+        }
+        headerAlignment: HeaderAlignment
+        bannerWidth: BannerWidth
+        titleWidth: TitleWidth
+        authorStyle: AuthorStyle
+        bannerMarginTop: number
+        bannerMarginBottom: number
+    }
+    articleInformation: {
+        showReadingTime: boolean
+        showPublishedDate: boolean
+        showCategory: boolean
+        showShareButtons: boolean
+    }
+    media: {
+        videoPlayerSkin: VideoPlayerSkin
+    }
+    widgets: {
+        profile: boolean
+        series: boolean
+        subscribeForm: boolean
+        socialLinks: boolean
+    }
 }
 
 export type ReaderPresetId =
     | 'default'
-    | 'creator'
-    | 'awwwards'
     | 'minimal'
     | 'magazine'
     | 'developer'
-    | 'distraction-free'
+    | 'awwwards'
+    | 'editorial'
+    | 'creator'
 
 export interface ReaderPreset {
     id: ReaderPresetId
     name: string
     tagline: string
     description: string
+    iconSymbol?: string
     badge?: string
-    settings: ReaderSettings
+    settings: Partial<ReaderSettings>
 }

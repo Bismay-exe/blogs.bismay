@@ -31,7 +31,10 @@ export const HeaderZone: React.FC<MainLayoutProps> = ({
     readingTimeMinutes,
 }) => {
     const { settings } = useReaderSettings()
-    const { headerOrder, headerVisibility, contentWidth, titleWidth = 'contained' } = settings.layout
+    const headerOrder = settings.articleLayout?.headerBuilder?.headerOrder || settings.layout?.headerOrder || ['topbar', 'banner', 'author', 'title', 'tags']
+    const headerVisibility = settings.articleLayout?.headerBuilder?.headerVisibility || settings.layout?.headerVisibility || { topbar: true, banner: true, author: true, title: true, tags: true }
+    const contentWidth = settings.layout?.contentWidth || 'default'
+    const titleWidth = settings.articleLayout?.titleWidth || settings.layout?.titleWidth || 'contained'
 
     const maxWidthClass =
         contentWidth === 'narrow'
@@ -54,9 +57,13 @@ export const HeaderZone: React.FC<MainLayoutProps> = ({
                     />
                 )
             case 'banner':
-                return bannerUrl ? (
-                    <Banner key="banner" src={bannerUrl} alt={bannerAlt || title} />
-                ) : null
+                return (
+                    <Banner
+                        key="banner"
+                        src={bannerUrl || 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1200&auto=format&fit=crop'}
+                        alt={bannerAlt || title}
+                    />
+                )
             case 'author':
                 return <Author key="author" />
             case 'title':

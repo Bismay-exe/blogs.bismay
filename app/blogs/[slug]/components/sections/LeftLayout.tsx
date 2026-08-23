@@ -1,7 +1,7 @@
 'use client'
  
 import React, { useEffect, useState, useMemo } from 'react'
-import { ArrowLeftIcon, Sparkles } from 'lucide-react'
+import { ArrowLeftIcon, Sparkles, ListTree } from 'lucide-react'
 import Link from 'next/link'
 import { ArrowIcon } from '@/components/ui/shared/ArrowIcon'
 import { useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
@@ -24,7 +24,10 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
     const { settings } = useReaderSettings()
     const [activeSlug, setActiveSlug] = useState<string>('')
 
-    if (!settings.layout.showLeftSidebar || !settings.appearance.showTableOfContents) {
+    const showLeft = settings.layout?.showLeftSidebar ?? true
+    const showToc = settings.layout?.showTableOfContents ?? true
+
+    if (!showLeft || !showToc) {
         return null
     }
 
@@ -38,9 +41,9 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
 
         for (const line of lines) {
             const trimmed = line.trim()
-            if (trimmed.startsWith('## ') || trimmed.startsWith('### ')) {
-                const level = trimmed.startsWith('## ') ? 2 : 3
-                const rawText = trimmed.replace(/^#{2,3}\s+/, '').trim()
+            if (trimmed.startsWith('# ') || trimmed.startsWith('## ') || trimmed.startsWith('### ')) {
+                const level = trimmed.startsWith('### ') ? 3 : trimmed.startsWith('## ') ? 2 : 1
+                const rawText = trimmed.replace(/^#{1,3}\s+/, '').trim()
                 const slug = slugify(rawText)
                 const length = rawText.length
                 if (length < minLength) minLength = length
@@ -63,7 +66,7 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
         })
     }, [markdown])
 
-    // Group headings into parent H2 sections with nested H3 children
+    // Group headings into parent sections with nested children
     const groupedHeadings = useMemo(() => {
         const groups: {
             parent: { text: string; slug: string; level: number; widthPercent: number }
@@ -71,7 +74,7 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
         }[] = []
 
         for (const h of headings) {
-            if (h.level === 2) {
+            if (h.level <= 2) {
                 groups.push({ parent: h, children: [] })
             } else if (h.level === 3) {
                 if (groups.length > 0) {
@@ -137,7 +140,7 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
     }
 
     return (
-        <div className="sticky top-10 max-w-56 w-full h-[calc(100vh-64px)] hidden xl:flex flex-col gap-5 justify-center bg-transparent group z-10">
+        <div className="sticky top-10 max-w-56 w-full h-[calc(100vh-64px)] hidden xl:flex flex-col gap-5 justify-center bg-transparent group z-10 select-none">
             {/* Back to blogs link */}
             <div className="absolute top-0 pt-5 cursor-pointer translate-x-8 w-fit">
                 <Link href="/blogs" className="project group/icon flex items-center gap-2 w-fit hover:text-accent transition-colors">
@@ -146,22 +149,24 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
             </div>
 
             {/* Skeleton / Topic length minimap bars (Visible when not hovering) */}
-            <div className="absolute w-[80%] space-y-2.5 group-hover:opacity-0 transition-all duration-300 ease-in-out pointer-events-none">
-                {headings.map((h, idx) => {
-                    const isActive = activeSlug === h.slug
-                    return (
-                        <div
-                            key={idx}
-                            style={{ width: `${h.widthPercent}%` }}
-                            className={`h-0.5 rounded-full transition-all duration-300 ${h.level === 2 ? '' : 'ml-2.5'} ${
-                                isActive
-                                    ? 'bg-accent scale-y-125'
-                                    : 'bg-sec/70'
-                            }`}
-                        />
-                    )
-                })}
-            </div>
+            {headings.length > 0 && (
+                <div className="absolute w-[80%] space-y-2.5 group-hover:opacity-0 transition-all duration-300 ease-in-out pointer-events-none">
+                    {headings.map((h, idx) => {
+                        const isActive = activeSlug === h.slug
+                        return (
+                            <div
+                                key={idx}
+                                style={{ width: `${h.widthPercent}%` }}
+                                className={`h-0.5 rounded-full transition-all duration-300 ${h.level === 2 ? '' : 'ml-2.5'} ${
+                                    isActive
+                                        ? 'bg-accent scale-y-125'
+                                        : 'bg-sec/70'
+                                }`}
+                            />
+                        )
+                    })}
+                </div>
+            )}
 
             {/* Interactive Table of Contents (Reveals smoothly on hover) */}
             <h1 className="group-hover:opacity-100 opacity-0 transition-all duration-300 ease-in-out text-sm font-bold tracking-tight text-fg flex items-center gap-2">
@@ -170,51 +175,57 @@ const LeftLayout: React.FC<LeftLayoutProps> = ({ markdown = '' }) => {
             </h1>
 
             <div className="group-hover:opacity-100 opacity-0 transition-all duration-300 ease-in-out w-full space-y-1 text-xs sm:text-sm text-sec max-h-[70vh] overflow-y-auto pr-2">
-                {groupedHeadings.map((group, gIdx) => {
-                    const isParentActive = activeSlug === group.parent.slug
+                {groupedHeadings.length > 0 ? (
+                    groupedHeadings.map((group, gIdx) => {
+                        const isParentActive = activeSlug === group.parent.slug
 
-                    return (
-                        <div key={gIdx} className="space-y-0.5">
-                            {/* Main H2 Heading */}
-                            <a
-                                href={`#${group.parent.slug}`}
-                                onClick={(e) => handleScroll(e, group.parent.slug)}
-                                className={`list block transition-all duration-200 leading-tight truncate cursor-pointer ${
-                                    isParentActive
-                                        ? 'text-accent font-semibold translate-x-1'
-                                        : 'hover:text-fg hover:translate-x-0.5'
-                                }`}
-                                title={group.parent.text}
-                            >
-                                {group.parent.text}
-                            </a>
+                        return (
+                            <div key={gIdx} className="space-y-0.5">
+                                {/* Main Heading */}
+                                <a
+                                    href={`#${group.parent.slug}`}
+                                    onClick={(e) => handleScroll(e, group.parent.slug)}
+                                    className={`list block transition-all duration-200 leading-tight truncate cursor-pointer ${
+                                        isParentActive
+                                            ? 'text-accent font-semibold translate-x-1'
+                                            : 'hover:text-fg hover:translate-x-0.5'
+                                    }`}
+                                    title={group.parent.text}
+                                >
+                                    {group.parent.text}
+                                </a>
 
-                            {/* Subheadings Tree (like Series section) */}
-                            {group.children.length > 0 && (
-                                <div className="project-list pl-6! my-0.5">
-                                    <div className="line translate-y-1"></div>
-                                    {group.children.map((child, cIdx) => {
-                                        const isChildActive = activeSlug === child.slug
-                                        return (
-                                            <a
-                                                key={cIdx}
-                                                href={`#${child.slug}`}
-                                                onClick={(e) => handleScroll(e, child.slug)}
-                                                className={`flex items-center px-[0.8rem]! gap-1.5 project w-fit group/sub hover:text-accent transition-colors text-xs text-sec ${
-                                                    isChildActive ? 'text-accent font-semibold' : ''
-                                                }`}
-                                                title={child.text}
-                                            >
-                                                <div className="project-line w-5! translate-x-5! group-hover/sub:translate-x-3! transition-transform duration-300 ease-in-out"></div>
-                                                <span className="truncate max-w-36 block">{child.text}</span>
-                                            </a>
-                                        )
-                                    })}
-                                </div>
-                            )}
-                        </div>
-                    )
-                })}
+                                {/* Subheadings Tree */}
+                                {group.children.length > 0 && (
+                                    <div className="project-list pl-6! my-0.5">
+                                        <div className="line translate-y-1"></div>
+                                        {group.children.map((child, cIdx) => {
+                                            const isChildActive = activeSlug === child.slug
+                                            return (
+                                                <a
+                                                    key={cIdx}
+                                                    href={`#${child.slug}`}
+                                                    onClick={(e) => handleScroll(e, child.slug)}
+                                                    className={`flex items-center px-[0.8rem]! gap-1.5 project w-fit group/sub hover:text-accent transition-colors text-xs text-sec ${
+                                                        isChildActive ? 'text-accent font-semibold' : ''
+                                                    }`}
+                                                    title={child.text}
+                                                >
+                                                    <div className="project-line w-5! translate-x-5! group-hover/sub:translate-x-3! transition-transform duration-300 ease-in-out"></div>
+                                                    <span className="truncate max-w-36 block">{child.text}</span>
+                                                </a>
+                                            )
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+                        )
+                    })
+                ) : (
+                    <div className="text-xs text-sec/70 italic py-2">
+                        <span>Table of contents active</span>
+                    </div>
+                )}
             </div>
         </div>
     )

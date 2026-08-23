@@ -9,17 +9,19 @@ import { useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
 
 const RightLayout = () => {
     const { settings } = useReaderSettings()
-    const { showRightSidebar, rightWidgets } = settings.layout
+    const showRightSidebar = settings.layout?.showRightSidebar ?? true
+    const widgets = settings.widgets || settings.layout?.rightWidgets
 
     if (!showRightSidebar) {
         return null
     }
 
-    const hasAnyWidget =
-        rightWidgets.profile ||
-        rightWidgets.series ||
-        rightWidgets.subscribeForm ||
-        rightWidgets.socials
+    const showProfile = widgets?.profile ?? true
+    const showSeries = widgets?.series ?? true
+    const showSubscribe = widgets?.subscribeForm ?? true
+    const showSocials = widgets?.socialLinks ?? (widgets as any)?.socials ?? true
+
+    const hasAnyWidget = showProfile || showSeries || showSubscribe || showSocials
 
     if (!hasAnyWidget) {
         return null
@@ -27,10 +29,10 @@ const RightLayout = () => {
 
     return (
         <div className="w-full sm:max-w-76 shrink-0 h-full bg-transparent space-y-10 pt-7 pb-50 transition-all duration-300">
-            {rightWidgets.profile && <Profile />}
-            {rightWidgets.series && <Series />}
-            {rightWidgets.subscribeForm && <SubscribeForm />}
-            {rightWidgets.socials && <Socials />}
+            {showProfile && <Profile />}
+            {showSeries && <Series />}
+            {showSubscribe && <SubscribeForm />}
+            {showSocials && <Socials />}
         </div>
     )
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
 
 interface BannerProps {
@@ -8,16 +8,25 @@ interface BannerProps {
     alt?: string
 }
 
+const DEFAULT_FALLBACK_BANNER =
+    'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1200&auto=format&fit=crop'
+
 const Banner: React.FC<BannerProps> = ({
-    src = 'https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fhew29obo84cj4o50024q.jpg',
+    src = DEFAULT_FALLBACK_BANNER,
     alt = 'Blog Banner',
 }) => {
     const { settings } = useReaderSettings()
-    const bannerWidth = settings.layout.bannerWidth || 'contained'
-    const bannerMarginTop = settings.layout.bannerMarginTop ?? 24
-    const bannerMarginBottom = settings.layout.bannerMarginBottom ?? 32
+    const bannerWidth = settings.articleLayout?.bannerWidth || settings.layout?.bannerWidth || 'contained'
+    const bannerMarginTop = settings.articleLayout?.bannerMarginTop ?? settings.layout?.bannerMarginTop ?? 24
+    const bannerMarginBottom = settings.articleLayout?.bannerMarginBottom ?? settings.layout?.bannerMarginBottom ?? 32
 
-    if (!src) return null
+    const [imgSrc, setImgSrc] = useState<string>(src || DEFAULT_FALLBACK_BANNER)
+
+    useEffect(() => {
+        if (src) {
+            setImgSrc(src)
+        }
+    }, [src])
 
     const marginStyle = {
         marginTop: `${bannerMarginTop}px`,
@@ -29,12 +38,14 @@ const Banner: React.FC<BannerProps> = ({
         return (
             <div
                 style={marginStyle}
-                className="w-full rounded-md sm:rounded-xl lg:rounded-2xl overflow-hidden border border-sec/15 bg-fg/2 transition-all duration-300"
+                className="w-full aspect-[16/9] sm:aspect-[21/9] rounded-md sm:rounded-xl lg:rounded-2xl overflow-hidden border border-sec/15 bg-fg/2 transition-all duration-300 relative"
             >
                 <img
                     className="w-full h-full object-cover"
-                    src={src}
+                    src={imgSrc}
                     alt={alt}
+                    onError={() => setImgSrc(DEFAULT_FALLBACK_BANNER)}
+                    loading="eager"
                 />
             </div>
         )
@@ -45,12 +56,14 @@ const Banner: React.FC<BannerProps> = ({
         return (
             <div
                 style={marginStyle}
-                className="relative w-full mx-auto rounded-md sm:rounded-xl lg:rounded-2xl overflow-hidden border border-sec/20 bg-fg/3 transition-all duration-300"
+                className="relative w-full aspect-[16/9] sm:aspect-[21/9] mx-auto rounded-md sm:rounded-xl lg:rounded-2xl overflow-hidden border border-sec/20 bg-fg/3 transition-all duration-300"
             >
                 <img
                     className="w-full h-full object-cover"
-                    src={src}
+                    src={imgSrc}
                     alt={alt}
+                    onError={() => setImgSrc(DEFAULT_FALLBACK_BANNER)}
+                    loading="eager"
                 />
             </div>
         )
@@ -61,12 +74,14 @@ const Banner: React.FC<BannerProps> = ({
         return (
             <div
                 style={marginStyle}
-                className="w-full lg:w-[80vw] relative left-1/2 -translate-x-1/2 rounded-md sm:rounded-xl lg:rounded-2xl overflow-hidden border border-sec/20 bg-fg/3 transition-all duration-300"
+                className="w-full lg:w-[80vw] aspect-[16/9] sm:aspect-[21/9] relative left-1/2 -translate-x-1/2 rounded-md sm:rounded-xl lg:rounded-2xl overflow-hidden border border-sec/20 bg-fg/3 transition-all duration-300"
             >
                 <img
                     className="w-full h-full object-cover max-h-[80vh]"
-                    src={src}
+                    src={imgSrc}
                     alt={alt}
+                    onError={() => setImgSrc(DEFAULT_FALLBACK_BANNER)}
+                    loading="eager"
                 />
             </div>
         )
@@ -76,12 +91,14 @@ const Banner: React.FC<BannerProps> = ({
     return (
         <div
             style={marginStyle}
-            className="w-screen relative left-1/2 -translate-x-1/2 overflow-hidden transition-all duration-300"
+            className="w-screen aspect-[16/9] sm:aspect-[21/9] relative left-1/2 -translate-x-1/2 overflow-hidden transition-all duration-300"
         >
             <img
                 className="w-full h-full object-cover"
-                src={src}
+                src={imgSrc}
                 alt={alt}
+                onError={() => setImgSrc(DEFAULT_FALLBACK_BANNER)}
+                loading="eager"
             />
         </div>
     )

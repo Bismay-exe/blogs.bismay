@@ -160,19 +160,19 @@ const ArticleViewInner: React.FC<ArticleViewClientProps> = ({
     }
 
     const cssVariables = {
-        ['--reader-heading-font' as any]: getFontFamily(typography.headingFont),
-        ['--reader-body-font' as any]: getFontFamily(typography.bodyFont),
-        ['--reader-code-font' as any]: getFontFamily(typography.codeFont),
-        ['--reader-body-font-size' as any]: `${typography.bodyFontSize}px`,
-        ['--reader-body-font-weight' as any]: `${typography.bodyFontWeight || 400}`,
-        ['--reader-heading-font-weight' as any]: `${typography.headingFontWeight || 700}`,
-        ['--reader-title-font-weight' as any]: `${typography.titleFontWeight || 700}`,
-        ['--reader-title-scale' as any]: `${typography.titleScale || 1.0}`,
-        ['--reader-line-height' as any]: `${typography.lineHeight}`,
-        ['--reader-heading-scale' as any]: `${typography.headingScale}`,
-        ['--reader-paragraph-spacing' as any]: `${typography.paragraphSpacing || 24}px`,
-        ['--reader-heading-margin-top' as any]: `${typography.headingMarginTop || 32}px`,
-        ['--reader-heading-margin-bottom' as any]: `${typography.headingMarginBottom || 12}px`,
+        ['--reader-heading-font' as any]: getFontFamily(typography.headingFont?.headingFont || typography.headingFontChoice),
+        ['--reader-body-font' as any]: getFontFamily(typography.bodyFont?.bodyFont || typography.bodyFontChoice),
+        ['--reader-code-font' as any]: getFontFamily(typography.codeFont?.codeFont || typography.codeFontChoice),
+        ['--reader-body-font-size' as any]: `${typography.bodyFont?.bodyFontSize || typography.bodyFontSize || 17}px`,
+        ['--reader-body-font-weight' as any]: `${typography.bodyFont?.bodyFontWeight || typography.bodyFontWeight || 400}`,
+        ['--reader-heading-font-weight' as any]: `${typography.headingFont?.headingFontWeight || typography.headingFontWeight || 600}`,
+        ['--reader-title-font-weight' as any]: `${typography.titleFont?.titleFontWeight || typography.titleFontWeight || 700}`,
+        ['--reader-title-scale' as any]: `${typography.titleFont?.titleScale || typography.titleScale || 1.0}`,
+        ['--reader-line-height' as any]: `${typography.bodyFont?.lineHeight || typography.lineHeight || 1.77}`,
+        ['--reader-heading-scale' as any]: `${typography.headingFont?.headingScale || typography.headingScale || 1.0}`,
+        ['--reader-paragraph-spacing' as any]: `${typography.bodyFont?.paragraphSpacing || typography.paragraphSpacing || 26}px`,
+        ['--reader-heading-margin-top' as any]: `${typography.headingFont?.headingMarginTop || typography.headingMarginTop || 32}px`,
+        ['--reader-heading-margin-bottom' as any]: `${typography.headingFont?.headingMarginBottom || typography.headingMarginBottom || 12}px`,
     }
 
     const maxWidthClass =
@@ -182,13 +182,18 @@ const ArticleViewInner: React.FC<ArticleViewClientProps> = ({
             ? 'max-w-5xl'
             : 'max-w-3xl'
 
+    const bannerWidthChoice = settings.articleLayout?.bannerWidth || layout.bannerWidth
+    const titleWidthChoice = settings.articleLayout?.titleWidth || layout.titleWidth
+
     const isBreakoutBanner =
-        layout.bannerWidth === 'breakout' ||
-        layout.bannerWidth === 'awwwards-80' ||
-        layout.bannerWidth === 'full-bleed' ||
-        layout.titleWidth === 'breakout' ||
-        layout.titleWidth === 'awwwards-80' ||
-        layout.titleWidth === 'full-bleed'
+        bannerWidthChoice === 'breakout' ||
+        bannerWidthChoice === 'awwwards-80' ||
+        bannerWidthChoice === 'full-bleed' ||
+        titleWidthChoice === 'breakout' ||
+        titleWidthChoice === 'awwwards-80' ||
+        titleWidthChoice === 'full-bleed'
+
+    const showLeftSidebar = (layout?.showLeftSidebar ?? true) && (layout?.showTableOfContents ?? true)
 
     return (
         <div
@@ -247,7 +252,7 @@ const ArticleViewInner: React.FC<ArticleViewClientProps> = ({
 
                     {/* Content & Sidebars Zone: Centered with sidebars starting at Body Text */}
                     <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 pt-4 pb-16">
-                        {layout.showLeftSidebar && appearance.showTableOfContents && (
+                        {showLeftSidebar && (
                             <LeftLayout markdown={article.markdown} />
                         )}
                         <div className={`w-full ${maxWidthClass} mx-auto min-w-0 flex-1 transition-all duration-300`}>
@@ -259,7 +264,7 @@ const ArticleViewInner: React.FC<ArticleViewClientProps> = ({
             ) : (
                 /* Contained Layout: Standard 3-column top alignment */
                 <div className={`w-full max-w-7xl mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 pb-16 ${layout.showNavbar ? 'pt-8 sm:pt-12' : 'pt-6'}`}>
-                    {layout.showLeftSidebar && appearance.showTableOfContents && (
+                    {showLeftSidebar && (
                         <LeftLayout markdown={article.markdown} />
                     )}
                     <Main

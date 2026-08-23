@@ -9,8 +9,9 @@ interface TitleProps {
 
 const Title: React.FC<TitleProps> = ({ title }) => {
     const { settings } = useReaderSettings()
-    const { headerAlignment, titleWidth = 'contained' } = settings.layout
-    const { titleUppercase = false } = settings.typography
+    const headerAlignment = settings.articleLayout?.headerAlignment || settings.layout?.headerAlignment || 'left'
+    const titleWidth = settings.articleLayout?.titleWidth || settings.layout?.titleWidth || 'contained'
+    const titleUppercase = settings.typography?.titleFont?.titleUppercase ?? settings.typography?.titleUppercase ?? false
     const isCenter = headerAlignment === 'center'
 
     const titleElement = (

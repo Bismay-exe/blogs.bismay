@@ -48,12 +48,14 @@ const ArticleVideo: React.FC<ArticleVideoProps> = ({
         return <YoutubeVideo url={src} alt={alt} caption={caption} className={className} />
     }
 
-    // Determine skin from props or global reader appearance settings
+    // Determine skin from props or global reader media settings
     let readerSkin: VideoPlayerSkin = 'modern'
     try {
         const { settings } = useReaderSettings()
-        if (settings?.appearance?.videoPlayerSkin) {
-            readerSkin = settings.appearance.videoPlayerSkin
+        if (settings?.media?.videoPlayerSkin) {
+            readerSkin = settings.media.videoPlayerSkin
+        } else if ((settings as any)?.appearance?.videoPlayerSkin) {
+            readerSkin = (settings as any).appearance.videoPlayerSkin
         }
     } catch {
         // Fallback if rendered outside ReaderSettingsProvider

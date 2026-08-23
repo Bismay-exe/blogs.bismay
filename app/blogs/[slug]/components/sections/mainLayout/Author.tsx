@@ -5,7 +5,8 @@ import { useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
 
 const Author = () => {
     const { settings } = useReaderSettings()
-    const { headerAlignment, authorStyle = 'default' } = settings.layout
+    const headerAlignment = settings.articleLayout?.headerAlignment || settings.layout?.headerAlignment || 'left'
+    const authorStyle = settings.articleLayout?.authorStyle || settings.layout?.authorStyle || 'default'
     const isCenter = headerAlignment === 'center'
 
     if (authorStyle === 'overlap') {
