@@ -1,12 +1,13 @@
 "use client"
 
-import { useLayoutEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import type React from "react"
 import { useInView } from "motion/react"
 import { annotate } from "rough-notation"
 import { type RoughAnnotation } from "rough-notation/lib/model"
+import { cn } from "@/lib/utils"
 
-type AnnotationAction =
+export type AnnotationAction =
   | "highlight"
   | "underline"
   | "box"
@@ -15,40 +16,57 @@ type AnnotationAction =
   | "crossed-off"
   | "bracket"
 
-interface HighlighterProps {
+export interface HighlighterProps {
   children: React.ReactNode
   action?: AnnotationAction
   color?: string
   strokeWidth?: number
   animationDuration?: number
   iterations?: number
-  padding?: number
+  padding?: number | [number, number] | [number, number, number, number]
   multiline?: boolean
   isView?: boolean
+  className?: string
+}
+
+const DEFAULT_ACTION_COLORS: Record<AnnotationAction, string> = {
+  highlight: "#ffd93d55",
+  underline: "#4d96ff",
+  box: "#6bcb77",
+  circle: "#ff6b6b",
+  "strike-through": "#9b51e0",
+  "crossed-off": "#ff6b6b",
+  bracket: "#4d96ff",
 }
 
 export function Highlighter({
   children,
   action = "highlight",
-  color = "#ffd1dc",
+  color,
   strokeWidth = 1.5,
   animationDuration = 600,
   iterations = 2,
   padding = 2,
   multiline = true,
-  isView = false,
+  isView = true,
+  className,
 }: HighlighterProps) {
   const elementRef = useRef<HTMLSpanElement>(null)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const isInView = useInView(elementRef, {
     once: true,
-    margin: "-10%",
+    margin: "-5%",
   })
 
-  // If isView is false, always show. If isView is true, wait for inView
-  const shouldShow = !isView || isInView
+  const effectiveColor = color || DEFAULT_ACTION_COLORS[action] || "#ffd93d55"
+  const shouldShow = isMounted && (!isView || isInView)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const element = elementRef.current
     let annotation: RoughAnnotation | null = null
     let resizeObserver: ResizeObserver | null = null
@@ -56,8 +74,8 @@ export function Highlighter({
     if (shouldShow && element) {
       const annotationConfig = {
         type: action,
-        color,
-        strokeWidth,
+        color: effectiveColor,
+        strokeWidth: action === "highlight" ? strokeWidth * 1.2 : strokeWidth,
         animationDuration,
         iterations,
         padding,
@@ -74,7 +92,9 @@ export function Highlighter({
       })
 
       resizeObserver.observe(element)
-      resizeObserver.observe(document.body)
+      if (document.body) {
+        resizeObserver.observe(document.body)
+      }
     }
 
     return () => {
@@ -86,7 +106,7 @@ export function Highlighter({
   }, [
     shouldShow,
     action,
-    color,
+    effectiveColor,
     strokeWidth,
     animationDuration,
     iterations,
@@ -95,7 +115,10 @@ export function Highlighter({
   ])
 
   return (
-    <span ref={elementRef} className="relative inline-block bg-transparent">
+    <span
+      ref={elementRef}
+      className={cn("relative inline-block bg-transparent leading-relaxed", className)}
+    >
       {children}
     </span>
   )

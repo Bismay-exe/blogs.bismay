@@ -16,6 +16,9 @@ import {
     AuthorStyle,
 } from '@/lib/reader-settings/types'
 import { ReaderNav } from '@/components/settings/ReaderNav'
+import { BannerWidthPreviewSVG } from '@/components/settings/svgs/BannerWidthPreviewSVG'
+import { HeaderAlignmentSVG } from '@/components/settings/svgs/HeaderAlignmentSVG'
+import { TitleWidthPreviewSVG } from '@/components/settings/svgs/TitleWidthPreviewSVG'
 
 const ELEMENT_LABELS: Record<HeaderElementId, string> = {
     topbar: 'Metadata / Category & Date',
@@ -138,23 +141,33 @@ export default function ArticleLayoutSettingsPage() {
                     </div>
 
                     {/* Header Alignment */}
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
                         <span className="text-xs font-semibold text-sec block">Header Alignment</span>
-                        <div className="grid grid-cols-2 gap-2">
-                            {(['left', 'center'] as HeaderAlignment[]).map((align) => (
-                                <button
-                                    key={align}
-                                    type="button"
-                                    onClick={() => updateArticleLayout({ headerAlignment: align })}
-                                    className={`py-2 px-3 rounded-xl text-xs font-medium border capitalize transition-all cursor-pointer ${
-                                        headerAlignment === align
-                                            ? 'border-fg bg-fg text-bg shadow-xs'
-                                            : 'border-sec/15 bg-bg text-fg hover:border-sec/30'
-                                    }`}
-                                >
-                                    {align}
-                                </button>
-                            ))}
+                        <div className="grid grid-cols-2 gap-3">
+                            {[
+                                { id: 'left', label: 'Left Aligned', sub: 'Standard' },
+                                { id: 'center', label: 'Centered', sub: 'Editorial' },
+                            ].map((item) => {
+                                const isSelected = headerAlignment === item.id
+                                return (
+                                    <button
+                                        key={item.id}
+                                        type="button"
+                                        onClick={() => updateArticleLayout({ headerAlignment: item.id as HeaderAlignment })}
+                                        className={`group relative rounded-2xl overflow-hidden text-left cursor-pointer transition-all duration-200 ${
+                                            isSelected
+                                                ? 'ring-2 ring-fg shadow-lg shadow-fg/10'
+                                                : 'border border-sec/20 opacity-75 hover:opacity-100'
+                                        }`}
+                                    >
+                                        <HeaderAlignmentSVG alignment={item.id as HeaderAlignment} className="w-full h-auto" />
+                                        <div className="p-2.5 bg-fg/5 border-t border-sec/10 flex flex-col items-start justify-between">
+                                            <span className="text-xs font-semibold text-fg">{item.label}</span>
+                                            <span className="text-[10px] font-mono text-sec">{item.sub}</span>
+                                        </div>
+                                    </button>
+                                )
+                            })}
                         </div>
                     </div>
 
@@ -192,54 +205,68 @@ export default function ArticleLayoutSettingsPage() {
                     </div>
 
                     {/* Banner Width */}
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
                         <span className="text-xs font-semibold text-sec block">Hero Banner Width</span>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             {[
-                                { id: 'contained', label: 'Contained' },
-                                { id: 'breakout', label: 'Wide' },
-                                { id: 'awwwards-80', label: '85% Viewport' },
-                                { id: 'full-bleed', label: 'Full Bleed' },
-                            ].map((bw) => (
-                                <button
-                                    key={bw.id}
-                                    type="button"
-                                    onClick={() => updateArticleLayout({ bannerWidth: bw.id as BannerWidth })}
-                                    className={`py-2 px-2 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
-                                        bannerWidth === bw.id
-                                            ? 'border-fg bg-fg text-bg shadow-xs'
-                                            : 'border-sec/15 bg-bg text-fg hover:border-sec/30'
-                                    }`}
-                                >
-                                    {bw.label}
-                                </button>
-                            ))}
+                                { id: 'contained', label: 'Contained', sub: 'Column' },
+                                { id: 'breakout', label: 'Wide', sub: 'Breakout' },
+                                { id: 'awwwards-80', label: '85% Viewport', sub: 'Immersive' },
+                                { id: 'full-bleed', label: 'Full Bleed', sub: 'Edge-to-Edge' },
+                            ].map((bw) => {
+                                const isSelected = bannerWidth === bw.id
+                                return (
+                                    <button
+                                        key={bw.id}
+                                        type="button"
+                                        onClick={() => updateArticleLayout({ bannerWidth: bw.id as BannerWidth })}
+                                        className={`group relative rounded-2xl overflow-hidden text-left cursor-pointer transition-all duration-200 ${
+                                            isSelected
+                                                ? 'ring-2 ring-fg shadow-lg shadow-fg/10'
+                                                : 'border border-sec/20 opacity-75 hover:opacity-100'
+                                        }`}
+                                    >
+                                        <BannerWidthPreviewSVG widthMode={bw.id as BannerWidth} className="w-full h-auto" />
+                                        <div className="p-2.5 bg-fg/5 border-t border-sec/10 flex flex-col items-start justify-between">
+                                            <span className="text-xs font-semibold text-fg">{bw.label}</span>
+                                            <span className="text-[10px] font-mono text-sec">{bw.sub}</span>
+                                        </div>
+                                    </button>
+                                )
+                            })}
                         </div>
                     </div>
 
                     {/* Title Width */}
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
                         <span className="text-xs font-semibold text-sec block">Title (H1) Width</span>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             {[
-                                { id: 'contained', label: 'Contained' },
-                                { id: 'breakout', label: 'Wide' },
-                                { id: 'awwwards-80', label: '80% Viewport' },
-                                { id: 'full-bleed', label: 'Full Bleed' },
-                            ].map((tw) => (
-                                <button
-                                    key={tw.id}
-                                    type="button"
-                                    onClick={() => updateArticleLayout({ titleWidth: tw.id as TitleWidth })}
-                                    className={`py-2 px-2 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
-                                        titleWidth === tw.id
-                                            ? 'border-fg bg-fg text-bg shadow-xs'
-                                            : 'border-sec/15 bg-bg text-fg hover:border-sec/30'
-                                    }`}
-                                >
-                                    {tw.label}
-                                </button>
-                            ))}
+                                { id: 'contained', label: 'Contained', sub: 'Column' },
+                                { id: 'breakout', label: 'Wide', sub: 'Breakout' },
+                                { id: 'awwwards-80', label: '80% Viewport', sub: 'Immersive' },
+                                { id: 'full-bleed', label: 'Full Bleed', sub: 'Edge-to-Edge' },
+                            ].map((tw) => {
+                                const isSelected = titleWidth === tw.id
+                                return (
+                                    <button
+                                        key={tw.id}
+                                        type="button"
+                                        onClick={() => updateArticleLayout({ titleWidth: tw.id as TitleWidth })}
+                                        className={`group relative rounded-2xl overflow-hidden text-left cursor-pointer transition-all duration-200 ${
+                                            isSelected
+                                                ? 'ring-2 ring-fg shadow-lg shadow-fg/10'
+                                                : 'border border-sec/20 opacity-75 hover:opacity-100'
+                                        }`}
+                                    >
+                                        <TitleWidthPreviewSVG widthMode={tw.id as TitleWidth} className="w-full h-auto" />
+                                        <div className="p-2.5 bg-fg/5 border-t border-sec/10 flex flex-col items-start justify-between">
+                                            <span className="text-xs font-semibold text-fg">{tw.label}</span>
+                                            <span className="text-[10px] font-mono text-sec">{tw.sub}</span>
+                                        </div>
+                                    </button>
+                                )
+                            })}
                         </div>
                     </div>
 

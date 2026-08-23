@@ -11,6 +11,7 @@ import {
     Code,
     Code2,
     Keyboard,
+    Highlighter as HighlighterIcon,
     GitCompare,
     AlertCircle,
     Quote,
@@ -104,6 +105,14 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
                 title="Strikethrough (~~text~~)"
             >
                 <Strikethrough size={16} />
+            </button>
+            <button
+                type="button"
+                onClick={() => toggleInlineFormat(getTextarea(), content, 'highlight', onContentChange)}
+                className="p-1.5 rounded-lg hover:bg-fg/10 text-sec hover:text-amber-400 transition-colors cursor-pointer"
+                title="Highlight (==text==)"
+            >
+                <HighlighterIcon size={16} />
             </button>
             <button
                 type="button"

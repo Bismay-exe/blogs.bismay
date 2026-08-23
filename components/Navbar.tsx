@@ -50,27 +50,33 @@ const Navbar = () => {
     const [theme, setTheme] = useState<'dark' | 'light'>('dark')
     const [mounted, setMounted] = useState(false)
 
-    // Initialize theme from localStorage or default to dark
+    // Synchronize theme with document.documentElement classList
     useEffect(() => {
         setMounted(true)
-        const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' | null
-        if (savedTheme) {
-            setTheme(savedTheme)
-            document.documentElement.classList.remove('dark', 'light')
-            document.documentElement.classList.add(savedTheme)
-        } else {
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-            const initialTheme = prefersDark ? 'dark' : 'dark' // default to dark aesthetic
-            setTheme(initialTheme)
-            document.documentElement.classList.remove('dark', 'light')
-            document.documentElement.classList.add(initialTheme)
-        }
+        const isDark = document.documentElement.classList.contains('dark')
+        setTheme(isDark ? 'dark' : 'light')
+
+        const observer = new MutationObserver(() => {
+            const currentIsDark = document.documentElement.classList.contains('dark')
+            setTheme(currentIsDark ? 'dark' : 'light')
+        })
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+        return () => observer.disconnect()
     }, [])
 
     const toggleTheme = () => {
-        const nextTheme = theme === 'dark' ? 'light' : 'dark'
+        const isCurrentlyDark = document.documentElement.classList.contains('dark')
+        const nextTheme = isCurrentlyDark ? 'light' : 'dark'
         setTheme(nextTheme)
-        localStorage.setItem('theme', nextTheme)
+        try {
+            localStorage.setItem('theme', nextTheme)
+            const raw = localStorage.getItem('reader_custom_settings')
+            if (raw) {
+                const parsed = JSON.parse(raw)
+                parsed.appearance = { ...(parsed.appearance || {}), theme: nextTheme }
+                localStorage.setItem('reader_custom_settings', JSON.stringify(parsed))
+            }
+        } catch {}
         document.documentElement.classList.remove('dark', 'light')
         document.documentElement.classList.add(nextTheme)
     }

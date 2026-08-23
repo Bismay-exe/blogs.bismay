@@ -1,0 +1,20 @@
+<svg width="246" height="179" viewBox="0 0 246 179" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="246" height="179" rx="21" fill="#141414"/>
+<g clip-path="url(#clip_breakout)">
+<rect x="80" y="32" width="29" height="5" rx="2.5" fill="#272727"/>
+<rect x="63" y="44" width="120" height="47" rx="4" fill="#272727"/>
+<rect x="80" y="103" width="36" height="7" rx="3.5" fill="#272727"/>
+<rect x="80" y="115" width="81" height="5" rx="2.5" fill="#272727"/>
+<rect x="80" y="122" width="83" height="5" rx="2.5" fill="#272727"/>
+<rect x="80" y="129" width="86" height="5" rx="2.5" fill="#272727"/>
+<rect x="80" y="136" width="81" height="5" rx="2.5" fill="#272727"/>
+<rect x="80" y="143" width="84" height="5" rx="2.5" fill="#272727"/>
+<rect x="80" y="150" width="86" height="5" rx="2.5" fill="#272727"/>
+<rect x="80" y="157" width="86" height="5" rx="2.5" fill="#272727"/>
+</g>
+<defs>
+<clipPath id="clip_breakout">
+<rect width="246" height="179" rx="21" fill="white"/>
+</clipPath>
+</defs>
+</svg>

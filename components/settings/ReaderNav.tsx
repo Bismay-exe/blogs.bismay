@@ -24,10 +24,10 @@ export const ReaderNav: React.FC = () => {
     const pathname = usePathname()
 
     return (
-        <div className="fixed left-0 top-0 h-screen flex flex-col justify-between pl-3 md:pl-6 pb-6 pt-22">
+        <div className="fixed left-0 top-0 h-screen flex flex-col justify-between pl-3 md:pl-6 pb-6 pt-6">
             <div className="flex items-center justify-between">
                 <Link href="/settings" className="projectz group/icon h-13 w-13 flex justify-center items-center rounded-2xl text-2xl font-medium whitespace-nowrap transition-all duration-150 bg-sec/15 text-sec hover:text-fg hover:bg-sec/25">
-                    <ArrowIcon className="list-line rotate-180 translate-x-17" />
+                    <ArrowIcon className="list-line rotate-180 translate-x-14.5 md:translate-x-17.5" />
                 </Link>
             </div>
 

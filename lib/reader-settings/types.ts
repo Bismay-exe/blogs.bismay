@@ -12,7 +12,7 @@ export type HeaderAlignment = 'left' | 'center'
 
 export type FontChoice = 'sans' | 'inter-tight' | 'serif' | 'mono' | 'space-mono' | 'roboto'
 
-export type ReaderThemeMode = 'system' | 'light' | 'dim' | 'dark'
+export type ReaderThemeMode = 'system' | 'light' | 'dark'
 
 export type VideoPlayerSkin = 'modern' | 'minimal'
 

@@ -38,6 +38,8 @@ const spaceMono = Space_Mono({
   display: 'swap',
 });
 
+import { ReaderSettingsClientProvider } from "@/components/providers/ReaderSettingsClientProvider";
+
 export const metadata: Metadata = {
   title: "Blogs by Bismay",
   description: "Personal tech blog & reading experience by Bismay",
@@ -59,7 +61,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         interTight.variable
       )}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ReaderSettingsClientProvider>{children}</ReaderSettingsClientProvider>
+      </body>
     </html>
   );
 }

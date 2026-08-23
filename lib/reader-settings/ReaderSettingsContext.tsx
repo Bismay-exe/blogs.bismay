@@ -156,6 +156,51 @@ export const ReaderSettingsProvider: React.FC<{ children: React.ReactNode }> = (
         }
     }, [])
 
+    // Apply Theme & Accent Color dynamically to document.documentElement
+    useEffect(() => {
+        if (typeof window === 'undefined') return
+
+        const theme = settings.appearance?.theme || 'system'
+        const accent = settings.appearance?.accentColor || '#9b51e0'
+
+        const applyThemeClass = (effectiveTheme: 'dark' | 'light') => {
+            document.documentElement.classList.remove('dark', 'light')
+            document.documentElement.classList.add(effectiveTheme)
+            try {
+                localStorage.setItem('theme', effectiveTheme)
+            } catch {}
+        }
+
+        let mediaQuery: MediaQueryList | null = null
+        const handleMediaChange = (e: MediaQueryListEvent) => {
+            applyThemeClass(e.matches ? 'dark' : 'light')
+        }
+
+        if (theme === 'dark') {
+            applyThemeClass('dark')
+        } else if (theme === 'light') {
+            applyThemeClass('light')
+        } else {
+            // 'system'
+            mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+            applyThemeClass(mediaQuery.matches ? 'dark' : 'light')
+            mediaQuery.addEventListener('change', handleMediaChange)
+        }
+
+        // Apply accent color to CSS variables
+        if (accent) {
+            document.documentElement.style.setProperty('--acc', accent)
+            document.documentElement.style.setProperty('--accent', accent)
+            document.documentElement.style.setProperty('--reader-accent-color', accent)
+        }
+
+        return () => {
+            if (mediaQuery) {
+                mediaQuery.removeEventListener('change', handleMediaChange)
+            }
+        }
+    }, [settings.appearance.theme, settings.appearance.accentColor])
+
     // Persist settings to localStorage
     const persistSettings = useCallback((newSettings: ReaderSettings) => {
         try {

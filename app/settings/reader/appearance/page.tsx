@@ -2,8 +2,8 @@
 
 import React from 'react'
 import { useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
-import { ReaderThemeMode } from '@/lib/reader-settings/types'
 import { ReaderNav } from '@/components/settings/ReaderNav'
+import { ThemePreviewSVG } from '@/components/settings/svgs/ThemePreviewSVG'
 
 const ACCENT_COLORS = [
     { name: 'Coral Red', value: '#ff6b6b' },
@@ -36,32 +36,28 @@ export default function AppearanceSettingsPage() {
                     Appearance
                 </h1>
 
-                {/* Card 1: Theme Visual Wireframe Selector */}
+                {/* Card 1: Theme Visual Wireframe Selector with ThemePreviewSVG */}
                 <div className="rounded-[28px] bg-fg/5 p-6 sm:p-7 space-y-4">
                     <div>
                         <h2 className="text-base font-bold text-fg">Theme</h2>
                         <p className="text-xs text-sec mt-0.5">Customize your UI color mode</p>
                     </div>
 
-                    <div className="flex items-center gap-3.5 overflow-x-auto pb-1 no-scrollbar">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                         {/* Dark Card */}
                         <button
                             type="button"
                             onClick={() => updateAppearance({ theme: 'dark' })}
-                            className={`group relative shrink-0 w-40 h-28 rounded-2xl bg-[#191919] p-3.5 flex flex-col justify-between text-left cursor-pointer transition-all duration-200 ${
+                            className={`group relative rounded-2xl overflow-hidden text-left cursor-pointer transition-all duration-200 ${
                                 activeTheme === 'dark'
                                     ? 'ring-2 ring-fg shadow-lg shadow-fg/10'
                                     : 'border border-sec/20 opacity-75 hover:opacity-100'
                             }`}
                         >
-                            <div className="space-y-1.5 w-full">
-                                <div className="w-7 h-1 bg-[#444] rounded-full" />
-                                <div className="w-16 h-1.5 bg-[#444] rounded-full" />
-                                <div className="w-full h-10 bg-[#252525] rounded-lg mt-1" />
-                            </div>
-                            <div className="space-y-1 w-full">
-                                <div className="w-full h-1 bg-[#444] rounded-full" />
-                                <div className="w-4/5 h-1 bg-[#444] rounded-full" />
+                            <ThemePreviewSVG mode="dark" className="w-full h-auto" />
+                            <div className="p-2.5 bg-fg/5 border-t border-sec/10 flex items-center justify-between">
+                                <span className="text-xs font-semibold text-fg">Dark</span>
+                                <span className="text-[10px] font-mono text-sec">#141414</span>
                             </div>
                         </button>
 
@@ -69,41 +65,16 @@ export default function AppearanceSettingsPage() {
                         <button
                             type="button"
                             onClick={() => updateAppearance({ theme: 'light' })}
-                            className={`group relative shrink-0 w-40 h-28 rounded-2xl bg-[#FFFFFF] p-3.5 flex flex-col justify-between text-left cursor-pointer transition-all duration-200 ${
+                            className={`group relative rounded-2xl overflow-hidden text-left cursor-pointer transition-all duration-200 ${
                                 activeTheme === 'light'
                                     ? 'ring-2 ring-fg shadow-lg shadow-fg/10'
                                     : 'border border-sec/20 opacity-75 hover:opacity-100'
                             }`}
                         >
-                            <div className="space-y-1.5 w-full">
-                                <div className="w-7 h-1 bg-[#e0e0e0] rounded-full" />
-                                <div className="w-16 h-1.5 bg-[#e0e0e0] rounded-full" />
-                                <div className="w-full h-10 bg-[#f4f4f5] rounded-lg mt-1" />
-                            </div>
-                            <div className="space-y-1 w-full">
-                                <div className="w-full h-1 bg-[#e0e0e0] rounded-full" />
-                                <div className="w-4/5 h-1 bg-[#e0e0e0] rounded-full" />
-                            </div>
-                        </button>
-
-                        {/* Dim / Sepia Card */}
-                        <button
-                            type="button"
-                            onClick={() => updateAppearance({ theme: 'dim' })}
-                            className={`group relative shrink-0 w-40 h-28 rounded-2xl bg-[#E8DFC8] p-3.5 flex flex-col justify-between text-left cursor-pointer transition-all duration-200 ${
-                                activeTheme === 'dim'
-                                    ? 'ring-2 ring-fg shadow-lg shadow-fg/10'
-                                    : 'border border-[#dcd2b7] opacity-75 hover:opacity-100'
-                            }`}
-                        >
-                            <div className="space-y-1.5 w-full">
-                                <div className="w-7 h-1 bg-[#cfc5aa] rounded-full" />
-                                <div className="w-16 h-1.5 bg-[#cfc5aa] rounded-full" />
-                                <div className="w-full h-10 bg-[#dfd6be] rounded-lg mt-1" />
-                            </div>
-                            <div className="space-y-1 w-full">
-                                <div className="w-full h-1 bg-[#cfc5aa] rounded-full" />
-                                <div className="w-4/5 h-1 bg-[#cfc5aa] rounded-full" />
+                            <ThemePreviewSVG mode="light" className="w-full h-auto" />
+                            <div className="p-2.5 bg-fg/5 border-t border-sec/10 flex items-center justify-between">
+                                <span className="text-xs font-semibold text-fg">Light</span>
+                                <span className="text-[10px] font-mono text-sec">Clean</span>
                             </div>
                         </button>
 
@@ -111,20 +82,16 @@ export default function AppearanceSettingsPage() {
                         <button
                             type="button"
                             onClick={() => updateAppearance({ theme: 'system' })}
-                            className={`group relative shrink-0 w-40 h-28 rounded-2xl bg-linear-to-r from-[#191919] to-[#FFFFFF] p-3.5 flex flex-col justify-between text-left cursor-pointer transition-all duration-200 ${
+                            className={`group relative rounded-2xl overflow-hidden text-left cursor-pointer transition-all duration-200 ${
                                 activeTheme === 'system'
                                     ? 'ring-2 ring-fg shadow-lg shadow-fg/10'
                                     : 'border border-sec/20 opacity-75 hover:opacity-100'
                             }`}
                         >
-                            <div className="space-y-1.5 w-full">
-                                <div className="w-7 h-1 bg-[#888] rounded-full" />
-                                <div className="w-16 h-1.5 bg-[#888] rounded-full" />
-                                <div className="w-full h-10 bg-[#888]/30 rounded-lg mt-1" />
-                            </div>
-                            <div className="space-y-1 w-full">
-                                <div className="w-full h-1 bg-[#888] rounded-full" />
-                                <div className="w-4/5 h-1 bg-[#888] rounded-full" />
+                            <ThemePreviewSVG mode="system" className="w-full h-auto" />
+                            <div className="p-2.5 bg-fg/5 border-t border-sec/10 flex items-center justify-between">
+                                <span className="text-xs font-semibold text-fg">System</span>
+                                <span className="text-[10px] font-mono text-sec">Auto</span>
                             </div>
                         </button>
                     </div>

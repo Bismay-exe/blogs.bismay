@@ -30,7 +30,7 @@ export function updateTextarea(
 export function toggleInlineFormat(
     textarea: HTMLTextAreaElement | null,
     content: string,
-    type: 'bold' | 'italic' | 'strike' | 'code' | 'kbd',
+    type: 'bold' | 'italic' | 'strike' | 'code' | 'kbd' | 'highlight',
     onContentChange: (content: string) => void
 ) {
     if (!textarea) {
@@ -41,6 +41,8 @@ export function toggleInlineFormat(
                 ? '*'
                 : type === 'strike'
                 ? '~~'
+                : type === 'highlight'
+                ? '=='
                 : type === 'kbd'
                 ? '<kbd>'
                 : '`'
@@ -52,6 +54,25 @@ export function toggleInlineFormat(
     const start = textarea.selectionStart
     const end = textarea.selectionEnd
     const selected = content.slice(start, end)
+
+    if (type === 'highlight') {
+        if (selected.startsWith('==') && selected.endsWith('==') && selected.length >= 4) {
+            const unwrapped = selected.slice(2, -2)
+            const newContent = content.slice(0, start) + unwrapped + content.slice(end)
+            updateTextarea(textarea, newContent, start, start + unwrapped.length, onContentChange)
+            return
+        }
+        if (content.slice(Math.max(0, start - 2), start) === '==' && content.slice(end, end + 2) === '==') {
+            const newContent = content.slice(0, start - 2) + selected + content.slice(end + 2)
+            updateTextarea(textarea, newContent, start - 2, start - 2 + selected.length, onContentChange)
+            return
+        }
+        const textToWrap = selected || 'highlighted text'
+        const replacement = `==${textToWrap}==`
+        const newContent = content.slice(0, start) + replacement + content.slice(end)
+        updateTextarea(textarea, newContent, start + 2, start + 2 + textToWrap.length, onContentChange)
+        return
+    }
 
     if (type === 'kbd') {
         if (selected.startsWith('<kbd>') && selected.endsWith('</kbd>')) {
