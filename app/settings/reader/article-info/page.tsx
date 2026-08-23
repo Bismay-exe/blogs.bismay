@@ -28,7 +28,7 @@ export default function ArticleInfoSettingsPage() {
                 {/* Card: Grouped Article Info Toggles */}
                 <div className="rounded-[28px] bg-fg/5 text-fg divide-y divide-sec/10 overflow-hidden">
                     {/* Row 1: Reading Time */}
-                    <div className="flex items-center justify-between p-6 sm:p-7">
+                    <div className="flex items-center justify-between px-4 py-5 sm:px-7 sm:py-7">
                         <div>
                             <h3 className="text-sm font-semibold text-fg">Reading time</h3>
                             <p className="text-xs text-sec mt-0.5">Show estimated reading duration badge.</p>
@@ -52,7 +52,7 @@ export default function ArticleInfoSettingsPage() {
                     </div>
 
                     {/* Row 2: Published Date */}
-                    <div className="flex items-center justify-between p-6 sm:p-7">
+                    <div className="flex items-center justify-between px-4 py-5 sm:px-7 sm:py-7">
                         <div>
                             <h3 className="text-sm font-semibold text-fg">Published date</h3>
                             <p className="text-xs text-sec mt-0.5">Show article publication timestamp.</p>
@@ -76,7 +76,7 @@ export default function ArticleInfoSettingsPage() {
                     </div>
 
                     {/* Row 3: Category */}
-                    <div className="flex items-center justify-between p-6 sm:p-7">
+                    <div className="flex items-center justify-between px-4 py-5 sm:px-7 sm:py-7">
                         <div>
                             <h3 className="text-sm font-semibold text-fg">Category</h3>
                             <p className="text-xs text-sec mt-0.5">Show the article taxonomy topic chip.</p>
@@ -100,7 +100,7 @@ export default function ArticleInfoSettingsPage() {
                     </div>
 
                     {/* Row 4: Share Buttons */}
-                    <div className="flex items-center justify-between p-6 sm:p-7">
+                    <div className="flex items-center justify-between px-4 py-5 sm:px-7 sm:py-7">
                         <div>
                             <h3 className="text-sm font-semibold text-fg">Share buttons</h3>
                             <p className="text-xs text-sec mt-0.5">Show social share & copy URL action button.</p>

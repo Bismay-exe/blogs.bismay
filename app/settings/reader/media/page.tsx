@@ -27,7 +27,7 @@ export default function MediaSettingsPage() {
                 </h1>
 
                 {/* Card 1: Video Player Skin */}
-                <div className="rounded-[28px] bg-fg/5 text-fg p-6 sm:p-7 space-y-4">
+                <div className="rounded-[28px] bg-fg/5 text-fg px-4 py-5 sm:px-7 sm:py-7 space-y-4">
                     <div>
                         <h2 className="text-base font-bold text-fg">Video Player Skin</h2>
                         <p className="text-xs text-sec mt-0.5">Select embedded video controls interface</p>

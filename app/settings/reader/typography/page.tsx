@@ -133,12 +133,12 @@ export default function TypographySettingsPage() {
         <div className="relative bg-bg text-fg py-12 pl-18 pr-3 sm:pr-6">
             <ReaderNav />
             <div className="max-w-2xl mx-auto space-y-5">
-                <h1 className="text-3xl font-bold tracking-tight text-fg mb-6">
+                <h1 className="text-3xl font-bold tracking-tight text-fg mb-6 ml-3">
                     Typography
                 </h1>
 
                 {/* Card 1: Title (H1) Typography */}
-                <div className="rounded-[28px] bg-fg/5 text-fg p-6 sm:p-7 space-y-5">
+                <div className="rounded-[28px] bg-fg/5 text-fg px-4 py-5 sm:px-7 sm:py-7 space-y-5">
                     <div>
                         <h2 className="text-base font-bold text-fg">Article Title (H1)</h2>
                         <p className="text-xs text-sec mt-0.5">Customize title styling, weight, and scale</p>
@@ -189,7 +189,7 @@ export default function TypographySettingsPage() {
                 </div>
 
                 {/* Card 2: Headings (H2/H3) Typography */}
-                <div className="rounded-[28px] bg-fg/5 text-fg p-6 sm:p-7 space-y-5">
+                <div className="rounded-[28px] bg-fg/5 text-fg px-4 py-5 sm:px-7 sm:py-7 space-y-5">
                     <div>
                         <h2 className="text-base font-bold text-fg">Section Headings (H2)</h2>
                         <p className="text-xs text-sec mt-0.5">Control font family, scale, and vertical spacing</p>
@@ -242,7 +242,7 @@ export default function TypographySettingsPage() {
                 </div>
 
                 {/* Card 3: Body Prose Typography */}
-                <div className="rounded-[28px] bg-fg/5 text-fg p-6 sm:p-7 space-y-5">
+                <div className="rounded-[28px] bg-fg/5 text-fg px-4 py-5 sm:px-7 sm:py-7 space-y-5">
                     <div>
                         <h2 className="text-base font-bold text-fg">Body Prose</h2>
                         <p className="text-xs text-sec mt-0.5">Control font family, size, and comfortable line rhythm</p>
@@ -291,7 +291,7 @@ export default function TypographySettingsPage() {
                 </div>
 
                 {/* Card 4: Code Block Typography */}
-                <div className="rounded-[28px] bg-fg/5 text-fg p-6 sm:p-7 space-y-5">
+                <div className="rounded-[28px] bg-fg/5 text-fg px-4 py-5 sm:px-7 sm:py-7 space-y-5">
                     <div>
                         <h2 className="text-base font-bold text-fg">Code Block</h2>
                         <p className="text-xs text-sec mt-0.5">Styling for embedded code snippets</p>

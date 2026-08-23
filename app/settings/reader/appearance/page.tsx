@@ -37,7 +37,7 @@ export default function AppearanceSettingsPage() {
                 </h1>
 
                 {/* Card 1: Theme Visual Wireframe Selector with ThemePreviewSVG */}
-                <div className="rounded-[28px] bg-fg/5 p-6 sm:p-7 space-y-4">
+                <div className="rounded-[28px] bg-fg/5 px-4 py-5 sm:px-7 sm:py-7 space-y-4">
                     <div>
                         <h2 className="text-base font-bold text-fg">Theme</h2>
                         <p className="text-xs text-sec mt-0.5">Customize your UI color mode</p>
@@ -98,7 +98,7 @@ export default function AppearanceSettingsPage() {
                 </div>
 
                 {/* Card 2: Theme / Accent Color Circles */}
-                <div className="rounded-[28px] bg-fg/5 p-6 sm:p-7 space-y-4">
+                <div className="rounded-[28px] bg-fg/5 px-4 py-5 sm:px-7 sm:py-7 space-y-4">
                     <div>
                         <h2 className="text-base font-bold text-fg">Accent Color</h2>
                         <p className="text-xs text-sec mt-0.5">A small touch of personality</p>
@@ -126,7 +126,7 @@ export default function AppearanceSettingsPage() {
                 {/* Card 3: Grouped Switch Rows */}
                 <div className="rounded-[28px] bg-fg/5 divide-y divide-sec/10 overflow-hidden">
                     {/* Row 1: Reading Progress */}
-                    <div className="flex items-center justify-between p-6 sm:p-7">
+                    <div className="flex items-center justify-between px-4 py-5 sm:px-7 sm:py-7">
                         <div>
                             <h3 className="text-sm font-semibold text-fg">Reading progress</h3>
                             <p className="text-xs text-sec mt-0.5">Show your progress while scrolling.</p>
@@ -150,7 +150,7 @@ export default function AppearanceSettingsPage() {
                     </div>
 
                     {/* Row 2: Reduce Motion */}
-                    <div className="flex items-center justify-between p-6 sm:p-7">
+                    <div className="flex items-center justify-between px-4 py-5 sm:px-7 sm:py-7">
                         <div>
                             <h3 className="text-sm font-semibold text-fg">Reduce motion</h3>
                             <p className="text-xs text-sec mt-0.5">Minimize animations and transitions.</p>

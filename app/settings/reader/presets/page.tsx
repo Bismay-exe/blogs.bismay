@@ -27,7 +27,7 @@ export default function PresetsSettingsPage() {
                 </h1>
 
                 {/* Card 1: 1-Click Presets Grid */}
-                <div className="rounded-[28px] bg-fg/5 p-6 sm:p-7 space-y-4">
+                <div className="rounded-[28px] bg-fg/5 px-4 py-5 sm:px-7 sm:py-7 space-y-4">
                     <div>
                         <h2 className="text-base font-bold text-fg">Curated Presets</h2>
                         <p className="text-xs text-sec mt-0.5">

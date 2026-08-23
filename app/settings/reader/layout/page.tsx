@@ -27,7 +27,7 @@ export default function LayoutSettingsPage() {
                 </h1>
 
                 {/* Card 1: Content Width */}
-                <div className="rounded-[28px] bg-fg/5 text-fg p-6 sm:p-7 space-y-4">
+                <div className="rounded-[28px] bg-fg/5 text-fg px-4 py-5 sm:px-7 sm:py-7 space-y-4">
                     <div>
                         <h2 className="text-base font-bold text-fg">Content Width</h2>
                         <p className="text-xs text-sec mt-0.5">Control the reading column width for articles</p>
@@ -64,7 +64,7 @@ export default function LayoutSettingsPage() {
                 {/* Card 2: Grouped Layout Toggles */}
                 <div className="rounded-[28px] bg-fg/5 text-fg divide-y divide-sec/10 overflow-hidden">
                     {/* Row 1: Navbar */}
-                    <div className="flex items-center justify-between p-6 sm:p-7">
+                    <div className="flex items-center justify-between px-4 py-5 sm:px-7 sm:py-7">
                         <div>
                             <h3 className="text-sm font-semibold text-fg">Navbar</h3>
                             <p className="text-xs text-sec mt-0.5">Show the top navigation header.</p>
@@ -88,7 +88,7 @@ export default function LayoutSettingsPage() {
                     </div>
 
                     {/* Row 2: Left Sidebar */}
-                    <div className="flex items-center justify-between p-6 sm:p-7">
+                    <div className="flex items-center justify-between px-4 py-5 sm:px-7 sm:py-7">
                         <div>
                             <h3 className="text-sm font-semibold text-fg">Left sidebar</h3>
                             <p className="text-xs text-sec mt-0.5">Show the left rail container.</p>
@@ -112,7 +112,7 @@ export default function LayoutSettingsPage() {
                     </div>
 
                     {/* Row 3: Table of Contents */}
-                    <div className="flex items-center justify-between p-6 sm:p-7">
+                    <div className="flex items-center justify-between px-4 py-5 sm:px-7 sm:py-7">
                         <div>
                             <h3 className="text-sm font-semibold text-fg">Table of contents</h3>
                             <p className="text-xs text-sec mt-0.5">Keep the article heading minimap rail available.</p>
@@ -136,7 +136,7 @@ export default function LayoutSettingsPage() {
                     </div>
 
                     {/* Row 4: Right Sidebar */}
-                    <div className="flex items-center justify-between p-6 sm:p-7">
+                    <div className="flex items-center justify-between px-4 py-5 sm:px-7 sm:py-7">
                         <div>
                             <h3 className="text-sm font-semibold text-fg">Right sidebar</h3>
                             <p className="text-xs text-sec mt-0.5">Show supporting article widgets and cards.</p>

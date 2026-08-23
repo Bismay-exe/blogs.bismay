@@ -70,7 +70,7 @@ export default function ArticleLayoutSettingsPage() {
                 </h1>
 
                 {/* Card 1: Header Builder (Reorder & Visibility) */}
-                <div className="rounded-[28px] bg-fg/5 text-fg p-6 sm:p-7 space-y-4">
+                <div className="rounded-[28px] bg-fg/5 text-fg px-4 py-5 sm:px-7 sm:py-7 space-y-4">
                     <div>
                         <h2 className="text-base font-bold text-fg">Header Order & Visibility</h2>
                         <p className="text-xs text-sec mt-0.5">Reorder elements and toggle their presence</p>
@@ -135,7 +135,7 @@ export default function ArticleLayoutSettingsPage() {
                 </div>
 
                 {/* Card 2: Header Alignment & Author Style */}
-                <div className="rounded-[28px] bg-fg/5 text-fg p-6 sm:p-7 space-y-5">
+                <div className="rounded-[28px] bg-fg/5 text-fg px-4 py-5 sm:px-7 sm:py-7 space-y-5">
                     <div>
                         <h2 className="text-base font-bold text-fg">Alignment & Author Style</h2>
                         <p className="text-xs text-sec mt-0.5">Control header positioning and avatar layout</p>
@@ -199,7 +199,7 @@ export default function ArticleLayoutSettingsPage() {
                 </div>
 
                 {/* Card 3: Banner & Title Breakout Widths */}
-                <div className="rounded-[28px] bg-fg/5 text-fg p-6 sm:p-7 space-y-5">
+                <div className="rounded-[28px] bg-fg/5 text-fg px-4 py-5 sm:px-7 sm:py-7 space-y-5">
                     <div>
                         <h2 className="text-base font-bold text-fg">Hero & Title Breakout Width</h2>
                         <p className="text-xs text-sec mt-0.5">Control breakout sizing and full bleed presentation</p>

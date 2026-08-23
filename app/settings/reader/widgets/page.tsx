@@ -28,7 +28,7 @@ export default function WidgetsSettingsPage() {
                 {/* Card: Grouped Widgets Switches */}
                 <div className="rounded-[28px] bg-fg/5 text-fg divide-y divide-sec/10 overflow-hidden">
                     {/* Row 1: Profile */}
-                    <div className="flex items-center justify-between p-6 sm:p-7">
+                    <div className="flex items-center justify-between px-4 py-5 sm:px-7 sm:py-7">
                         <div>
                             <h3 className="text-sm font-semibold text-fg">Author profile</h3>
                             <p className="text-xs text-sec mt-0.5">Show author bio and avatar in the sidebar.</p>
@@ -52,7 +52,7 @@ export default function WidgetsSettingsPage() {
                     </div>
 
                     {/* Row 2: Series */}
-                    <div className="flex items-center justify-between p-6 sm:p-7">
+                    <div className="flex items-center justify-between px-4 py-5 sm:px-7 sm:py-7">
                         <div>
                             <h3 className="text-sm font-semibold text-fg">Series navigation</h3>
                             <p className="text-xs text-sec mt-0.5">Show tutorial chapters and series roadmap card.</p>
@@ -76,7 +76,7 @@ export default function WidgetsSettingsPage() {
                     </div>
 
                     {/* Row 3: Subscribe Form */}
-                    <div className="flex items-center justify-between p-6 sm:p-7">
+                    <div className="flex items-center justify-between px-4 py-5 sm:px-7 sm:py-7">
                         <div>
                             <h3 className="text-sm font-semibold text-fg">Subscribe newsletter</h3>
                             <p className="text-xs text-sec mt-0.5">Show the 1-click email newsletter form.</p>
@@ -100,7 +100,7 @@ export default function WidgetsSettingsPage() {
                     </div>
 
                     {/* Row 4: Social Links */}
-                    <div className="flex items-center justify-between p-6 sm:p-7">
+                    <div className="flex items-center justify-between px-4 py-5 sm:px-7 sm:py-7">
                         <div>
                             <h3 className="text-sm font-semibold text-fg">Social links</h3>
                             <p className="text-xs text-sec mt-0.5">Show links to GitHub, X/Twitter, and LinkedIn.</p>
