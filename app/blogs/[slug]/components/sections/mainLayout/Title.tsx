@@ -17,7 +17,7 @@ const Title: React.FC<TitleProps> = ({ title }) => {
     const titleElement = (
         <h1
             style={{
-                fontFamily: 'var(--reader-heading-font, inherit)',
+                fontFamily: 'var(--reader-title-font, var(--reader-heading-font, inherit))',
                 fontWeight: 'var(--reader-title-font-weight, 700)',
                 fontSize: 'calc(clamp(2rem, 4.5vw, 3.75rem) * var(--reader-title-scale, 1))',
             }}

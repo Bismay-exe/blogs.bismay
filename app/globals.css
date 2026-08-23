@@ -51,9 +51,12 @@ html.light {
   --color-accent: var(--acc);
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
+  --font-roboto: var(--font-roboto);
   --font-mono: var(--font-mono);
   --font-inter-tight: var(--font-inter-tight);
   --font-space-mono: var(--font-space-mono);
+  --font-dm-sans: var(--font-dm-sans);
+  --font-dm-mono: var(--font-dm-mono);
 }
 
 html {

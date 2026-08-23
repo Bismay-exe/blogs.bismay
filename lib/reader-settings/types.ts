@@ -10,7 +10,8 @@ export type AuthorStyle = 'default' | 'overlap' | 'compact'
 
 export type HeaderAlignment = 'left' | 'center'
 
-export type FontChoice = 'sans' | 'inter-tight' | 'serif' | 'mono' | 'space-mono' | 'roboto'
+export type CodeFontChoice = 'mono' | 'space-mono' | 'dm-mono'
+export type FontChoice = 'inter-tight' | 'inter' | 'sans' | 'serif' | 'roboto' | CodeFontChoice
 
 export type ReaderThemeMode = 'system' | 'light' | 'dark'
 
@@ -48,7 +49,7 @@ export interface ReaderSettings {
             bodyFontWeight: number
         }
         codeFont: {
-            codeFont: 'mono' | 'space-mono'
+            codeFont: CodeFontChoice
             codeFontSize: number
             lineHeight: number
             paragraphSpacing: number
@@ -57,7 +58,7 @@ export interface ReaderSettings {
         // Aliases for backwards compatibility with article renderer:
         headingFontChoice?: FontChoice
         bodyFontChoice?: FontChoice
-        codeFontChoice?: FontChoice
+        codeFontChoice?: CodeFontChoice
         bodyFontSize?: number
         bodyFontWeight?: number
         headingFontWeight?: number

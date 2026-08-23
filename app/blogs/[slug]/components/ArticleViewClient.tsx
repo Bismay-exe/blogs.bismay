@@ -160,6 +160,7 @@ const ArticleViewInner: React.FC<ArticleViewClientProps> = ({
     }
 
     const cssVariables = {
+        ['--reader-title-font' as any]: getFontFamily(typography.titleFont?.titleFont || typography.headingFont?.headingFont),
         ['--reader-heading-font' as any]: getFontFamily(typography.headingFont?.headingFont || typography.headingFontChoice),
         ['--reader-body-font' as any]: getFontFamily(typography.bodyFont?.bodyFont || typography.bodyFontChoice),
         ['--reader-code-font' as any]: getFontFamily(typography.codeFont?.codeFont || typography.codeFontChoice),

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Inter_Tight, Lora, JetBrains_Mono, Space_Mono, DM_Sans, DM_Mono } from "next/font/google";
+import { Inter, Inter_Tight, Lora, JetBrains_Mono, Space_Mono, DM_Sans, DM_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -24,6 +24,12 @@ const interTight = Inter_Tight({
 const lora = Lora({
   variable: "--font-serif",
   subsets: ["latin"],
+});
+
+const roboto = Roboto({
+  weight: ['300', '400', '500', '700', '900'],
+  subsets: ['latin'],
+  variable: '--font-roboto',
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -55,6 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         dmSans.variable,
         dmMono.variable,
         lora.variable,
+        roboto.variable,
         jetbrainsMono.variable,
         spaceMono.variable,
         inter.variable,

@@ -2,11 +2,46 @@
 
 import React from 'react'
 import { useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
-import { FontChoice } from '@/lib/reader-settings/types'
+import { FontChoice, CodeFontChoice } from '@/lib/reader-settings/types'
 import { ReaderNav } from '@/components/settings/ReaderNav'
 import { Notch, NotchItem } from '@/components/ui/notch'
 import { Scrubber } from '@/components/ui/smoothui/scrubber'
 import { Type, Sparkles, Binary, BookOpen } from 'lucide-react'
+
+// All available text fonts
+const TEXT_FONT_OPTIONS = [
+    { id: 'inter-tight', label: 'Inter Tight' },
+    { id: 'inter', label: 'Inter' },
+    { id: 'sans', label: 'DM Sans' },
+    { id: 'serif', label: 'Lora Serif' },
+    { id: 'roboto', label: 'Roboto' },
+]
+
+// All available font weights for text
+const TEXT_WEIGHT_OPTIONS = [
+    { id: '300', label: '300 Light' },
+    { id: '400', label: '400 Regular' },
+    { id: '500', label: '500 Medium' },
+    { id: '600', label: '600 Semi' },
+    { id: '700', label: '700 Bold' },
+    { id: '800', label: '800 Extra Bold' },
+    { id: '900', label: '900 Black' },
+]
+
+// Monospace fonts for code blocks only
+const CODE_FONT_OPTIONS = [
+    { id: 'mono', label: 'JetBrains Mono' },
+    { id: 'space-mono', label: 'Space Mono' },
+    { id: 'dm-mono', label: 'DM Mono' },
+]
+
+// Monospace font weights
+const CODE_WEIGHT_OPTIONS = [
+    { id: '400', label: '400 Regular' },
+    { id: '500', label: '500 Medium' },
+    { id: '600', label: '600 Semi' },
+    { id: '700', label: '700 Bold' },
+]
 
 export default function TypographySettingsPage() {
     const { settings, updateTitleFont, updateHeadingFont, updateBodyFont, updateCodeFont, isLoaded } = useReaderSettings()
@@ -28,23 +63,15 @@ export default function TypographySettingsPage() {
             id: 'title-font',
             label: 'Font',
             icon: <Type className="w-3.5 h-3.5" />,
-            value: titleFont.titleFont,
-            options: [
-                { id: 'inter-tight', label: 'Inter Tight' },
-                { id: 'sans', label: 'DM Sans' },
-                { id: 'serif', label: 'Lora Serif' },
-            ],
+            value: titleFont.titleFont || 'inter-tight',
+            options: TEXT_FONT_OPTIONS,
             onChange: (id) => updateTitleFont({ titleFont: id as FontChoice }),
         },
         {
             id: 'title-weight',
             label: 'Weight',
-            value: String(titleFont.titleFontWeight),
-            options: [
-                { id: '600', label: '600 Semi' },
-                { id: '700', label: '700 Bold' },
-                { id: '800', label: '800 Black' },
-            ],
+            value: String(titleFont.titleFontWeight || 700),
+            options: TEXT_WEIGHT_OPTIONS,
             onChange: (id) => updateTitleFont({ titleFontWeight: parseInt(id, 10) }),
         },
     ]
@@ -55,23 +82,15 @@ export default function TypographySettingsPage() {
             id: 'heading-font',
             label: 'Font',
             icon: <Sparkles className="w-3.5 h-3.5" />,
-            value: headingFont.headingFont,
-            options: [
-                { id: 'inter-tight', label: 'Inter Tight' },
-                { id: 'sans', label: 'DM Sans' },
-                { id: 'serif', label: 'Lora Serif' },
-            ],
+            value: headingFont.headingFont || 'inter-tight',
+            options: TEXT_FONT_OPTIONS,
             onChange: (id) => updateHeadingFont({ headingFont: id as FontChoice }),
         },
         {
             id: 'heading-weight',
             label: 'Weight',
-            value: String(headingFont.headingFontWeight),
-            options: [
-                { id: '400', label: '400 Regular' },
-                { id: '600', label: '600 Semi' },
-                { id: '700', label: '700 Bold' },
-            ],
+            value: String(headingFont.headingFontWeight || 600),
+            options: TEXT_WEIGHT_OPTIONS,
             onChange: (id) => updateHeadingFont({ headingFontWeight: parseInt(id, 10) }),
         },
     ]
@@ -82,23 +101,15 @@ export default function TypographySettingsPage() {
             id: 'body-font',
             label: 'Font',
             icon: <BookOpen className="w-3.5 h-3.5" />,
-            value: bodyFont.bodyFont,
-            options: [
-                { id: 'sans', label: 'DM Sans' },
-                { id: 'serif', label: 'Lora Serif' },
-                { id: 'roboto', label: 'Roboto' },
-            ],
+            value: bodyFont.bodyFont || 'sans',
+            options: TEXT_FONT_OPTIONS,
             onChange: (id) => updateBodyFont({ bodyFont: id as FontChoice }),
         },
         {
             id: 'body-weight',
             label: 'Weight',
             value: String(bodyFont.bodyFontWeight || 400),
-            options: [
-                { id: '300', label: '300 Light' },
-                { id: '400', label: '400 Regular' },
-                { id: '500', label: '500 Medium' },
-            ],
+            options: TEXT_WEIGHT_OPTIONS,
             onChange: (id) => updateBodyFont({ bodyFontWeight: parseInt(id, 10) }),
         },
     ]
@@ -109,22 +120,15 @@ export default function TypographySettingsPage() {
             id: 'code-font',
             label: 'Font',
             icon: <Binary className="w-3.5 h-3.5" />,
-            value: codeFont.codeFont,
-            options: [
-                { id: 'mono', label: 'JetBrains Mono' },
-                { id: 'space-mono', label: 'Space Mono' },
-            ],
-            onChange: (id) => updateCodeFont({ codeFont: id as any }),
+            value: codeFont.codeFont || 'mono',
+            options: CODE_FONT_OPTIONS,
+            onChange: (id) => updateCodeFont({ codeFont: id as CodeFontChoice }),
         },
         {
             id: 'code-weight',
             label: 'Weight',
             value: String(codeFont.codeFontWeight || 400),
-            options: [
-                { id: '400', label: '400 Regular' },
-                { id: '500', label: '500 Medium' },
-                { id: '700', label: '700 Bold' },
-            ],
+            options: CODE_WEIGHT_OPTIONS,
             onChange: (id) => updateCodeFont({ codeFontWeight: parseInt(id, 10) }),
         },
     ]
@@ -297,7 +301,7 @@ export default function TypographySettingsPage() {
                         <p className="text-xs text-sec mt-0.5">Styling for embedded code snippets</p>
                     </div>
 
-                    {/* Code Font & Weight Notch */}
+                    {/* Code Font & Weight Notch (Monospace Only) */}
                     <div className="space-y-2">
                         <span className="text-xs font-semibold text-sec block">Monospace Font & Weight</span>
                         <Notch variant="inline" items={codeNotchItems} />

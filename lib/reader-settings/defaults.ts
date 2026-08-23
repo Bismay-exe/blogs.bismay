@@ -84,17 +84,22 @@ export const DEFAULT_READER_SETTINGS: ReaderSettings = {
 export function getFontFamily(choice?: string): string {
     switch (choice) {
         case 'inter-tight':
-            return '"Inter Tight", var(--font-inter-tight), sans-serif'
+            return 'var(--font-inter-tight), "Inter Tight", sans-serif'
+        case 'inter':
+            return 'var(--font-sans), "Inter", sans-serif'
         case 'serif':
-            return 'Lora, var(--font-serif), Georgia, serif'
-        case 'mono':
-            return '"JetBrains Mono", var(--font-mono), monospace'
-        case 'space-mono':
-            return '"Space Mono", var(--font-space-mono), monospace'
+            return 'var(--font-serif), Lora, Georgia, serif'
         case 'roboto':
-            return '"Roboto", sans-serif'
+            return 'var(--font-roboto), Roboto, sans-serif'
         case 'sans':
+            return 'var(--font-dm-sans), "DM Sans", system-ui, sans-serif'
+        case 'mono':
+            return 'var(--font-mono), "JetBrains Mono", monospace'
+        case 'space-mono':
+            return 'var(--font-space-mono), "Space Mono", monospace'
+        case 'dm-mono':
+            return 'var(--font-dm-mono), "DM Mono", monospace'
         default:
-            return '"DM Sans", var(--font-sans), system-ui, -apple-system, sans-serif'
+            return 'var(--font-sans), "Inter", system-ui, sans-serif'
     }
 }
