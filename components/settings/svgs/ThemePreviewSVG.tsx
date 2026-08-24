@@ -59,8 +59,11 @@ export function ThemePreviewSVG({
                         x2="246"
                         y2="0"
                         gradientUnits="userSpaceOnUse"
+                        className=''
                     >
-                        <stop offset="0%" stopColor="#141414" />
+                        <stop offset="0%" stopColor="#00000" />
+                        <stop offset="50%" stopColor="#000000" />
+                        <stop offset="50%" stopColor="#FFFFFF" />
                         <stop offset="100%" stopColor="#FFFFFF" />
                     </linearGradient>
                 )}
