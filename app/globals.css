@@ -59,8 +59,9 @@ html.light {
   --font-dm-mono: var(--font-dm-mono);
 }
 
-html {
-  scroll-behavior: smooth;
+html.lenis,
+html.lenis body {
+  height: auto;
 }
 
 body {

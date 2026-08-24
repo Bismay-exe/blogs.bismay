@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Inter_Tight, Lora, JetBrains_Mono, Space_Mono, DM_Sans, DM_Mono, Roboto } from "next/font/google";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { ReaderSettingsClientProvider } from "@/components/providers/ReaderSettingsClientProvider";
+import { SmoothScroll } from "@/components/motion/smooth-scroll";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -44,8 +47,6 @@ const spaceMono = Space_Mono({
   display: 'swap',
 });
 
-import { ReaderSettingsClientProvider } from "@/components/providers/ReaderSettingsClientProvider";
-
 export const metadata: Metadata = {
   title: "Blogs by Bismay",
   description: "Personal tech blog & reading experience by Bismay",
@@ -69,7 +70,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       )}
     >
       <body className="min-h-full flex flex-col">
-        <ReaderSettingsClientProvider>{children}</ReaderSettingsClientProvider>
+        <ReaderSettingsClientProvider>
+          <SmoothScroll root>
+            {children}
+          </SmoothScroll>
+        </ReaderSettingsClientProvider>
       </body>
     </html>
   );
