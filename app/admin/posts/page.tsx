@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
 import {
     getStoredArticles,
     saveArticleToStorage,
@@ -869,8 +868,6 @@ const BlogsDashboard = () => {
                     </div>
                 )}
             </main>
-
-            <Footer />
         </div>
     )
 }

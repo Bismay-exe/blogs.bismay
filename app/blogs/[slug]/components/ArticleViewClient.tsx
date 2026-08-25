@@ -199,49 +199,79 @@ const ArticleViewInner: React.FC<ArticleViewClientProps> = ({
     return (
         <div
             style={cssVariables}
-            className="relative w-full min-h-screen flex flex-col items-center bg-bg text-fg z-0"
+            className="relative w-full min-h-screen flex flex-col items-center bg-fg text-fg z-0"
         >
-            {/* Top Reading Progress Bar (Fixed at very top) */}
-            {appearance.showReadingProgress && (
-                <div className="fixed top-0 left-0 right-0 h-1 z-10000 bg-transparent pointer-events-none">
-                    <div
-                        className="h-full bg-linear-to-r from-purple-500 via-accent to-indigo-400 transition-all duration-150 ease-out"
-                        style={{ width: `${scrollProgress}%` }}
-                    />
-                </div>
-            )}
+            {/* Main Article Sheet with Rounded Bottom Corners */}
+            <div className="relative z-10 w-full flex-1 flex flex-col items-center bg-bg rounded-b-[2.5rem] sm:rounded-b-[3.5rem] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)]">
+                {/* Top Reading Progress Bar (Fixed at very top) */}
+                {appearance.showReadingProgress && (
+                    <div className="fixed top-0 left-0 right-0 h-1 z-10000 bg-transparent pointer-events-none">
+                        <div
+                            className="h-full bg-linear-to-r from-purple-500 via-accent to-indigo-400 transition-all duration-150 ease-out"
+                            style={{ width: `${scrollProgress}%` }}
+                        />
+                    </div>
+                )}
 
-            {/* Conditionally Render Top Navbar */}
-            {layout.showNavbar ? (
-                <Navbar />
-            ) : (
-                /* Distraction-Free Header Bar with Quick Exit */
-                <div className="sticky top-0 z-50 w-full px-4 py-3 flex items-center justify-between bg-bg/80 backdrop-blur-md border-b border-sec/10">
-                    <Link
-                        href="/blogs"
-                        className="flex items-center gap-1.5 text-xs font-mono text-sec hover:text-fg transition-colors"
-                    >
-                        <ArrowLeft size={14} />
-                        <span>Exit Focus Mode</span>
-                    </Link>
+                {/* Conditionally Render Top Navbar */}
+                {layout.showNavbar ? (
+                    <Navbar />
+                ) : (
+                    /* Distraction-Free Header Bar with Quick Exit */
+                    <div className="sticky top-0 z-50 w-full px-4 py-3 flex items-center justify-between bg-bg/80 backdrop-blur-md border-b border-sec/10">
+                        <Link
+                            href="/blogs"
+                            className="flex items-center gap-1.5 text-xs font-mono text-sec hover:text-fg transition-colors"
+                        >
+                            <ArrowLeft size={14} />
+                            <span>Exit Focus Mode</span>
+                        </Link>
 
-                    <Link
-                        href="/settings/reader"
-                        className="flex items-center gap-1 text-[11px] font-mono text-sec hover:text-accent transition-colors"
-                        title="Customize Reading Experience"
-                    >
-                        <Sliders size={13} />
-                        <span className="hidden sm:inline">Reader Settings</span>
-                    </Link>
-                </div>
-            )}
+                        <Link
+                            href="/settings/reader"
+                            className="flex items-center gap-1 text-[11px] font-mono text-sec hover:text-accent transition-colors"
+                            title="Customize Reading Experience"
+                        >
+                            <Sliders size={13} />
+                            <span className="hidden sm:inline">Reader Settings</span>
+                        </Link>
+                    </div>
+                )}
 
-            {/* Layout Rendering: Breakout Banner Layout vs Contained Layout */}
-            {isBreakoutBanner ? (
-                <div className="w-full flex flex-col items-center">
-                    {/* Header Zone: Full container width across the top without sidebar constraint */}
-                    <header className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${layout.showNavbar ? 'pt-8 sm:pt-12' : 'pt-6'}`}>
-                        <HeaderZone
+                {/* Layout Rendering: Breakout Banner Layout vs Contained Layout */}
+                {isBreakoutBanner ? (
+                    <div className="w-full flex flex-col items-center">
+                        {/* Header Zone: Full container width across the top without sidebar constraint */}
+                        <header className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${layout.showNavbar ? 'pt-8 sm:pt-12' : 'pt-6'}`}>
+                            <HeaderZone
+                                title={article.title}
+                                bannerUrl={article.bannerUrl}
+                                tags={article.tags}
+                                category={article.category}
+                                date={article.date}
+                                readingTimeMinutes={article.readingTimeMinutes}
+                            />
+                        </header>
+
+                        {/* Content & Sidebars Zone: Centered with sidebars starting at Body Text */}
+                        <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 pt-4 pb-16">
+                            {showLeftSidebar && (
+                                <LeftLayout markdown={article.markdown} />
+                            )}
+                            <div className={`w-full ${maxWidthClass} mx-auto min-w-0 flex-1 transition-all duration-300`}>
+                                <Body content={article.markdown} />
+                            </div>
+                            {layout.showRightSidebar && <RightLayout />}
+                        </div>
+                    </div>
+                ) : (
+                    /* Contained Layout: Standard 3-column top alignment */
+                    <div className={`w-full max-w-7xl mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 pb-16 ${layout.showNavbar ? 'pt-8 sm:pt-12' : 'pt-6'}`}>
+                        {showLeftSidebar && (
+                            <LeftLayout markdown={article.markdown} />
+                        )}
+                        <Main
+                            markdown={article.markdown}
                             title={article.title}
                             bannerUrl={article.bannerUrl}
                             tags={article.tags}
@@ -249,40 +279,14 @@ const ArticleViewInner: React.FC<ArticleViewClientProps> = ({
                             date={article.date}
                             readingTimeMinutes={article.readingTimeMinutes}
                         />
-                    </header>
-
-                    {/* Content & Sidebars Zone: Centered with sidebars starting at Body Text */}
-                    <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 pt-4 pb-16">
-                        {showLeftSidebar && (
-                            <LeftLayout markdown={article.markdown} />
-                        )}
-                        <div className={`w-full ${maxWidthClass} mx-auto min-w-0 flex-1 transition-all duration-300`}>
-                            <Body content={article.markdown} />
-                        </div>
                         {layout.showRightSidebar && <RightLayout />}
                     </div>
-                </div>
-            ) : (
-                /* Contained Layout: Standard 3-column top alignment */
-                <div className={`w-full max-w-7xl mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 pb-16 ${layout.showNavbar ? 'pt-8 sm:pt-12' : 'pt-6'}`}>
-                    {showLeftSidebar && (
-                        <LeftLayout markdown={article.markdown} />
-                    )}
-                    <Main
-                        markdown={article.markdown}
-                        title={article.title}
-                        bannerUrl={article.bannerUrl}
-                        tags={article.tags}
-                        category={article.category}
-                        date={article.date}
-                        readingTimeMinutes={article.readingTimeMinutes}
-                    />
-                    {layout.showRightSidebar && <RightLayout />}
-                </div>
-            )}
+                )}
 
-            <ProgressiveBlur position="top" backgroundColor="var(--background)" />
-            <ProgressiveBlur position="bottom" backgroundColor="var(--background)" />
+                <ProgressiveBlur position="top" backgroundColor="var(--background)" />
+                <ProgressiveBlur position="bottom" backgroundColor="var(--background)" />
+            </div>
+
             <Footer />
         </div>
     )

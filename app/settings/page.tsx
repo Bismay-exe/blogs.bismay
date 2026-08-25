@@ -52,9 +52,11 @@ export default function SettingsHubPage() {
     const headingFontName = typography.headingFont?.headingFont || typography.headingFontChoice || 'inter-tight'
 
     return (
-        <div className="min-h-screen flex flex-col bg-bg text-fg">
-            <Navbar />
-            <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20 space-y-8">
+        <div className="min-h-screen flex flex-col bg-fg text-fg">
+            {/* Main Settings Sheet with Rounded Bottom Corners */}
+            <div className="relative z-10 w-full flex-1 flex flex-col bg-bg">
+                <Navbar />
+                <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20 space-y-8">
                 {/* Capsule Breadcrumb Ribbon */}
                 <CapsuleBreadcrumb
                     currentPage="Settings Hub"
@@ -204,7 +206,7 @@ export default function SettingsHubPage() {
                 {/* Export Config Modal */}
                 <ExportConfigModal isOpen={isExportOpen} onClose={() => setIsExportOpen(false)} />
             </main>
-            <Footer />
+            </div>
         </div>
     )
 }

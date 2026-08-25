@@ -1,7 +1,5 @@
 import React from 'react'
 import { ReaderSettingsProvider } from '@/lib/reader-settings/ReaderSettingsContext'
-import Footer from '@/components/Footer'
-import Navbar from '@/components/Navbar'
 
 export const metadata = {
     title: 'Reader Settings · Bismay.exe',

@@ -4,7 +4,6 @@ import React, { useState, useEffect, Suspense, useCallback } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import MainLayout from './sections/MainLayout'
 import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
 import LeftLayout from './sections/LeftLayout'
 import RightLayout from './sections/RightLayout'
 import { ProductionBlogPost } from '@/articles/format/articleData'
@@ -260,7 +259,6 @@ const PostEditor: React.FC<PostEditorProps> = (props) => {
             <Suspense fallback={<div className="py-20 text-center text-sm font-mono text-sec">Loading editor...</div>}>
                 <PostEditorContent {...props} />
             </Suspense>
-            <Footer />
         </div>
     )
 }

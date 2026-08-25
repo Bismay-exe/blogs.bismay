@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useRef } from "react";
 
 type ProgressiveBlurProps = {
     className?: string;
@@ -15,11 +17,66 @@ const ProgressiveBlur = ({
     height = "150px",
     blurAmount = "4px",
 }: ProgressiveBlurProps) => {
+    const elRef = useRef<HTMLDivElement>(null);
     const isTop = position === "top";
+
+    useEffect(() => {
+        const el = elRef.current;
+        if (!el) return;
+
+        let rafId: number;
+        const numericHeight = parseFloat(height) || 150;
+
+        const updatePosition = () => {
+            const parent = el.parentElement;
+            if (!parent) return;
+
+            const parentRect = parent.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+
+            if (isTop) {
+                // Keep top blur attached to parent top if parent scrolls down
+                const offset = Math.max(0, parentRect.top);
+                el.style.transform = `translate3d(0, ${offset}px, 0)`;
+            } else {
+                // If parent bottom enters the viewport, push bottom blur UP with the parent and fade it
+                const offset = Math.max(0, windowHeight - parentRect.bottom);
+                el.style.transform = `translate3d(0, -${offset}px, 0)`;
+                const opacity = Math.max(0, 1 - (offset / numericHeight));
+                el.style.opacity = String(opacity);
+            }
+        };
+
+        const onScrollOrResize = () => {
+            cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(updatePosition);
+        };
+
+        updatePosition();
+        window.addEventListener("scroll", onScrollOrResize, { passive: true });
+        window.addEventListener("resize", onScrollOrResize, { passive: true });
+
+        // Also observe parent resizing
+        const ro = new ResizeObserver(onScrollOrResize);
+        if (el.parentElement) {
+            ro.observe(el.parentElement);
+        }
+
+        return () => {
+            cancelAnimationFrame(rafId);
+            window.removeEventListener("scroll", onScrollOrResize);
+            window.removeEventListener("resize", onScrollOrResize);
+            ro.disconnect();
+        };
+    }, [isTop, height]);
 
     return (
         <div
-            className={`pointer-events-none fixed left-0 w-full select-none ${className}`}
+            ref={elRef}
+            aria-hidden="true"
+            className={`pointer-events-none fixed left-0 w-full select-none z-20 will-change-transform ${
+                isTop ? "" : "rounded-b-[2.5rem] sm:rounded-b-[3.5rem]"
+            } ${className}`}
             style={{
                 [isTop ? "top" : "bottom"]: 0,
                 height,
@@ -39,21 +96,3 @@ const ProgressiveBlur = ({
 };
 
 export { ProgressiveBlur };
-
-/**
- * Skiper 41 Canvas_Landing_004 — React + framer motion
- * Inspired by and adapted from https://devouringdetails.com/
- * We respect the original creators. This is an inspired rebuild with our own taste and does not claim any ownership.
- * These animations aren’t associated with the devouringdetails.com . They’re independent recreations meant to study interaction design
- *
- * License & Usage:
- * - Free to use and modify in both personal and commercial projects.
- * - Attribution to Skiper UI is required when using the free version.
- * - No attribution required with Skiper UI Pro.
- *
- * Feedback and contributions are welcome.
- *
- * Author: @gurvinder-singh02
- * Website: https://gxuri.me
- * Twitter: https://x.com/Gur__vi
- */
