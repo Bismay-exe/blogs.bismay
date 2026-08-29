@@ -111,7 +111,7 @@ const FannedDeckCarousel = () => {
   }, []);
 
   return (
-    <div className="relative h-[80vh] w-full select-none overflow-hidden bg-background text-foreground">
+    <div className="relative h-screen w-full select-none overflow-hidden bg-transparent text-fg">
       <div
         className="absolute inset-0 cursor-grab active:cursor-grabbing"
         style={{

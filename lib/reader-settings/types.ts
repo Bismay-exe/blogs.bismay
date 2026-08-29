@@ -17,6 +17,9 @@ export type ReaderThemeMode = 'system' | 'light' | 'dark'
 
 export type VideoPlayerSkin = 'modern' | 'minimal'
 
+export type { WidgetType, WidgetInstance } from '@/lib/widgets-settings/types'
+import type { WidgetInstance } from '@/lib/widgets-settings/types'
+
 export interface ReaderSettings {
     presets: ReaderPresetId[]
     appearance: {
@@ -91,6 +94,7 @@ export interface ReaderSettings {
             series: boolean
             subscribeForm: boolean
             socials: boolean
+            commentForm?: boolean
         }
     }
     articleLayout: {
@@ -119,6 +123,8 @@ export interface ReaderSettings {
         series: boolean
         subscribeForm: boolean
         socialLinks: boolean
+        commentForm?: boolean
+        items?: WidgetInstance[]
     }
 }
 

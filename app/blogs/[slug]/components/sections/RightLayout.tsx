@@ -1,39 +1,75 @@
 'use client'
 
 import React from 'react'
-import Profile from '../../components/sections/rightLayout/Profile'
-import Series from '../../components/sections/rightLayout/Series'
-import SubscribeForm from '../../components/sections/rightLayout/SubscribeForm'
-import Socials from '../../components/sections/rightLayout/Socials'
+import Profile from './rightLayout/Profile'
+import Series from './rightLayout/Series'
+import SubscribeForm from './rightLayout/SubscribeForm'
+import Socials from './rightLayout/Socials'
+import CommentForm from './rightLayout/CommentForm'
+import CustomHtmlWidget from './rightLayout/CustomHtmlWidget'
+import CustomMarkdownWidget from './rightLayout/CustomMarkdownWidget'
+import { WidgetErrorBoundary } from './rightLayout/WidgetErrorBoundary'
+import { useWidgetsSettings, WidgetInstance } from '@/lib/widgets-settings'
 import { useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
 
-const RightLayout = () => {
+interface RightLayoutProps {
+    articleData?: {
+        title?: string
+        slug?: string
+        category?: string
+        date?: string
+        readingTimeMinutes?: number
+        tags?: string[]
+        [key: string]: any
+    }
+}
+
+export const renderWidgetComponent = (
+    widget: WidgetInstance,
+    articleData?: Record<string, any>,
+    forceTheme?: 'dark' | 'light'
+) => {
+    switch (widget.type) {
+        case 'profile':
+            return <Profile />
+        case 'series':
+            return <Series />
+        case 'subscribeForm':
+            return <SubscribeForm />
+        case 'socialLinks':
+            return <Socials />
+        case 'commentForm':
+            return <CommentForm />
+        case 'customHtml':
+            return <CustomHtmlWidget widget={widget} articleData={articleData} forceTheme={forceTheme} />
+        case 'customMarkdown':
+            return <CustomMarkdownWidget widget={widget} articleData={articleData} />
+        default:
+            return null
+    }
+}
+
+const RightLayout: React.FC<RightLayoutProps> = ({ articleData }) => {
     const { settings } = useReaderSettings()
-    const showRightSidebar = settings.layout?.showRightSidebar ?? true
-    const widgets = settings.widgets || settings.layout?.rightWidgets
+    const { activeWidgets, showRightSidebar: widgetsShowRightSidebar } = useWidgetsSettings()
+    const showRightSidebar = (settings.layout?.showRightSidebar ?? true) && widgetsShowRightSidebar
 
     if (!showRightSidebar) {
         return null
     }
 
-    const showProfile = widgets?.profile ?? true
-    const showSeries = widgets?.series ?? true
-    const showSubscribe = widgets?.subscribeForm ?? true
-    const showSocials = widgets?.socialLinks ?? (widgets as any)?.socials ?? true
-
-    const hasAnyWidget = showProfile || showSeries || showSubscribe || showSocials
-
-    if (!hasAnyWidget) {
+    if (activeWidgets.length === 0) {
         return null
     }
 
     return (
-        <div className="w-full sm:max-w-76 shrink-0 h-full bg-transparent space-y-10 pt-7 pb-50 transition-all duration-300">
-            {showProfile && <Profile />}
-            {showSeries && <Series />}
-            {showSubscribe && <SubscribeForm />}
-            {showSocials && <Socials />}
-        </div>
+        <aside className="w-full sm:max-w-76 shrink-0 h-full bg-transparent space-y-10 pt-7 pb-50 transition-all duration-300">
+            {activeWidgets.map((widget) => (
+                <WidgetErrorBoundary key={widget.id} widgetTitle={widget.title}>
+                    {renderWidgetComponent(widget, articleData)}
+                </WidgetErrorBoundary>
+            ))}
+        </aside>
     )
 }
 

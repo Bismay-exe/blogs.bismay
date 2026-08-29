@@ -13,8 +13,9 @@ import {
     AuthorStyle,
     HeaderAlignment,
     FontChoice,
+    WidgetInstance,
 } from './types'
-import { DEFAULT_READER_SETTINGS, getFontFamily } from './defaults'
+import { DEFAULT_READER_SETTINGS, DEFAULT_WIDGET_ITEMS, getFontFamily } from './defaults'
 import { READER_PRESETS } from './presets'
 
 export const READER_SETTINGS_STORAGE_KEY = 'reader_experience_settings_v2'
@@ -36,7 +37,13 @@ interface ReaderSettingsContextType {
     updateWidgets: (patch: Partial<ReaderSettings['widgets']>) => void
     reorderHeader: (newOrder: HeaderElementId[]) => void
     toggleHeaderVisibility: (id: HeaderElementId) => void
-    toggleWidget: (id: keyof ReaderSettings['widgets']) => void
+    toggleWidget: (id: string | keyof ReaderSettings['widgets']) => void
+    reorderWidgets: (newItems: WidgetInstance[]) => void
+    toggleWidgetActive: (id: string) => void
+    addWidget: (widget: WidgetInstance) => void
+    updateWidgetConfig: (id: string, patch: Partial<WidgetInstance>) => void
+    deleteWidget: (id: string) => void
+    resetWidgets: () => void
     applyPreset: (presetId: ReaderPresetId) => void
     resetToDefaults: () => void
 }
@@ -50,6 +57,38 @@ export const ReaderSettingsProvider: React.FC<{ children: React.ReactNode }> = (
 
     // Helper to merge partial settings with defaults
     const mergeSettings = (raw: Partial<ReaderSettings>): ReaderSettings => {
+        // Synthesize widget items if not provided or migrate from legacy booleans
+        let resolvedWidgetItems: WidgetInstance[] = []
+
+        if (Array.isArray(raw.widgets?.items) && raw.widgets.items.length > 0) {
+            resolvedWidgetItems = raw.widgets.items
+        } else {
+            // Migrate from legacy booleans or fallback to default
+            resolvedWidgetItems = DEFAULT_WIDGET_ITEMS.map((item) => {
+                if (item.id === 'profile' && raw.widgets?.profile !== undefined) {
+                    return { ...item, enabled: raw.widgets.profile }
+                }
+                if (item.id === 'series' && raw.widgets?.series !== undefined) {
+                    return { ...item, enabled: raw.widgets.series }
+                }
+                if (item.id === 'subscribeForm' && raw.widgets?.subscribeForm !== undefined) {
+                    return { ...item, enabled: raw.widgets.subscribeForm }
+                }
+                if (item.id === 'socialLinks' && (raw.widgets?.socialLinks !== undefined || (raw.widgets as any)?.socials !== undefined)) {
+                    return { ...item, enabled: raw.widgets?.socialLinks ?? (raw.widgets as any)?.socials }
+                }
+                if (item.id === 'commentForm' && raw.widgets?.commentForm !== undefined) {
+                    return { ...item, enabled: raw.widgets.commentForm }
+                }
+                return item
+            })
+        }
+
+        const isEnabled = (id: string, fallback: boolean) => {
+            const found = resolvedWidgetItems.find((w) => w.id === id)
+            return found ? found.enabled : fallback
+        }
+
         return {
             presets: raw.presets || DEFAULT_READER_SETTINGS.presets,
             appearance: {
@@ -103,10 +142,11 @@ export const ReaderSettingsProvider: React.FC<{ children: React.ReactNode }> = (
                 get headerAlignment() { return raw.articleLayout?.headerAlignment || DEFAULT_READER_SETTINGS.articleLayout.headerAlignment },
                 get rightWidgets() {
                     return {
-                        profile: raw.widgets?.profile ?? DEFAULT_READER_SETTINGS.widgets.profile,
-                        series: raw.widgets?.series ?? DEFAULT_READER_SETTINGS.widgets.series,
-                        subscribeForm: raw.widgets?.subscribeForm ?? DEFAULT_READER_SETTINGS.widgets.subscribeForm,
-                        socials: raw.widgets?.socialLinks ?? DEFAULT_READER_SETTINGS.widgets.socialLinks,
+                        profile: isEnabled('profile', DEFAULT_READER_SETTINGS.widgets.profile),
+                        series: isEnabled('series', DEFAULT_READER_SETTINGS.widgets.series),
+                        subscribeForm: isEnabled('subscribeForm', DEFAULT_READER_SETTINGS.widgets.subscribeForm),
+                        socials: isEnabled('socialLinks', DEFAULT_READER_SETTINGS.widgets.socialLinks),
+                        commentForm: isEnabled('commentForm', false),
                     }
                 },
             },
@@ -136,6 +176,12 @@ export const ReaderSettingsProvider: React.FC<{ children: React.ReactNode }> = (
             widgets: {
                 ...DEFAULT_READER_SETTINGS.widgets,
                 ...(raw.widgets || {}),
+                profile: isEnabled('profile', DEFAULT_READER_SETTINGS.widgets.profile),
+                series: isEnabled('series', DEFAULT_READER_SETTINGS.widgets.series),
+                subscribeForm: isEnabled('subscribeForm', DEFAULT_READER_SETTINGS.widgets.subscribeForm),
+                socialLinks: isEnabled('socialLinks', DEFAULT_READER_SETTINGS.widgets.socialLinks),
+                commentForm: isEnabled('commentForm', false),
+                items: resolvedWidgetItems,
             },
         }
     }
@@ -382,13 +428,113 @@ export const ReaderSettingsProvider: React.FC<{ children: React.ReactNode }> = (
         })
     }, [persistSettings])
 
-    const toggleWidget = useCallback((id: keyof ReaderSettings['widgets']) => {
+    const reorderWidgets = useCallback((newItems: WidgetInstance[]) => {
         setSettings((prev) => {
             const updated = mergeSettings({
                 ...prev,
                 widgets: {
                     ...prev.widgets,
-                    [id]: !prev.widgets[id],
+                    items: newItems,
+                },
+            })
+            persistSettings(updated)
+            return updated
+        })
+    }, [persistSettings])
+
+    const toggleWidgetActive = useCallback((id: string) => {
+        setSettings((prev) => {
+            const items = prev.widgets.items || DEFAULT_WIDGET_ITEMS
+            const updatedItems = items.map((w) => (w.id === id ? { ...w, enabled: !w.enabled } : w))
+            const updated = mergeSettings({
+                ...prev,
+                widgets: {
+                    ...prev.widgets,
+                    items: updatedItems,
+                },
+            })
+            persistSettings(updated)
+            return updated
+        })
+    }, [persistSettings])
+
+    const toggleWidget = useCallback((id: string | keyof ReaderSettings['widgets']) => {
+        setSettings((prev) => {
+            const items = prev.widgets.items || DEFAULT_WIDGET_ITEMS
+            const itemExists = items.some((w) => w.id === id)
+            let updatedItems = items
+            if (itemExists) {
+                updatedItems = items.map((w) => (w.id === id ? { ...w, enabled: !w.enabled } : w))
+            }
+
+            const updated = mergeSettings({
+                ...prev,
+                widgets: {
+                    ...prev.widgets,
+                    items: updatedItems,
+                    ...(typeof id === 'string' && id in prev.widgets ? { [id]: !((prev.widgets as any)[id]) } : {}),
+                },
+            })
+            persistSettings(updated)
+            return updated
+        })
+    }, [persistSettings])
+
+    const addWidget = useCallback((widget: WidgetInstance) => {
+        setSettings((prev) => {
+            const items = prev.widgets.items || DEFAULT_WIDGET_ITEMS
+            const updatedItems = [...items, widget]
+            const updated = mergeSettings({
+                ...prev,
+                widgets: {
+                    ...prev.widgets,
+                    items: updatedItems,
+                },
+            })
+            persistSettings(updated)
+            return updated
+        })
+    }, [persistSettings])
+
+    const updateWidgetConfig = useCallback((id: string, patch: Partial<WidgetInstance>) => {
+        setSettings((prev) => {
+            const items = prev.widgets.items || DEFAULT_WIDGET_ITEMS
+            const updatedItems = items.map((w) => (w.id === id ? { ...w, ...patch, config: { ...w.config, ...(patch.config || {}) } } : w))
+            const updated = mergeSettings({
+                ...prev,
+                widgets: {
+                    ...prev.widgets,
+                    items: updatedItems,
+                },
+            })
+            persistSettings(updated)
+            return updated
+        })
+    }, [persistSettings])
+
+    const deleteWidget = useCallback((id: string) => {
+        setSettings((prev) => {
+            const items = prev.widgets.items || DEFAULT_WIDGET_ITEMS
+            const updatedItems = items.filter((w) => w.id !== id)
+            const updated = mergeSettings({
+                ...prev,
+                widgets: {
+                    ...prev.widgets,
+                    items: updatedItems,
+                },
+            })
+            persistSettings(updated)
+            return updated
+        })
+    }, [persistSettings])
+
+    const resetWidgets = useCallback(() => {
+        setSettings((prev) => {
+            const updated = mergeSettings({
+                ...prev,
+                widgets: {
+                    ...prev.widgets,
+                    items: DEFAULT_WIDGET_ITEMS,
                 },
             })
             persistSettings(updated)
@@ -431,6 +577,12 @@ export const ReaderSettingsProvider: React.FC<{ children: React.ReactNode }> = (
             reorderHeader,
             toggleHeaderVisibility,
             toggleWidget,
+            reorderWidgets,
+            toggleWidgetActive,
+            addWidget,
+            updateWidgetConfig,
+            deleteWidget,
+            resetWidgets,
             applyPreset,
             resetToDefaults,
         }),
@@ -452,6 +604,12 @@ export const ReaderSettingsProvider: React.FC<{ children: React.ReactNode }> = (
             reorderHeader,
             toggleHeaderVisibility,
             toggleWidget,
+            reorderWidgets,
+            toggleWidgetActive,
+            addWidget,
+            updateWidgetConfig,
+            deleteWidget,
+            resetWidgets,
             applyPreset,
             resetToDefaults,
         ]

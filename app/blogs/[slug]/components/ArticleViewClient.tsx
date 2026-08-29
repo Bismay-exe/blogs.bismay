@@ -19,6 +19,7 @@ import { ArrowIcon } from '@/components/ui/shared/ArrowIcon'
 import { ProgressiveBlur } from '@/components/ui/shared/ProgressiveBlur'
 import { ReaderSettingsProvider, useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
 import { getFontFamily } from '@/lib/reader-settings/defaults'
+import MobileArticleBottomNav from '@/components/blog/article/MobileArticleBottomNav'
 
 interface ArticleData {
     markdown: string
@@ -261,7 +262,7 @@ const ArticleViewInner: React.FC<ArticleViewClientProps> = ({
                             <div className={`w-full ${maxWidthClass} mx-auto min-w-0 flex-1 transition-all duration-300`}>
                                 <Body content={article.markdown} />
                             </div>
-                            {layout.showRightSidebar && <RightLayout />}
+                            {layout.showRightSidebar && <RightLayout articleData={article} />}
                         </div>
                     </div>
                 ) : (
@@ -279,13 +280,20 @@ const ArticleViewInner: React.FC<ArticleViewClientProps> = ({
                             date={article.date}
                             readingTimeMinutes={article.readingTimeMinutes}
                         />
-                        {layout.showRightSidebar && <RightLayout />}
+                        {layout.showRightSidebar && <RightLayout articleData={article} />}
                     </div>
                 )}
 
                 <ProgressiveBlur position="top" backgroundColor="var(--background)" />
                 <ProgressiveBlur position="bottom" backgroundColor="var(--background)" />
             </div>
+
+            {/* Mobile / Compact Floating Article Bottom Navigation Toolbar */}
+            <MobileArticleBottomNav
+                markdown={article.markdown}
+                readingTimeMinutes={article.readingTimeMinutes}
+                title={article.title}
+            />
 
             <Footer />
         </div>

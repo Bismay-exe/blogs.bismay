@@ -5,11 +5,11 @@ import { motion } from "framer-motion";
 const CoinSpinAnimation = () => {
   return (
     <div
-      className="relative h-[74px] w-[74px]"
+      className="relative h-14 w-14"
       style={{ perspective: "900px" }}
     >
       <motion.div
-        className="absolute left-1/2 top-1/2 h-14 w-14"
+        className="absolute h-14 w-14"
         style={{
           transform: "translate(-50%, -50%)",
           transformStyle: "preserve-3d",

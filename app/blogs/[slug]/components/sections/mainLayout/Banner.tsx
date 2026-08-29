@@ -38,7 +38,7 @@ const Banner: React.FC<BannerProps> = ({
         return (
             <div
                 style={marginStyle}
-                className="w-full aspect-[16/9] sm:aspect-[21/9] rounded-md sm:rounded-xl lg:rounded-2xl overflow-hidden border border-sec/15 bg-fg/2 transition-all duration-300 relative"
+                className="w-full rounded-md sm:rounded-xl lg:rounded-2xl overflow-hidden border border-sec/15 bg-fg/2 transition-all duration-300 relative"
             >
                 <img
                     className="w-full h-full object-cover"
@@ -56,7 +56,7 @@ const Banner: React.FC<BannerProps> = ({
         return (
             <div
                 style={marginStyle}
-                className="relative w-full aspect-[16/9] sm:aspect-[21/9] mx-auto rounded-md sm:rounded-xl lg:rounded-2xl overflow-hidden border border-sec/20 bg-fg/3 transition-all duration-300"
+                className="relative w-full mx-auto rounded-md sm:rounded-xl lg:rounded-2xl overflow-hidden border border-sec/20 bg-fg/3 transition-all duration-300"
             >
                 <img
                     className="w-full h-full object-cover"
@@ -74,7 +74,7 @@ const Banner: React.FC<BannerProps> = ({
         return (
             <div
                 style={marginStyle}
-                className="w-full lg:w-[80vw] aspect-[16/9] sm:aspect-[21/9] relative left-1/2 -translate-x-1/2 rounded-md sm:rounded-xl lg:rounded-2xl overflow-hidden border border-sec/20 bg-fg/3 transition-all duration-300"
+                className="w-full lg:w-[80vw] relative left-1/2 -translate-x-1/2 rounded-md sm:rounded-xl lg:rounded-2xl overflow-hidden border border-sec/20 bg-fg/3 transition-all duration-300"
             >
                 <img
                     className="w-full h-full object-cover max-h-[80vh]"
@@ -91,7 +91,7 @@ const Banner: React.FC<BannerProps> = ({
     return (
         <div
             style={marginStyle}
-            className="w-screen aspect-[16/9] sm:aspect-[21/9] relative left-1/2 -translate-x-1/2 overflow-hidden transition-all duration-300"
+            className="w-screen relative left-1/2 -translate-x-1/2 overflow-hidden transition-all duration-300"
         >
             <img
                 className="w-full h-full object-cover"

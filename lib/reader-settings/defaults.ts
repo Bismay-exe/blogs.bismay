@@ -1,4 +1,7 @@
 import { ReaderSettings } from './types'
+import { DEFAULT_WIDGET_ITEMS } from '@/lib/widgets-settings/defaults'
+
+export { DEFAULT_WIDGET_ITEMS } from '@/lib/widgets-settings/defaults'
 
 export const DEFAULT_READER_SETTINGS: ReaderSettings = {
     presets: ['default', 'minimal', 'magazine', 'developer', 'awwwards', 'editorial'],
@@ -78,6 +81,8 @@ export const DEFAULT_READER_SETTINGS: ReaderSettings = {
         series: true,
         subscribeForm: true,
         socialLinks: true,
+        commentForm: false,
+        items: DEFAULT_WIDGET_ITEMS,
     },
 }
 

@@ -22,11 +22,13 @@ import {
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useReaderSettings } from '@/lib/reader-settings/ReaderSettingsContext'
+import { useWidgetsSettings } from '@/lib/widgets-settings'
 import { CapsuleBreadcrumb } from '@/components/settings/CapsuleBreadcrumb'
 import { ExportConfigModal } from '@/components/ui/settings/ExportConfigModal'
 
 export default function SettingsHubPage() {
     const { settings, activePreset, applyPreset, resetToDefaults, isLoaded } = useReaderSettings()
+    const { items: widgetItems } = useWidgetsSettings()
     const [isExportOpen, setIsExportOpen] = useState(false)
     const [resetNotice, setResetNotice] = useState(false)
 
@@ -44,11 +46,11 @@ export default function SettingsHubPage() {
         )
     }
 
-    const { layout, typography, appearance, articleLayout, widgets } = settings
+    const { layout, typography, appearance, articleLayout } = settings
     const headerOrder = articleLayout?.headerBuilder?.headerOrder || layout?.headerOrder || []
     const headerVisibility = articleLayout?.headerBuilder?.headerVisibility || layout?.headerVisibility || {}
     const visibleHeadersCount = headerOrder.filter((id) => headerVisibility[id]).length
-    const enabledWidgetsCount = Object.values(widgets || layout?.rightWidgets || {}).filter(Boolean).length
+    const enabledWidgetsCount = widgetItems.filter((w) => w.enabled).length
     const headingFontName = typography.headingFont?.headingFont || typography.headingFontChoice || 'inter-tight'
 
     return (
@@ -139,7 +141,7 @@ export default function SettingsHubPage() {
                 </div>
 
                 {/* Main Navigation Studio Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Card 1: Reader Studio */}
                     <Link
                         href="/settings/reader"
@@ -157,21 +159,52 @@ export default function SettingsHubPage() {
 
                             <div>
                                 <h2 className="text-lg font-bold text-fg group-hover:text-accent transition-colors">
-                                    Reading Experience Studio
+                                    Reading Experience
                                 </h2>
                                 <p className="text-xs text-sec mt-1.5 leading-relaxed">
-                                    Customize header hierarchy, sidebar widgets, typography fonts, font sizes, line height, breakout margins, and distraction-free mode.
+                                    Customize header hierarchy, typography fonts, font sizes, line height, breakout margins, and distraction-free mode.
                                 </p>
                             </div>
                         </div>
 
                         <div className="flex items-center justify-between pt-3 border-t border-sec/10 text-xs font-mono text-accent font-medium">
-                            <span>Open Interactive Studio</span>
+                            <span>Open Reader Studio</span>
                             <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                         </div>
                     </Link>
 
-                    {/* Card 2: Post & Article Content Management */}
+                    {/* Card 2: Widgets Studio */}
+                    <Link
+                        href="/settings/widgets"
+                        className="group p-6 rounded-3xl border border-sec/20 bg-black/2 dark:bg-white/2 hover:bg-black/4 dark:hover:bg-white/4 hover:border-purple-500/40 transition-all duration-300 flex flex-col justify-between space-y-5 shadow-xs"
+                    >
+                        <div className="space-y-3.5">
+                            <div className="flex items-center justify-between">
+                                <div className="w-12 h-12 rounded-2xl bg-purple-500/15 text-purple-400 flex items-center justify-center border border-purple-500/25 group-hover:scale-105 transition-transform">
+                                    <Sparkles size={22} />
+                                </div>
+                                <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-400 font-bold">
+                                    Widgets Hub
+                                </span>
+                            </div>
+
+                            <div>
+                                <h2 className="text-lg font-bold text-fg group-hover:text-purple-400 transition-colors">
+                                    Sidebar Widgets Studio
+                                </h2>
+                                <p className="text-xs text-sec mt-1.5 leading-relaxed">
+                                    Manage individual cards, write custom HTML/CSS/JS code, configure dynamic tokens, and add custom extensions.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-3 border-t border-sec/10 text-xs font-mono text-purple-400 font-medium">
+                            <span>Open Widgets Studio</span>
+                            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                        </div>
+                    </Link>
+
+                    {/* Card 3: Post & Article Content Management */}
                     <Link
                         href="/admin/posts"
                         className="group p-6 rounded-3xl border border-sec/20 bg-black/2 dark:bg-white/2 hover:bg-black/4 dark:hover:bg-white/4 hover:border-emerald-500/40 transition-all duration-300 flex flex-col justify-between space-y-5 shadow-xs"
